@@ -1,0 +1,22 @@
+_____________________
+The ifplatform package
+v0.2       2007/11/18
+
+This package uses -shell-escape to establish whether
+the document is being processed on Windows or a *NIX
+platform (Mac OS X, Linux, etc.).
+
+Booleans provided are:
+ - ifwindows
+ - iflinux
+ - ifmacosx
+Please request more platforms if you need them.
+
+Finally, the \platformname macro is also provided that
+expands to a string of the platform name.
+
+Will Robertson         wspr 81 at gmail dot com
+Johannes Große
+
+Copyright 2007
+Distributed under the LaTeX Project Public License

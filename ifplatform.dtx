@@ -1,0 +1,293 @@
+%\iffalse 
+%<*internal>
+\iffalse
+%</internal>
+%<*readme>
+_____________________
+The ifplatform package
+v0.2       2007/11/18
+
+This package uses -shell-escape to establish whether
+the document is being processed on Windows or a *NIX
+platform (Mac OS X, Linux, etc.).
+
+Booleans provided are: 
+ - ifwindows
+ - iflinux
+ - ifmacosx
+Please request more platforms if you need them.
+
+Finally, the \platformname macro is also provided that
+expands to a string of the platform name.
+
+Will Robertson         wspr 81 at gmail dot com
+Johannes Große
+
+Copyright 2007
+Distributed under the LaTeX Project Public License
+%</readme>
+%<*internal>
+\fi
+\begingroup
+%</internal>
+%<*batchfile>
+\input docstrip.tex
+\keepsilent
+\preamble
+  ___________________________________________________
+  Copyright (C) 2007  Will Robertson & Johannes Große
+  License information appended.
+\endpreamble
+\postamble
+Copyright (C) 2007 by Will Robertson & Johannes Große
+
+Distributable under the LaTeX Project Public License,
+version 1.3c or higher (your choice). The latest version of
+this license is at: http://www.latex-project.org/lppl.txt
+
+This work is "maintained" (as per LPPL maintenance status) 
+by Will Robertson.
+
+This work consists of the file  ifplatform.dtx
+          and the derived files ifplatform.pdf,
+                                ifplatform.sty, and 
+                                ifplatform.ins.
+\endpostamble
+\askforoverwritefalse
+\generate{\file{\jobname.sty}{\from{\jobname.dtx}{package}}}
+%</batchfile>
+%<batchfile>\endbatchfile
+%<*internal>
+\generate{\file{\jobname.ins}{\from{\jobname.dtx}{batchfile}}}
+\nopreamble\nopostamble
+\generate{\file{README.txt}{\from{\jobname.dtx}{readme}}}
+\generate{\file{prepare.sh}{\from{\jobname.dtx}{prepare}}}
+\endgroup
+%</internal>
+%<*driver>
+\documentclass{ltxdoc}
+\errorcontextlines=999
+\EnableCrossrefs
+\CodelineIndex
+\RecordChanges
+%\OnlyDescription
+\usepackage{array,booktabs,color,enumitem,hyperref}
+\usepackage[sc,osf]{mathpazo}
+\linespread{1.1}       % A bit more space between lines
+\frenchspacing         % Remove ugly extra space after punctuation
+\definecolor{niceblue}{rgb}{0.2,0.4,0.8}
+\def\theCodelineNo{\textcolor{niceblue}{\sffamily\tiny\arabic{CodelineNo}}}
+\newcommand*\pkg[1]{\textsf{#1}}
+\hfuzz2pt
+\usepackage{ifplatform}% for version info
+\begin{document}
+\DocInput{ifplatform.dtx}
+\end{document}
+%</driver>
+%\fi
+%
+% \GetFileInfo{\jobname.sty}
+% \CheckSum{0}
+% \makeatletter
+%
+% \title{The \pkg{\jobname} package}
+% \author{Code by Johannes Gro\ss{}e\\
+%         Package by Will Robertson\\
+%         \color[gray]{0.5}
+%         \texttt{wspr\,81\,at\,gmail\,dot\,com}}
+% \date{[\fileversion] \qquad [\filedate]}
+%
+% \maketitle
+%
+% \section{About}
+% This package provides the following conditionals to test
+% which operating system is being used to run \TeX:
+% \begin{itemize}[nolistsep,label=--]
+% \item \cs{ifwindows}
+% \item \cs{iflinux}
+% \item \cs{ifmacosx}
+% \end{itemize}
+%
+% \TeX\ must be invoked with the |-shell-escape| option (or equivalent) for the
+% package to work. \cs{ifshellescape} is also provided to check 
+% whether this is the case.
+%
+% Also, the \cmd\platformname\ command is defined to expand to a 
+% macro that represents the operating system. Default definitions are (respectively):
+%
+% \begin{tabular}{@{}l@{\quad$\to$\quad}l}
+% \cmd\windowsname & `Windows' \\
+% \cmd\linuxname & `Linux' \\
+% \cmd\macosxname & `Mac\,OS\,X' \\
+% \cmd\unknownplatform & \emph{whatever is returned by} |uname| \\
+% \end{tabular}
+%
+% \noindent Redefine these macros to customise
+% the output of \cmd\platformname.
+% \ifshellescape
+% This documentation was compiled on \platformname.
+% \fi
+%
+% \section{Other platforms}
+%
+% If greater granularity is required to differentiate between various \textsc{unix}-like operating systems, then \cmd\unknownplatform\ can be interrogated for the platform based on the output of |uname|. Table~\ref{table} lists possible outputs for a range of operating systems.
+%
+% For example, to test whether the AIX operating system is being used, you could use the following code:
+% \begin{verbatim}
+%  \def\@tempa{aix6}
+%  \ifx\unknownplatform\@tempa
+%    ... AIX is being used ....
+%  \else
+%    ... or not ...
+%  \fi
+% \end{verbatim}
+% The \pkg{ifthen} and \pkg{xifthen} packages might be of interest to those who prefer more \LaTeX-like methods of conditional testing.
+%
+% \begin{table}[hp]
+% \centering
+% \begin{tabular}{@{}l>{\ttfamily}c@{}}
+% \toprule
+% Platform & uname \textrm{string} \\
+% \midrule
+% AIX & {aix6} \\
+% Cray UNICOS & {sn5176} \\
+% FreeBSD & {FreeBSD} \\
+% HPUX & {HP-UX} \\
+% IRIX & {IRIX64} \\
+% Solaris & {SunOS} \\
+% OpenBSD & {OpenBSD} \\
+% \bottomrule
+% \end{tabular}
+% \caption{List of operating systems and their \texttt{uname} strings. Adapted from % \url{http://en.wikipedia.org/wiki/Uname}.}
+% \label{table}
+% \end{table}
+%
+% \clearpage
+% \section{Implementation}
+%\iffalse
+%<*package>
+%\fi
+%    \begin{macrocode}
+\ProvidesPackage{ifplatform}
+  [2007/11/18 v0.3  Testing for the operating system]
+%    \end{macrocode}
+% Conditionals we provide:
+%    \begin{macrocode}
+\newif\ifshellescape
+\newif\ifwindows
+\newif\ifmacosx
+\newif\iflinux
+%    \end{macrocode}
+% Names of operating systems:
+%    \begin{macrocode}
+\newcommand\windowsname{Windows}
+\newcommand\linuxname{Linux}
+\newcommand\macosxname{Mac\,OS\,X}
+\newcommand\unknownplatform{[Unknown]}
+%    \end{macrocode}
+% Define test file name and define a hopefully unique string:
+%    \begin{macrocode}
+\edef\ip@file{\jobname.w18}
+\edef\ip@sig{write18-test-\the\year\the\month\the\day\the\time}
+\edef\ip@win{'\ip@sig'}
+%    \end{macrocode}
+% Macro to read in a one-line file into a temporary location:
+%    \begin{macrocode}
+\def\ip@read@file{%
+  \newread\instream 
+  \openin\instream=\ip@file
+  \@tempcnta=\endlinechar
+  \endlinechar=-1 
+  \immediate\read\instream to\@tempa
+  \endlinechar=\@tempcnta
+  \closein\instream}
+%    \end{macrocode}
+% Use echo to (maybe) write a test file. If it succeeds, continue; else, bail.
+%    \begin{macrocode}
+\immediate\write18{echo \ip@win >"\ip@file"}
+\IfFileExists{\ip@file}{\shellescapetrue}{\shellescapefalse\endinput}
+%    \end{macrocode}
+% Now read the test file into a macro:
+%    \begin{macrocode}
+\ip@read@file
+%    \end{macrocode}
+% The contents of the test file reveals several things:
+% \begin{itemize}[nolistsep,label=--]
+% \item test string correct with single quotes: Windows,
+% \item test string correct without single quotes: Linux/Mac OS X,
+% \item test string not correct: did not really write test file, so \cmd\write18\ is not enabled. (This should never happen.)
+% \end{itemize}
+% \begin{macro}{\ifwindows}
+% First test for Windows.
+%    \begin{macrocode}
+\ifx\@tempa\ip@sig
+  \windowsfalse
+\else
+  \ifx\@tempa\ip@win
+    \windowstrue
+  \else
+    \PackageError{ifplatform}
+      {There is a problem. Please delete the file \ip@file.}
+      {Somehow an old file is lying around telling me the wrong things.
+       \MessageBreak This should never happen. Please let us know when it does!}
+  \fi
+\fi
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\iflinux}
+% \begin{macro}{\ifmacosx}
+% Now test for the others; directly test for Linux and Mac~OS~X; but what about Solaris or FreeBSD or \dots\ ?
+% Define \cmd\unknownplatform\ as the output of |uname| rather than enumerate the possibilities.
+%    \begin{macrocode}
+\ifwindows\else
+  \immediate\write18{uname -s > "\ip@file"}
+  \ip@read@file
+  \def\@tempb{Linux}
+  \ifx\@tempa\@tempb
+    \linuxtrue
+  \else
+    \def\@tempb{Darwin}
+    \ifx\@tempa\@tempb
+      \macosxtrue
+    \else
+      \edef\unknownplatform{\@tempa}
+    \fi
+  \fi
+\fi
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\platformname}
+% Defined in terms of macros so the output is user-customisable.
+%    \begin{macrocode}
+\edef\platformname{%
+  \ifwindows\noexpand\windowsname\else
+  \iflinux  \noexpand\linuxname\else
+  \ifmacosx \noexpand\macosxname\else
+            \noexpand\unknownplatform
+  \fi\fi\fi}
+%    \end{macrocode}
+% \end{macro}
+% Clean up:
+%    \begin{macrocode}
+\immediate\write18{\ifwindows del \else rm -- \fi "\ip@file"}
+%    \end{macrocode}
+%\iffalse
+%</package>
+%<*prepare>
+%    \begin{macrocode}
+rm ifplatform.zip
+mv README.txt README
+zip ifplatform.zip ifplatform.dtx ifplatform.ins ifplatform.pdf README
+%    \end{macrocode}
+%</prepare>
+%\fi
+%
+% \typeout{------------------------------------------------------}
+% \typeout{ To finish the installation please move the following}
+% \typeout{ file into a directory searched by XeTeX:}
+% \typeout{ \space- ifplatform.sty}
+% \typeout{------------------------------------------------------}
+%
+\endinput
