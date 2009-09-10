@@ -3,9 +3,9 @@
 \iffalse
 %</internal>
 %<*readme>
-_____________________
+______________________
 The IFPLATFORM package
-v0.3       2009/09/09
+v0.3a       2009/09/10
 
 This package uses heuristics to establish whether
 the document is being processed on Windows or a *NIX
@@ -17,6 +17,7 @@ Booleans provided are:
  - ifwindows
  - iflinux
  - ifmacosx
+ - ifcygwin
 
 Finally, the \platformname macro is also provided that
 expands to a string of the platform name.
@@ -89,6 +90,8 @@ This work consists of the file  ifplatform.dtx
   \typeout{ifplatform debug: using Linux.}
 \fi\ifmacosx
   \typeout{ifplatform debug: using Mac OS X.}
+\fi\ifcygwin
+  \typeout{ifplatform debug: using Cygwin.}
 \fi
 \begin{document}
 \DocInput{ifplatform.dtx}
@@ -105,7 +108,7 @@ This work consists of the file  ifplatform.dtx
 %         Package by Will Robertson\\
 %         \color[gray]{0.5}
 %         \texttt{wspr\,81\,at\,gmail\,dot\,com}}
-% \date{\fileversion \qquad \filedate}
+% \date{\fileversion\thanks{Thanks to Ken Brown, Joseph Wright, Zebb Prime, and others for testing this version.}\qquad \filedate}
 %
 % \maketitle
 %
@@ -117,58 +120,63 @@ This work consists of the file  ifplatform.dtx
 % \item \cs{ifwindows}
 % \item \cs{iflinux}
 % \item \cs{ifmacosx}
+% \item \cs{ifcygwin}
 % \end{itemize}
 % If you only wish to detect \cs{ifwindows}, then it does not matter how you 
-% load this package. Note then that use of (Linux \emph{or} \macosxname) can 
+% load this package. Note then that use of (Linux \emph{or} \macosxname\ \emph{or} Cygwin) can 
 % then be detected with \cs{ifwindows}\cs{else}.
 % 
 % If you also wish to determine the difference between which Unix-variant
-% you are using (i.e., also detect \cs{iflinux} and \cs{ifmacosx}) then shell
+% you are using (i.e., also detect \cs{iflinux}, \cs{ifmacosx}, and \cs{ifcygwin}) then shell
 % escape must be enabled.
 % This is achieved by using the |-shell-escape| command line option when 
 % executing \LaTeX.
 %
-% If shell escape is not enabled, \cs{iflinux} and \cs{ifmacosx} will both return \emph{false}. A warning will be printed in the console output to remind you in this case.
+% If shell escape is not enabled, \cs{iflinux}, \cs{ifmacosx}, and \cs{ifcygwin} will all return \emph{false}. A warning will be printed in the console output to remind you in this case.
 %
 % \section{Auxiliary features}
 %
 % \cs{ifshellescape} is provided as a conditional to test whether
 % shell escape is active or not. (Note: new versions of pdf\/\TeX\ 
-% allow you to query shell escape with \verb|\ifnum\pdfshellescape>0|).
+% allow you to query shell escape with \verb|\ifnum\pdfshellescape>0|\,.)
 %
 % Also, the \cmd\platformname\ command is defined to expand to a 
 % macro that represents the operating system. Default definitions are 
 % (respectively):
-%
+% \begin{quote}
 % \begin{tabular}{@{}l@{\quad$\to$\quad}l}
 % \cmd\windowsname & `\windowsname' \\
 % \cmd\notwindowsname & `\notwindowsname' (when shell escape is disabled) \\
 % \cmd\linuxname & `\linuxname' \\
 % \cmd\macosxname & `\macosxname' \\
+% \cmd\cygwinname & `\cygwinname' \\
 % \cmd\unknownplatform & \emph{whatever is returned by} |uname| \\
 % \end{tabular}
-% For example if \cs{ifwindows} is \emph{true} then \cs{platformname}
+% \end{quote}
+% E.g., if \cs{ifwindows} is \emph{true} then \cs{platformname}
 % expands to \cs{windowsname}, which expands to `\windowsname'.
 % Redefine the macros above to customise
 % the output of \cmd\platformname.
 %
-% \ifshellescape
 % \begin{center}\itshape
 %  This documentation was compiled on \platformname.
 % \end{center}
-% \fi
 %
 % \section{Other platforms}
 %
 % If greater granularity is required to differentiate between various \textsc{unix}-like operating systems, then \cmd\unknownplatform\ can be interrogated for the platform based on the output of |uname|. Table~\ref{table} lists possible outputs for a range of operating systems.
 %
 % For example, to test whether the AIX operating system is being used, you could use the following code:
+% \begin{quote}
 % \begin{verbatim}
-%  \def\myplatform{aix6}
-%  \ifx\myplatform\unknownplatform
-%    ... AIX is being used ...
-%  \else ... or not ... \fi
+%\def\myplatform{aix6}
+%\ifx\myplatform\unknownplatform
+%  ... AIX is being used ...
+%\else
+%  ... or not ...
+%\fi
 % \end{verbatim}
+% \end{quote}
 % The \pkg{ifthen} and \pkg{xifthen} packages might be of interest to those who prefer more \LaTeX-like methods of conditional testing.
 %
 % \begin{table}[hp]
@@ -177,9 +185,6 @@ This work consists of the file  ifplatform.dtx
 % \toprule
 % Platform & uname \textrm{string} \\
 % \midrule
-% Linux & Linux \\
-% Mac\,OS\,X & Darwin \\
-% Cygwin & CYGWIN\_NT-5.1 \\
 % FreeBSD & {FreeBSD} \\
 % OpenBSD & {OpenBSD} \\
 % Solaris & {SunOS} \\
@@ -206,7 +211,7 @@ This work consists of the file  ifplatform.dtx
 % This `last resort' test will fail if shell escape is not enabled, or if the file |\jobname.w18| 
 % somehow already exists, or if the behaviour of |#| isn't as reliable as I think.
 %
-% \item In previous versions of this package, the presence of Cygwin under Windows would have \cs{ifwindows} return \emph{false}. Needless to say, this was somewhat confusing. I think this behaviour is now fixed, but I have no real way of testing this. Let me know if you run into difficulty (simply for documentation purposes~--- I may not be able to fix any such problems!).
+% \item Note that if you're running \TeX\ binaries from Cygwin on Windows, then your platform will \emph{not} be Windows. It will appear to be a *nix system, with platform name `Cygwin'.
 %
 % \item If you ever see the error
 % \begin{quote}\ttfamily I can't tell if this is Windows or *nix; you 
@@ -217,21 +222,14 @@ This work consists of the file  ifplatform.dtx
 % Keep these points in mind and you'll never run into trouble.
 % I hope you won't run into trouble in any case.
 %
-% \vfill
-% \centerline{$\ast$\qquad$\ast$\qquad$\ast$}
-% \vfill
-% \noindent {\footnotesize P.S. What do you think of \textsc{a5} paper for the documentation?
-% A bit harder to squeeze things in, but much easier to read on-screen, no?\par}
-%
-% \clearpage
-% \StopEventually{\PrintIndex}
+% \StopEventually{\clearpage\PrintIndex}
 % \section{Implementation}
 %\iffalse
 %<*package>
 %\fi
 %    \begin{macrocode}
 \ProvidesPackage{ifplatform}
-  [2009/09/09 v0.3  Testing for the operating system]
+  [2009/09/10 v0.3a  Testing for the operating system]
 %    \end{macrocode}
 % Packages required: (thanks Heiko)
 %    \begin{macrocode}
@@ -243,11 +241,13 @@ This work consists of the file  ifplatform.dtx
 \newif\ifwindows
 \newif\ifmacosx
 \newif\iflinux
+\newif\ifcygwin
 %    \end{macrocode}
 % \begin{macro}{\windowsname}
 % \begin{macro}{\notwindowsname}
 % \begin{macro}{\linuxname}
 % \begin{macro}{\macosxname}
+% \begin{macro}{\cygwinname}
 % \begin{macro}{\unknownplatform}
 % Names of operating systems:
 %    \begin{macrocode}
@@ -255,8 +255,10 @@ This work consists of the file  ifplatform.dtx
 \newcommand\notwindowsname{*NIX}
 \newcommand\linuxname{Linux}
 \newcommand\macosxname{Mac\,OS\,X}
+\newcommand\cygwinname{Cygwin}
 \newcommand\unknownplatform{[Unknown]}
 %    \end{macrocode}
+% \end{macro}
 % \end{macro}
 % \end{macro}
 % \end{macro}
@@ -270,7 +272,7 @@ This work consists of the file  ifplatform.dtx
 % \begin{macro}{\ifshellescape}
 % Determine if shell escape is enabled:
 %    \begin{macrocode}
-\ifnum\pdf@shellescape>0\relax
+\ifnum\pdf@shellescape=1\relax
   \shellescapetrue
 \else
   \PackageWarningNoLine{ifplatform}{^^J \space\space\space
@@ -297,14 +299,14 @@ This work consists of the file  ifplatform.dtx
 % \begin{table}
 % \centering
 % \begin{tabular}{@{}llll@{}}
-% \hline
+% \toprule
 % File & Exists & Windows? & *nix? \\
-% \hline
+% \midrule
 % \texttt{nul:} & true & Probably & Maybe \\
 % &  false & Definitely not & Definitely \\
 % \texttt{/dev/null} & true & Maybe & Probably \\
 % & false & Definitely & Definitely not \\
-% \hline
+% \bottomrule
 % \end{tabular}
 % \caption{Possibilities for testing null files and their prospects for determining the platform.}
 % \label{tbl}
@@ -363,10 +365,14 @@ This work consists of the file  ifplatform.dtx
   \fi
 \fi
 %    \end{macrocode}
-% 
+% Needed below:
+%    \begin{macrocode}
+\def\ip@only@six#1#2#3#4#5#6#7\@nil{#1#2#3#4#5#6}
+%    \end{macrocode}
 %
 % \begin{macro}{\iflinux}
 % \begin{macro}{\ifmacosx}
+% \begin{macro}{\ifcygwin}
 % Now test for the others; directly test for Linux and Mac\,OS\,X; but what about Solaris or FreeBSD or \dots\ ?
 % Define \cmd\unknownplatform\ as the output of |uname| rather than enumerate the possibilities.
 %    \begin{macrocode}
@@ -374,8 +380,8 @@ This work consists of the file  ifplatform.dtx
 \ifshellescape
   \ifwindows\else
     \immediate\write18{uname -s > "\ip@file"}
-    \CatchFileDef\@tempa{"\ip@file"}{}
-    \immediate\write18{rm -- "\ip@file"}%
+    \CatchFileDef\@tempa{\ip@file}{}
+    \immediate\write18{rm -- "\ip@file"}
 %    \end{macrocode}
 % Kill a trailing space:
 %    \begin{macrocode}
@@ -388,12 +394,19 @@ This work consists of the file  ifplatform.dtx
       \ifx\@tempa\@tempb
         \macosxtrue
       \else
-        \edef\unknownplatform{\@tempa}
+        \def\@tempb{CYGWIN}
+        \edef\@tempc{\expandafter\ip@only@six\@tempa------\@nil}
+        \ifx\@tempb\@tempc
+          \cygwintrue
+        \else
+          \edef\unknownplatform{\@tempa}
+        \fi
       \fi
     \fi
   \fi
 \fi\fi
 %    \end{macrocode}
+% \end{macro}
 % \end{macro}
 % \end{macro}
 %
@@ -411,11 +424,15 @@ This work consists of the file  ifplatform.dtx
         \ifmacosx
           \noexpand\macosxname
         \else
-          \noexpand\unknownplatform
+          \ifcygwin
+            \noexpand\cygwinname
+          \else
+            \noexpand\unknownplatform
+          \fi
         \fi
       \fi
     \else
-      \noexpand\nowindowsname
+      \noexpand\notwindowsname
     \fi
   \fi
 }

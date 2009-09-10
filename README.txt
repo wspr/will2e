@@ -1,6 +1,6 @@
-_____________________
+______________________
 The IFPLATFORM package
-v0.3       2009/09/09
+v0.3a       2009/09/10
 
 This package uses heuristics to establish whether
 the document is being processed on Windows or a *NIX
@@ -12,6 +12,7 @@ Booleans provided are:
  - ifwindows
  - iflinux
  - ifmacosx
+ - ifcygwin
 
 Finally, the \platformname macro is also provided that
 expands to a string of the platform name.
