@@ -15,7 +15,7 @@ Released under the LaTeX Project Public License
 \end{filecontents*}
 
 \begin{filecontents}{trimspaces.sty}
-\ProvidesPackage{trimspaces}[2009/09/16 v1.0
+\ProvidesPackage{trimspaces}[2009/09/16 v1.1
   Trim spaces around a token list]
 
 \catcode`\Q=3
@@ -26,17 +26,14 @@ Released under the LaTeX Project Public License
 \long\def\trim@trim@@#1Q#2{#1}
 \catcode`\Q=11
 
+\newcommand\trim@spaces@noexp[1]{%
+  \unexpanded\expandafter\expandafter\expandafter
+    {\trim@spaces{#1}}%
+}
+      
 % Brute force:
 \newcommand\trim@spaces@in[1]{%
-  \expandafter\expandafter\expandafter\expandafter
-  \expandafter\expandafter\expandafter
-  \def
-  \expandafter\expandafter\expandafter\expandafter
-  \expandafter\expandafter\expandafter
-  #1%
-  \expandafter\expandafter\expandafter\expandafter
-  \expandafter\expandafter\expandafter
-  {\expandafter\trim@spaces\expandafter{#1}}%
+  \edef#1{\expandafter\trim@spaces@noexp\expandafter{#1}}%
 }
 
 % That's it.
@@ -92,29 +89,39 @@ Released under the LaTeX Project Public License
 \maketitle
 
 \section{Use of the package}
-This package provides two macros for the \LaTeX\ programmer:
+This package provides three macros for the \LaTeX\ programmer:
 \begin{itemize}
 \item \cs{trim@spaces}\marg{text}
+\item \cs{trim@spaces@noexp}\marg{text}
 \item \cs{trim@spaces@in}\meta{macro}
 \end{itemize}
-The former is fully expandable and removes any surrounding spaces from \meta{text}.
-The latter re-defines \meta{macro} as itself stripped of any surrounding spaces
+The first is fully expandable and removes any surrounding spaces from \meta{text}.
+The second is a variant that after full expansion results in the original, unexpanded, text stripped of any surrounding spaces.
+The last re-defines \meta{macro} as itself stripped of any surrounding spaces
 (it is obviously not expandable).
 
 For example:
 \begin{verbatim}
-\edef\a{\trim@spaces{ a a a }}
-\def\b{ b \foo b }
+\def\foo{foo}
+\edef\a{\trim@spaces{ a \foo ! }}
+\edef\aa{\trim@spaces@noexp{ a \foo ! }}
+\def\b{ b \foo ! }
 \trim@spaces@in\b
-This is a: [\meaning\a] and this is b: [\meaning\b]
+a:  [\detokenize\expandafter{\a}] \\
+aa: [\detokenize\expandafter{\aa}] \\
+b:  [\detokenize\expandafter{\b}]
 \end{verbatim}
 which produces:
 \begin{quote}
 \makeatletter
-\edef\a{\trim@spaces{ a a a }}
-\def\b{ b \foo b }
+\def\foo{foo}
+\edef\a{\trim@spaces{ a \foo ! }}
+\edef\aa{\trim@spaces@noexp{ a \foo ! }}
+\def\b{ b \foo ! }
 \trim@spaces@in\b
-This is a: [\meaning\a] and this is b: [\meaning\b]
+a:  [\detokenize\expandafter{\a}] \\
+aa: [\detokenize\expandafter{\aa}] \\
+b:  [\detokenize\expandafter{\b}]
 \end{quote}
 
 
