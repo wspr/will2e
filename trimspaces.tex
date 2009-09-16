@@ -91,20 +91,22 @@ Released under the LaTeX Project Public License
 \section{Use of the package}
 This package provides three macros for the \LaTeX\ programmer:
 \begin{itemize}
-\item \cs{trim@spaces}\marg{text}
-\item \cs{trim@spaces@noexp}\marg{text}
-\item \cs{trim@spaces@in}\meta{macro}
-\end{itemize}
-The first is fully expandable and removes any surrounding spaces from \meta{text}.
-The second is a variant that after full expansion results in the original, unexpanded, text stripped of any surrounding spaces.
-The last re-defines \meta{macro} as itself stripped of any surrounding spaces
-(it is obviously not expandable).
+\item \cs{trim@spaces}\marg{text}\par 
+Fully expandable, removes any surrounding spaces from \meta{text}.
 
-For example:
+\item \cs{trim@spaces@noexp}\marg{text}\par
+Variant of the above that after full expansion results in the original unexpanded text stripped of any surrounding spaces.
+(\textit{Requires $\varepsilon$-\TeX}.)
+
+\item \cs{trim@spaces@in}\meta{macro}\par
+Re-defines \meta{macro} as itself stripped of any surrounding spaces
+(it is obviously not expandable).
+\end{itemize}
+These are best illustrated by example:
 \begin{verbatim}
-\def\foo{foo}
+\def\foo{bar}
 \edef\a{\trim@spaces{ a \foo ! }}
-\edef\aa{\trim@spaces@noexp{ a \foo ! }}
+\edef\aa{\trim@spaces@noexp{ aa \foo ! }}
 \def\b{ b \foo ! }
 \trim@spaces@in\b
 a:  [\detokenize\expandafter{\a}] \\
@@ -114,9 +116,9 @@ b:  [\detokenize\expandafter{\b}]
 which produces:
 \begin{quote}
 \makeatletter
-\def\foo{foo}
+\def\foo{bar}
 \edef\a{\trim@spaces{ a \foo ! }}
-\edef\aa{\trim@spaces@noexp{ a \foo ! }}
+\edef\aa{\trim@spaces@noexp{ aa \foo ! }}
 \def\b{ b \foo ! }
 \trim@spaces@in\b
 a:  [\detokenize\expandafter{\a}] \\
