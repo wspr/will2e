@@ -1,0 +1,136 @@
+\RequirePackage{filecontents}
+\begin{filecontents*}{README.txt}
+______________________
+The TRIMSPACES package
+v1.0
+
+A very short package that allows you to expandably
+remove spaces around a token list or remove surrounding
+spaces within a macro definition.
+
+Will Robertson
+Copyright 2009
+Released under the LaTeX Project Public License
+
+\end{filecontents*}
+
+\begin{filecontents}{trimspaces.sty}
+\ProvidesPackage{trimspaces}[2009/09/16 v1.0
+  Trim spaces around a token list]
+
+\catcode`\Q=3
+\newcommand\trim@spaces[1]{%
+  \romannumeral-`\q\trim@trim@\noexpand#1Q Q%
+}
+\long\def\trim@trim@#1 Q{\trim@trim@@#1Q}
+\long\def\trim@trim@@#1Q#2{#1}
+\catcode`\Q=11
+
+% Brute force:
+\newcommand\trim@spaces@in[1]{%
+  \expandafter\expandafter\expandafter\expandafter
+  \expandafter\expandafter\expandafter
+  \def
+  \expandafter\expandafter\expandafter\expandafter
+  \expandafter\expandafter\expandafter
+  #1%
+  \expandafter\expandafter\expandafter\expandafter
+  \expandafter\expandafter\expandafter
+  {\expandafter\trim@spaces\expandafter{#1}}%
+}
+
+% That's it.
+\end{filecontents}
+%%%%%%%%%1%%%%%%%%%2%%%%%%%%%3%%%%%%%%%4%%%%%%%%%5
+
+
+% Conditionally compile the documentation & generate the .ins file:
+\providecommand\pstoolCompile{Y}
+\if\pstoolCompile N
+  \expandafter\endinput
+\fi
+
+
+\begin{filecontents*}{trimspaces.ins}
+%&latex
+\def\pstoolCompile{N}
+\input pstool.tex
+\csname @@end\endcsname
+\end{filecontents*}
+
+
+
+
+\makeatletter
+\documentclass{article}
+\usepackage[rm,medium]{titlesec}
+\usepackage{xcolor}
+\usepackage[colorlinks,linktocpage]{hyperref}
+\usepackage{gmdoc}
+\usepackage{gmverb}
+\dekclubs
+\stanzaskip=\bigskipamount 
+\CodeSpacesGrey
+
+\let\pkg\textsf
+
+\usepackage{trimspaces}
+\usepackage[T1]{fontenc}
+\usepackage{microtype}
+\usepackage{lmodern}
+\usepackage[sc,osf]{mathpazo}
+\linespread{1.1}
+\frenchspacing
+
+\GetFileInfo{trimspaces.sty}
+\begin{document}
+
+\title{The \pkg{trimspaces} package}
+\author{Package author: Will Robertson\\Code thanks to Morten H\o gholm}
+\date{\fileversion\qquad\filedate}
+
+\maketitle
+
+\section{Use of the package}
+This package provides two macros for the \LaTeX\ programmer:
+\begin{itemize}
+\item \cs{trim@spaces}\marg{text}
+\item \cs{trim@spaces@in}\meta{macro}
+\end{itemize}
+The former is fully expandable and removes any surrounding spaces from \meta{text}.
+The latter re-defines \meta{macro} as itself stripped of any surrounding spaces
+(it is obviously not expandable).
+
+For example:
+\begin{verbatim}
+\edef\a{\trim@spaces{ a a a }}
+\def\b{ b \foo b }
+\trim@spaces@in\b
+This is a: [\meaning\a] and this is b: [\meaning\b]
+\end{verbatim}
+which produces:
+\begin{quote}
+\makeatletter
+\edef\a{\trim@spaces{ a a a }}
+\def\b{ b \foo b }
+\trim@spaces@in\b
+This is a: [\meaning\a] and this is b: [\meaning\b]
+\end{quote}
+
+
+\section{Package information}
+The most recent publicly released version of \pkg{trimspaces} is available at \textsc{ctan}: \url{http://tug.ctan.org/pkg/trimspaces/}. Historical and developmental versions are available at GitHub: \url{http://github.com/wspr/trimspaces/}.
+
+While general feedback via email is welcomed, specific bugs or feature requests should be reported through the issue tracker: \url{http://github.com/wspr/trimspaces/issues}.
+
+\subsection{Licence}
+
+This package is freely modifiable and distributable under the terms and conditions of the \LaTeX\ Project Public License, version 1.3c or greater (your choice).\footnote{\url{http://www.latex-project.org/lppl/}} This work consists of the files |pstool.tex| and the derived files |pstool.sty|, |pstool.ins|, and |pstool.pdf|.
+
+This work is author-maintained by \textsc{Will Robertson}.
+
+\section{Implementation}
+\parindent=0pt
+\DocInput{trimspaces.sty}
+
+\end{document}
