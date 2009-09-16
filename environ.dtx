@@ -279,7 +279,8 @@ This work consists of the file  environ.dtx
 %
 % This is the package.
 %    \begin{macrocode}
-\ProvidesPackage{environ}[2008/06/18 v0.2 A new way to define environments]
+\ProvidesPackage{environ}[2009/09/16 v0.2a A new way to define environments]
+\RequirePackage{trimspaces}
 %    \end{macrocode}
 %
 % \PrintChanges
@@ -311,19 +312,6 @@ This work consists of the file  environ.dtx
 \def\longdef@c#1{%
   \expandafter\long\expandafter\def\csname#1\endcsname}
 %    \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\trim@spaces}
-% \darg{tokens} Removes leading and trailing spaces from the (arbitrary) input.
-% Thanks to Morten H\o gholm.
-%    \begin{macrocode}
-\catcode`\Q=3
-\long\def\trim@spaces#1{\romannumeral-`\q\trim@trim@\noexpand#1Q Q}
-\long\def\trim@trim@#1 Q{\trim@trim@@#1Q}
-\long\def\trim@trim@@#1Q#2{#1}
-\catcode`\Q=11
-%    \end{macrocode}
-% \changes{v0.2}{2008/06/16}{Added.}
 % \end{macro}
 %
 % \section{\cs{collect@body}-related code}
