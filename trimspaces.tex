@@ -15,9 +15,10 @@ Released under the LaTeX Project Public License
 \end{filecontents*}
 
 \begin{filecontents}{trimspaces.sty}
-\ProvidesPackage{trimspaces}[2009/09/16 v1.1
+\ProvidesPackage{trimspaces}[2009/09/17 v1.1
   Trim spaces around a token list]
 
+% Trimming surrounding spaces:
 \catcode`\Q=3
 \newcommand\trim@spaces[1]{%
   \romannumeral-`\q\trim@trim@\noexpand#1Q Q%
@@ -30,10 +31,41 @@ Released under the LaTeX Project Public License
   \unexpanded\expandafter\expandafter\expandafter
     {\trim@spaces{#1}}%
 }
-      
-% Brute force:
+    
 \newcommand\trim@spaces@in[1]{%
   \edef#1{\expandafter\trim@spaces@noexp\expandafter{#1}}%
+}
+
+% Trimming preceding spaces:
+\newcommand\trim@pre@space[1]{%
+  \romannumeral-`\.\expandafter\noexpand#1%
+}
+
+\newcommand\trim@pre@space@noexp[1]{%
+  \unexpanded\expandafter{%
+    \romannumeral-`\.\expandafter\noexpand#1%
+  }%
+}
+
+\newcommand\trim@pre@space@in[1]{%
+  \expandafter\def\expandafter#1\expandafter{%
+    \romannumeral-`\.\expandafter\noexpand#1%
+  }%
+}
+
+% Trimming trailing space:
+\catcode`\Q=3
+\newcommand\trim@post@space[1]{\trim@trim@#1Q Q}
+\catcode`\Q=11
+
+\newcommand\trim@post@space@noexp[1]{%
+  \unexpanded\expandafter\expandafter\expandafter
+  \expandafter\expandafter\expandafter\expandafter
+    {\trim@post@space{#1}}%
+}
+    
+\newcommand\trim@post@space@in[1]{%
+  \edef#1{\expandafter\trim@post@space@noexp\expandafter{#1}}%
 }
 
 % That's it.
@@ -87,22 +119,39 @@ Released under the LaTeX Project Public License
 \date{\fileversion\qquad\filedate}
 
 \maketitle
+\tableofcontents
 
 \section{Use of the package}
-This package provides three macros for the \LaTeX\ programmer:
-\begin{itemize}
-\item \cs{trim@spaces}\marg{text}\par 
-Fully expandable, removes any surrounding spaces from \meta{text}.
+This package provides a collection of space trimming macros for the \LaTeX\ programmer. Tools are provided to remove either preceding space, trailing space, or both from a token list or the contents of a macro.
 
-\item \cs{trim@spaces@noexp}\marg{text}\par
-Variant of the above that after full expansion results in the original unexpanded text stripped of any surrounding spaces.
+For an extensive discussion on this topic, see chapter fifteen of Peter Wilson's compendium of Michael Downes' `Around the Bend' exercises:
+\par\centerline{\url{http://tug.ctan.org/pkg/around-the-bend}}
+
+The code that this package is based on, however, originates with Morten H\o gholm. Thanks!
+
+\subsection{Trimming spaces}
+\begin{itemize}
+\item \cs{trim@spaces} \marg{text}\\ 
+\cs{trim@pre@space} \marg{text}\\
+\cs{trim@post@space} \marg{text}\par 
+Fully expandable, removes spaces at the beginning and/or end of \meta{text}.
+
+\item \cs{trim@spaces@noexp} \marg{text}\\
+\cs{trim@pre@space@noexp} \marg{text}\\
+\cs{trim@post@space@noexp} \marg{text}\par
+Variants of the above that after full expansion result in the original unexpanded text stripped of surrounding spaces.
 (\textit{Requires $\varepsilon$-\TeX}.)
 
-\item \cs{trim@spaces@in}\meta{macro}\par
-Re-defines \meta{macro} as itself stripped of any surrounding spaces
-(it is obviously not expandable).
+\item \cs{trim@spaces@in} \meta{macro}\\
+\cs{trim@pre@space@in} \meta{macro}\\
+\cs{trim@post@space@in} \meta{macro}\par
+Re-defines \meta{macro} as itself stripped of its surrounding spaces
+(these commands are obviously not expandable).
 \end{itemize}
-These are best illustrated by example:
+
+\subsection{Examples}
+
+Trimming surrounding spaces:
 \begin{verbatim}
 \def\foo{bar}
 \edef\a{\trim@spaces{ a \foo ! }}
@@ -125,6 +174,52 @@ a:  [\detokenize\expandafter{\a}] \\
 aa: [\detokenize\expandafter{\aa}] \\
 b:  [\detokenize\expandafter{\b}]
 \end{quote}
+Only removing preceding spaces:
+\begin{verbatim}
+\def\foo{bar}
+\edef\a{\trim@pre@space{ a \foo ! }}
+\edef\aa{\trim@pre@space@noexp{ aa \foo ! }}
+\def\b{ b \foo ! }
+\trim@pre@space@in\b
+a:  [\detokenize\expandafter{\a}] \\
+aa: [\detokenize\expandafter{\aa}] \\
+b:  [\detokenize\expandafter{\b}]
+\end{verbatim}
+which produces:
+\begin{quote}
+\makeatletter
+\def\foo{bar}
+\edef\a{\trim@pre@space{ a \foo ! }}
+\edef\aa{\trim@pre@space@noexp{ aa \foo ! }}
+\def\b{ b \foo ! }
+\trim@pre@space@in\b
+a:  [\detokenize\expandafter{\a}] \\
+aa: [\detokenize\expandafter{\aa}] \\
+b:  [\detokenize\expandafter{\b}]
+\end{quote}
+Only removing trailing spaces:
+\begin{verbatim}
+\def\foo{bar}
+\edef\a{\trim@post@space{ a \foo ! }}
+\edef\aa{\trim@post@space@noexp{ aa \foo ! }}
+\def\b{ b \foo ! }
+\trim@post@space@in\b
+a:  [\detokenize\expandafter{\a}] \\
+aa: [\detokenize\expandafter{\aa}] \\
+b:  [\detokenize\expandafter{\b}]
+\end{verbatim}
+which produces:
+\begin{quote}
+\makeatletter
+\def\foo{bar}
+\edef\a{\trim@post@space{ a \foo ! }}
+\edef\aa{\trim@post@space@noexp{ aa \foo ! }}
+\def\b{ b \foo ! }
+\trim@post@space@in\b
+a:  [\detokenize\expandafter{\a}] \\
+aa: [\detokenize\expandafter{\aa}] \\
+b:  [\detokenize\expandafter{\b}]
+\end{quote}
 
 
 \section{Package information}
@@ -134,7 +229,7 @@ While general feedback via email is welcomed, specific bugs or feature requests 
 
 \subsection{Licence}
 
-This package is freely modifiable and distributable under the terms and conditions of the \LaTeX\ Project Public License, version 1.3c or greater (your choice).\footnote{\url{http://www.latex-project.org/lppl/}} This work consists of the files |pstool.tex| and the derived files |pstool.sty|, |pstool.ins|, and |pstool.pdf|.
+This package is freely modifiable and distributable under the terms and conditions of the \LaTeX\ Project Public License,\footnote{Available at the \LaTeX\ Project website: \url{http://www.latex-project.org/lppl/}} version 1.3c or greater (your choice). This work consists of the source file \texttt{\jobname.tex} and the derived files \texttt{\jobname.sty}, \texttt{\jobname.ins}, and the documentation \texttt{\jobname.pdf}.
 
 This work is author-maintained by \textsc{Will Robertson}.
 
