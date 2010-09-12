@@ -1,5 +1,5 @@
 ------------------------
-THE IFXETEX PACKAGE v0.5
+THE IFXETEX PACKAGE v0.6
 
 This very simple package, for both Plain TeX and LaTeX,
 defines the \ifxetex boolean for testing whether XeTeX
@@ -14,4 +14,4 @@ compiles the documentation and generates this README.
 
 -------------------
 Will Robertson
-Copyright 2006-2009
+Copyright 2006-2010

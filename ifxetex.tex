@@ -1,7 +1,7 @@
 \RequirePackage{filecontents}
 \begin{filecontents*}{README.txt}
 ------------------------
-THE IFXETEX PACKAGE v0.5
+THE IFXETEX PACKAGE v0.6
 
 This very simple package, for both Plain TeX and LaTeX, 
 defines the \ifxetex boolean for testing whether XeTeX 
@@ -16,13 +16,13 @@ compiles the documentation and generates this README.
 
 -------------------
 Will Robertson
-Copyright 2006-2009
+Copyright 2006-2010
 \end{filecontents*}
 %%%%%%%%%1%%%%%%%%%2%%%%%%%%%3%%%%%%%%%4%%%%%%%%%5
 
 \begin{filecontents*}{ifxetex.sty}
 % \iffalse
-% Copyright 2006-2009 by Will Robertson <wspr81@gmail.com>
+% Copyright 2006-2010 by Will Robertson <wspr81@gmail.com>
 % 
 % Distributable under the LaTeX Project Public License,
 % version 1.3c or higher (your choice). The latest version of
@@ -31,17 +31,18 @@ Copyright 2006-2009
 % This work is maintained by Will Robertson.
 % \fi
 
-% Ensure loading a single time only
+% Ensure loading a single time only.
 \csname ifxetexloaded\endcsname
 \let\ifxetexloaded\endinput
 
-% Declare ourselves to \LaTeX
+% Declare ourselves to \LaTeX.
+\begingroup\expandafter\expandafter\expandafter\endgroup
 \expandafter\ifx\csname ProvidesPackage\endcsname\relax\else
   \ProvidesPackage{ifxetex}
-    [2009/01/23 v0.5 Provides ifxetex conditional]
+    [2010/09/12 v0.6 Provides ifxetex conditional]
 \fi
 
-% For \XeTeX-exclusive packages
+% For \XeTeX-exclusive packages.
 \def\RequireXeTeX{%
   \ifxetex\else
     \begingroup
@@ -62,8 +63,9 @@ Copyright 2006-2009
   \expandafter\endinput
 \fi
 
-% Create and set \cmd\ifxetex\ accordingly
+% Create and set \cmd\ifxetex\ accordingly.
 \newif\ifxetex
+\begingroup\expandafter\expandafter\expandafter\endgroup
 \expandafter\ifx\csname XeTeXrevision\endcsname\relax
   \xetexfalse
 \else
@@ -130,10 +132,6 @@ Copyright 2006-2009
 \usepackage{amsmath,listings}
 \lstset{basicstyle=\ttfamily,columns=fullflexible}
 
-\usepackage{array,xltxtra}
-\setmainfont{Georgia}
-\setsansfont[Scale=MatchLowercase]{Helvetica}
-\setmonofont[Scale=MatchLowercase]{Monaco}
 \frenchspacing
 
 \GetFileInfo{ifxetex.sty}
