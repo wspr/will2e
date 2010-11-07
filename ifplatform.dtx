@@ -73,10 +73,10 @@ This work consists of the file  ifplatform.dtx
 \CodelineIndex
 \RecordChanges
 %\OnlyDescription
-\usepackage{array,booktabs,color,enumitem,geometry,microtype}
+\usepackage{array,booktabs,color,enumitem,geometry,hologo,microtype}
 \usepackage[sc,osf]{mathpazo}
 \usepackage[colorlinks]{hyperref}
-\geometry{a5paper,left=3.05cm,right=2cm}
+\geometry{b5paper}
 \linespread{1.1}       % A bit more space between lines
 \frenchspacing         % Remove ugly extra space after punctuation
 \definecolor{niceblue}{rgb}{0.2,0.4,0.8}
@@ -138,7 +138,9 @@ This work consists of the file  ifplatform.dtx
 %
 % \cs{ifshellescape} is provided as a conditional to test whether
 % shell escape is active or not. (Note: new versions of pdf\/\TeX\ 
-% allow you to query shell escape with \verb|\ifnum\pdfshellescape>0|\,.)
+% allow you to query shell escape with \verb|\ifnum\pdfshellescape>0|\,,
+% and the \pkg{pdftexcmds} provides the wrapper \cs{pdf@shellescape}
+% which works with \hologo{XeTeX}, \hologo{pdfTeX}, and \hologo{LuaTeX}.)
 %
 % Also, the \cmd\platformname\ command is defined to expand to a 
 % macro that represents the operating system. Default definitions are 
@@ -218,22 +220,24 @@ This work consists of the file  ifplatform.dtx
 % appear to be neither.\end{quote}
 % then I'd dearly like to know how it happened. It should 
 % never occur, as far as I know.
+% (Update: in previous versions of this package, this message appeared when running under \hologo{LuaTeX}.)
 % \end{itemize}
 % Keep these points in mind and you'll never run into trouble.
 % I hope you won't run into trouble in any case.
 %
-% \StopEventually{\clearpage\PrintIndex}
+% \clearpage
+% \StopEventually{\PrintIndex}
 % \section{Implementation}
 %\iffalse
 %<*package>
 %\fi
 %    \begin{macrocode}
 \ProvidesPackage{ifplatform}
-  [2009/09/10 v0.3a  Testing for the operating system]
+  [2010/10/22 v0.4  Testing for the operating system]
 %    \end{macrocode}
 % Packages required: (thanks Heiko)
 %    \begin{macrocode}
-\RequirePackage{pdftexcmds,catchfile}
+\RequirePackage{pdftexcmds,catchfile,ifluatex}
 %    \end{macrocode}
 % Conditionals we provide:
 %    \begin{macrocode}
@@ -275,10 +279,12 @@ This work consists of the file  ifplatform.dtx
 \ifnum\pdf@shellescape=1\relax
   \shellescapetrue
 \else
+  \ifluatex\else
   \PackageWarningNoLine{ifplatform}{^^J \space\space\space
     shell escape is disabled,
     so I can only detect \@backslashchar ifwindows%
   }
+  \fi
 \fi
 %    \end{macrocode}
 % \end{macro}
@@ -291,7 +297,22 @@ This work consists of the file  ifplatform.dtx
   }%
 }
 %    \end{macrocode}
-% Test for the null files of Windows and *nix. In a normal situation, this is all we need to do:
+% Now the platform test. In Lua\TeX\ this is straightforward:
+%    \begin{macrocode}
+\ifluatex
+  \csname\directlua{
+      if os.type == "unix" then 
+        tex.sprint("@ip@nix@true")
+      elseif os.type == "windows" then
+        tex.sprint("windowstrue")
+      end
+    }\endcsname
+\else
+%    \end{macrocode}
+% Otherwise we need to 
+% test for the null files of Windows and *nix.
+% (This doesn't work at all in LuaTeX. Not sure why; haven't looked.)
+% In a normal situation, this is all we need to do:
 %    \begin{macrocode}
 \IfFileExists{nul:}{\@ip@nix@false}{\@ip@nix@true}
 \IfFileExists{/dev/null}{\windowsfalse}{\windowstrue}
@@ -363,6 +384,7 @@ This work consists of the file  ifplatform.dtx
       \ip@cantdecide
     \fi
   \fi
+\fi
 \fi
 %    \end{macrocode}
 % Needed below:
