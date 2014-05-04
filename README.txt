@@ -1,6 +1,5 @@
 ___________________
 The ENVIRON package
-v0.2
 
 Provides two things: a new way of defining
 environments that read their contents before
@@ -22,5 +21,5 @@ ______________
 Will Robertson
 wspr 81 [at] gmail [dot] com
 
-Copyright 2007-2008
+Copyright 2007-2014
 Distributed under the LaTeX Project Public License
