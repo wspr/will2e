@@ -253,10 +253,10 @@ This work consists of the file  ifplatform.dtx
   \shellescapetrue
 \else
   \ifluatex\else
-  \PackageWarningNoLine{ifplatform}{^^J \space\space\space
-    shell escape is disabled,
-    so I can only detect \@backslashchar ifwindows%
-  }
+    \PackageWarningNoLine{ifplatform}{^^J \space\space\space
+      shell escape is disabled,
+      so I can only detect \@backslashchar ifwindows%
+    }
   \fi
 \fi
 %    \end{macrocode}
@@ -282,13 +282,13 @@ This work consists of the file  ifplatform.dtx
     }\endcsname
 \else
 %    \end{macrocode}
-% Otherwise we need to 
+% Otherwise we need to
 % test for the null files of Windows and *nix.
 % (This doesn't work at all in LuaTeX. Not sure why; haven't looked.)
 % In a normal situation, this is all we need to do:
 %    \begin{macrocode}
-\IfFileExists{nul:}{\@ip@nix@false}{\@ip@nix@true}
-\IfFileExists{/dev/null}{\windowsfalse}{\windowstrue}
+  \IfFileExists{nul:}{\@ip@nix@false}{\@ip@nix@true}
+  \IfFileExists{/dev/null}{\windowsfalse}{\windowstrue}
 %    \end{macrocode}
 % \begin{table}
 % \centering
@@ -322,42 +322,42 @@ This work consists of the file  ifplatform.dtx
 % \end{itemize}
 % Here's the code for the above `last resort' test:
 %    \begin{macrocode}
-\edef\ip@windows@echo@test{echo \string# > "\ip@file"}
-\def\ip@backupplan{%
-  \IfFileExists{\ip@file}{%
-    \PackageWarningNoLine{ifplatform}{^^J \space\space\space
-      Please delete the file "\ip@file" and try again%
-    }%
-    \ip@cantdecide
-  }{%
-    \immediate\write18{\ip@windows@echo@test}%
+  \edef\ip@windows@echo@test{echo \string# > "\ip@file"}
+  \def\ip@backupplan{%
     \IfFileExists{\ip@file}{%
-      \immediate\write18{del "\ip@file"}%
-      \windowstrue
+      \PackageWarningNoLine{ifplatform}{^^J \space\space\space
+        Please delete the file "\ip@file" and try again%
+      }%
+      \ip@cantdecide
     }{%
-      \@ip@nix@true
+      \ShellEscape{\ip@windows@echo@test}%
+      \IfFileExists{\ip@file}{%
+        \ShellEscape{del "\ip@file"}%
+        \windowstrue
+      }{%
+        \@ip@nix@true
+      }%
     }%
-  }%
-}
+  }
 %    \end{macrocode}
 % Now we use some odd logic to deduce what's happening in the edge cases when things go wrong: (see table~\ref{tbl})
 %    \begin{macrocode}
-\ifwindows
-  \if@ip@nix@
-    \PackageWarningNoLine{ifplatform}{^^J \space\space\space
-      I can't tell if this is Windows or *nix;
-      you appear to be neither%
-    }
-  \fi
-\else
-  \if@ip@nix@\else
-    \ifshellescape
-      \ip@backupplan
-    \else
-      \ip@cantdecide
+  \ifwindows
+    \if@ip@nix@
+      \PackageWarningNoLine{ifplatform}{^^J \space\space\space
+        I can't tell if this is Windows or *nix;
+        you appear to be neither%
+      }
+    \fi
+  \else
+    \if@ip@nix@\else
+      \ifshellescape
+        \ip@backupplan
+      \else
+        \ip@cantdecide
+      \fi
     \fi
   \fi
-\fi
 \fi
 %    \end{macrocode}
 % Needed below:
