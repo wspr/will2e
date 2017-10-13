@@ -1,36 +1,7 @@
-%\iffalse 
+%\iffalse
 %<*internal>
 \iffalse
 %</internal>
-%<*readme>
-______________________
-The IFPLATFORM package
-v0.4        2010/10/22
-
-This package uses heuristics to establish whether
-the document is being processed on Windows or a *NIX
-platform (Mac OS X, Linux, etc.).
-
-Except if you're using LuaTeX where this information
-is already known. Otherwise, shell escape is required
-to differentiate different *NIX platforms.
-
-Booleans provided are:
- - ifwindows
- - iflinux
- - ifmacosx
- - ifcygwin
-
-Finally, the \platformname macro is also provided that
-expands to a string of the platform name.
-
-Will Robertson         wspr 81 at gmail dot com
-Johannes Große
-
-Copyright 2007-2010 Will Robertson
-Copyright 2007      Johannes Große
-Distributed under the LaTeX Project Public License
-%</readme>
 %<*internal>
 \fi
 \begingroup
@@ -64,7 +35,6 @@ This work consists of the file  ifplatform.dtx
 %<*internal>
 \generate{\file{\jobname.ins}{\from{\jobname.dtx}{batchfile}}}
 \nopreamble\nopostamble
-\generate{\file{README.txt}{\from{\jobname.dtx}{readme}}}
 \endgroup
 \immediate\write18{makeindex -s gind.ist -o \jobname.ind  \jobname.idx}
 \immediate\write18{makeindex -s gglo.ist -o \jobname.gls  \jobname.glo}
