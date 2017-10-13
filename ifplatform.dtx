@@ -25,7 +25,7 @@ This work is "author-maintained" by Will Robertson.
 
 This work consists of the file  ifplatform.dtx
           and the derived files ifplatform.pdf,
-                                ifplatform.sty, and 
+                                ifplatform.sty, and
                                 ifplatform.ins.
 \endpostamble
 \askforoverwritefalse
@@ -95,14 +95,14 @@ This work consists of the file  ifplatform.dtx
 % \item \cs{ifmacosx}
 % \item \cs{ifcygwin}
 % \end{itemize}
-% If you only wish to detect \cs{ifwindows}, then it does not matter how you 
-% load this package. Note then that use of (Linux \emph{or} \macosxname\ \emph{or} Cygwin) can 
+% If you only wish to detect \cs{ifwindows}, then it does not matter how you
+% load this package. Note then that use of (Linux \emph{or} \macosxname\ \emph{or} Cygwin) can
 % then be detected with \cs{ifwindows}\cs{else}.
-% 
+%
 % If you also wish to determine the difference between which Unix-variant
 % you are using (i.e., also detect \cs{iflinux}, \cs{ifmacosx}, and \cs{ifcygwin}) then shell
 % escape must be enabled.
-% This is achieved by using the |-shell-escape| command line option when 
+% This is achieved by using the |-shell-escape| command line option when
 % executing \LaTeX.
 %
 % If shell escape is not enabled, \cs{iflinux}, \cs{ifmacosx}, and \cs{ifcygwin} will all return \emph{false}. A warning will be printed in the console output to remind you in this case.
@@ -183,15 +183,15 @@ This work consists of the file  ifplatform.dtx
 %
 % \item When both null files are detected (i.e., things aren't right with one of the two tests above), \pkg{ifplatform} uses another test to try and sort itself out. For interest, the test is: `|echo # > \jobname.w18|'. Under Windows you should end up with a text file containing an octothorpe. On *nix, the |#| will be seen as a comment char and the test will be ignored and the file will not be written.
 %
-% This `last resort' test will fail if shell escape is not enabled, or if the file |\jobname.w18| 
+% This `last resort' test will fail if shell escape is not enabled, or if the file |\jobname.w18|
 % somehow already exists, or if the behaviour of |#| isn't as reliable as I think.
 %
 % \item Note that if you're running \TeX\ binaries from Cygwin on Windows, then your platform will \emph{not} be Windows. It will appear to be a *nix system, with platform name `Cygwin'.
 %
 % \item If you ever see the error
-% \begin{quote}\ttfamily I can't tell if this is Windows or *nix; you 
+% \begin{quote}\ttfamily I can't tell if this is Windows or *nix; you
 % appear to be neither.\end{quote}
-% then I'd dearly like to know how it happened. It should 
+% then I'd dearly like to know how it happened. It should
 % never occur, as far as I know.
 % (Update: in previous versions of this package, this message appeared when running under \hologo{LuaTeX}.)
 % \end{itemize}
@@ -274,7 +274,7 @@ This work consists of the file  ifplatform.dtx
 %    \begin{macrocode}
 \ifluatex
   \csname\directlua{
-      if os.type == "unix" then 
+      if os.type == "unix" then
         tex.sprint("@ip@nix@true")
       elseif os.type == "windows" then
         tex.sprint("windowstrue")
