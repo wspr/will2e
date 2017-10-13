@@ -371,16 +371,15 @@ This work consists of the file  ifplatform.dtx
 % Now test for the others; directly test for Linux and Mac\,OS\,X; but what about Solaris or FreeBSD or \dots\ ?
 % Define \cmd\unknownplatform\ as the output of |uname| rather than enumerate the possibilities.
 %    \begin{macrocode}
-\if@ip@nix@
-\ifshellescape
+\if@ip@nix@\ifshellescape
   \ifwindows\else
-    \immediate\write18{uname -s > "\ip@file"}
+    \ShellEscape{uname -s > "\ip@file"}
     \CatchFileDef\@tempa{\ip@file}{}
-    \immediate\write18{rm -- "\ip@file"}
+    \ShellEscape{rm -- "\ip@file"}
 %    \end{macrocode}
 % Kill a trailing space:
 %    \begin{macrocode}
-    \edef\@tempa{\expandafter\zap@space\@tempa\@empty}  
+    \edef\@tempa{\expandafter\zap@space\@tempa\@empty}
     \def\@tempb{Linux}
     \ifx\@tempa\@tempb
       \linuxtrue
