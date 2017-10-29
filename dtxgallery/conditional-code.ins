@@ -1,0 +1,7 @@
+\input docstrip.tex
+\keepsilent\askforoverwritefalse
+\nopreamble\nopostamble
+\generate{\file{A.txt}{\from{conditional-code.dtx}{A}}
+          \file{B.txt}{\from{conditional-code.dtx}{B}}
+          \file{AB.txt}{\from{conditional-code.dtx}{A,B}}}
+\endbatchfile
