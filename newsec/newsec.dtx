@@ -1,0 +1,523 @@
+% \iffalse 
+%<*internal>
+\begingroup
+%</internal>
+%<*batchfile>
+\input docstrip.tex
+\keepsilent
+\preamble
+
+  __________________________________
+  Copyright (C) 2007  Will Robertson
+
+  License information appended.
+
+
+\endpreamble
+\postamble
+
+Copyright (C) 2007 by Will Robertson <wspr81@gmail.com>
+
+Distributable under the LaTeX Project Public License,
+version 1.3c or higher (your choice). The latest version of
+this license is at: http://www.latex-project.org/lppl.txt
+
+This work is "maintained" (as per LPPL maintenance status) 
+by Will Robertson.
+
+This work consists of the file  newsec.dtx
+          and the derived files newsec.pdf,
+                                newsec.sty, and
+                                newsec.ins.
+
+\endpostamble
+\askforoverwritefalse
+\generate{\file{\jobname.sty}{\from{\jobname.dtx}{package}}}
+%</batchfile>
+%<batchfile>\endbatchfile
+%<*internal>
+\generate{\file{\jobname.ins}{\from{\jobname.dtx}{batchfile}}}
+\nopreamble\nopostamble
+\generate{\file{dtx-style.sty}{\from{\jobname.dtx}{dtx-style}}}
+\endgroup
+\immediate\write18{makeindex -s gind.ist -o \jobname.ind  \jobname.idx}
+\immediate\write18{makeindex -s gglo.ist -o \jobname.gls  \jobname.glo}
+\immediate\write18{mv README.txt README}
+%</internal>
+%
+%<*driver>
+\documentclass{ltxdoc}
+\EnableCrossrefs
+\CodelineIndex
+\RecordChanges
+%\OnlyDescription
+\usepackage{dtx-style}
+\begin{document}
+  \DocInput{\jobname.dtx}
+\end{document}
+%</driver>
+%
+%
+% \fi
+%
+% \GetFileInfo{\jobname.sty}
+% \CheckSum{0}
+% \makeatletter
+%
+% \title{Extending the interface for document divisions}
+% \author{Will Robertson}
+% \date{\filedate \qquad \fileversion}
+%
+% \maketitle
+%
+% \tableofcontents
+%
+% \section{Introduction}
+%
+% This package extends the sectioning interface in a few orthogonal ways. I'll start out by describing the various sorts of referencing markup that we will consider.
+%
+% \section{Absolute referencing}
+% \LaTeX's classical document division markup uses fixed names for fixed levels: \cmd\part, \cmd\chapter,\footnote{\cmd\chapter\ is not used in the \pkg{article} class.} \cmd\section, \cmd\subsection, \cmd\subsubsection, \cmd\paragraph, \cmd\subparagraph. This scheme has been suitable for over 15 years, so it obviously must be eminently useable. Extensions to this scheme add further levels such as \cmd\subsubsubsection. The advantage of this method is that the markup is self-documenting: no context is required to infer the meaning (\ie, level) of the section markup at a glance.
+% \begin{Verbatim}
+% \chapter{Beginning}
+% ...
+%   \section{Introduction}
+%   ...
+%     \subsection{Outline}
+%     ...
+%   \section{Body}
+%   ...
+% \end{Verbatim}
+%
+% \subsection{Fixed relative referencing}
+% The absolute style of section markup has the disadvantage of not being portable. If a whole document is written in term of \cmd\section\ and lower, converting it to a book chapter means editing the markup of each and every section. Not too hard with search'n'replace, but still a pain. Markup that is flexible to cope with this situation would be nice. There are two broad ways to go about this.
+% 
+% The first is to use relative section headings that anchor themselves to whatever came before:
+% \begin{Verbatim}
+% \chapter{Beginning}
+% ...
+%   \relsec[1]{Introduction}
+%   ...
+%     \relsec[2]{Outline}
+%     ...
+%   \relsec[1]{Body}
+%   ...
+% \end{Verbatim}
+% If the \cmd\chapter\ were changed to a \cmd\section, the levels of all subsequent subsections would change. But this style of markup is inconvenient for another reason: you need to keep track of the number you're up to. The mapping between `subsection' and `|+2|' isn't particularly memorable.
+%
+% (Furthermore, this style can be emulated by simply changing the meaning of the sectioning commands as necessary (\eg, |\let\chapter\section| |\let\section\subsection| \dots). I'll address this later.)
+%
+% \subsection{Floating relative referencing}
+%
+% Floating referencing reduces the need to keep track of index numbers between sections.
+% \begin{Verbatim}
+% \relsec{Beginning}
+% ...
+%   \downsec{Introduction}
+%   ...
+%     \downsec{Outline}
+%     ...
+%   \upsec{Body}
+%   ...
+% \end{Verbatim}
+% This referencing style still anchors the section level to the previous text. A possible disadvantage of this style is that the level of previous sections needs to be kept track of.
+%
+% \subsection{Scoped referencing}
+% \label{sec:scope}
+%
+% The other way (and my preference) to implement relative sectioning is to use scoping.
+% \note{This method is equivalent to using floating relative referencing and grouping every \cmd\downsec\ command.}
+% \begin{Verbatim}
+% \begin{sect}{Beginning}
+% ...
+%   \begin{sect}{Introduction}
+%   ...
+%     \begin{sect}{Outline}
+%     ...
+%     \end{sect}
+%   \end{sect}
+%   \begin{sect}{Body}
+%   ...
+%   \end{sect}
+% \end{sect}
+% \end{Verbatim}
+% While more verbose, this method is easy to use (nesting is a logical mapping to `subsection') and provides a couple of other small advantages (including better scoping for bookmarks and easy support for code folding in a text editor).
+%
+% \section{Prior art}
+%
+% Victor Eijkhout's \pkg{outliner} package allows quite sophisticated behaviour based on fixed relative referencing:\\
+% \url{http://tug.ctan.org/cgi-bin/ctanPackageInformation.py?id=outliner}
+%
+% The \pkg{alphanum} package provides a slew of section levels (changing the style at the same time) along with the commands to implement `floating relative referencing' with \cmd\toc\ to place a section heading, \cmd\sub\ to move down a level and place a section, and \cmd\levelup\ to move up a level (only---\cmd\toc\ is then required to place a new section; this behaviour does makes sense when you think about it\dots):\\
+% \url{http://tug.ctan.org/cgi-bin/ctanPackageInformation.py?id=alphanum}
+%
+% Heiko Oberdiek has produced sample code to implement `fixed relative referencing':\\
+% \url{http://groups.google.com/group/comp.text.tex/msg/4e51ade49b07dc09}
+%
+% David Reitter has produced sample code to shift the level of the standard \LaTeX\ commands (fixed relative referencing under a different guise):\\ 
+% \url{http://groups.google.com/group/comp.text.tex/msg/748068898c505a9e}
+%
+% \section{Scope of the package}
+%
+% Clearly there are many approaches for the sectioning problem and different people like different interfaces. The aim of this package is to experiment with as many styles as possible to allow people to section their documents in the manner they wish.
+%
+% \begin{enumerate}
+% \item \LaTeX's plain commands are augmented to be useable in environment form (well, they work by default already but not in starred form).
+%
+% \item Relative sectioning is implemented in both fixed and floating styles, as well as scoped sectioning.
+% \end{enumerate}
+% 
+% The extensions performed by this package based explicitly on top of \LaTeX's sectioning commands, and so no modifications are made to the way these work. However, it's probable in the future that the section routines will be modified by this package. A unified interface allowing a keyval syntax like this would be nice:
+% \begin{Verbatim}
+% \section[nonum,toc=Short title,label=sec:mysec]{Long title}
+% \end{Verbatim}
+% No guarantees yet, though. 
+%
+% I recommend the \pkg{titlesec} package or the \pkg{memoir} or \pkg{KOMA} classes to modify the style of the section headings.
+%
+% \section{Interfaces}
+%
+% \subsection{Absolute sectioning}
+%
+% Standard \LaTeX\ section commands can be used as usual; they can also be used in the environment form:
+% \begin{Verbatim}
+% \section<section options>
+% ...
+% \end{Verbatim}
+% or
+% \begin{Verbatim}
+% \begin{section}<section options>
+% ...
+% \end{section}
+% \end{Verbatim}
+% The starred form can be used to omit the section number. All subsequent commands introduced by this package can also be used in environment form.
+%
+% While the \cmd\part\ command is not dealt with (by default) in this package, it too is able to be used in a starred environment form if desired.
+%
+% \subsection{Floating relative sectioning}
+%
+% \DescribeMacro\relsec
+% The \cmd\relsec\meta{section options} macro starts a new section at the same level as the previous section.
+%
+% \DescribeMacro\upsec
+% \DescribeMacro\downsec
+% These macros starts a new section at one level up or down as the previous section. They take an optional argument to change the section level by more than one:\\
+% \cmd\upsec\oarg{$n$}\meta{section options}
+% \cmd\downsec\oarg{$n$}\meta{section options}
+%
+% \subsection{Fixed relative sectioning}
+%
+% \cmd\relsec\ also accepts an optional argument with slightly differently semantics. With \cmd\relsec\oarg{$n$}\meta{section options}, a new section is created at $n$ levels above the previous section (or below it for negative $n$), and this new section does not affect the level of subsequent calls to \cmd\relsec\ (or \cmd\upsec\ or \cmd\downsec, see next).
+%
+% (There will also be a method to remap absolute section levels.)
+% 
+% \subsection{Scoped sectioning}
+%
+% The \env{sect} environment behaves as shown in the example given in \secref{scope}.
+%
+% \StopEventually{}
+%
+% \clearpage
+% \part{\pkg{\jobname} implementation}
+%\iffalse
+%<*package>
+%\fi
+%
+% \section{Setup code}
+% This is the package.
+%
+%    \begin{macrocode}
+\ProvidesPackage{newsec}
+  [2007/09/02 v0.1 New sectioning interfaces]
+%    \end{macrocode}
+%
+% \changes{v0.1}{2007/09/02}{Initial version}
+% \PrintChanges
+%
+%    \begin{macrocode}
+\newif\if@ss@in@sect@
+%    \end{macrocode}
+%
+% \section{Absolute sectioning}
+%
+% I'm not doing too much here besides sort out starred section environments.
+%
+% \begin{macro}{\ss@starenv}
+% End these environments with \cs{par} so that weird things don't happen (you never know).
+%    \begin{macrocode}
+\newcommand\ss@starenv[1]{%
+  \newenvironment{#1*}{\@nameuse{#1}*}{\par}}
+%    \end{macrocode}
+% \end{macro}
+% Defining starred environments for section commands.
+%    \begin{macrocode}
+\ss@starenv{part}
+\ss@starenv{chapter}
+\ss@starenv{section}
+\ss@starenv{subsection}
+\ss@starenv{subsubsection}
+\ss@starenv{paragraph}
+\ss@starenv{subparagraph}
+\ss@starenv{upsec}
+\ss@starenv{downsec}
+\ss@starenv{relsec}
+%    \end{macrocode}
+%
+% \section{Relative and scoped sectioning} 
+%
+%    \begin{macrocode}
+\newcount\ss@sec
+\newcommand\upsec[1][1]{%
+  \global\advance\ss@sec-#1
+  \ss@rel}
+\newcommand\downsec[1][1]{%
+  \global\advance\ss@sec#1
+  \ss@rel}
+%    \end{macrocode}
+% 
+%    \begin{macrocode}
+\newcommand\relsec[1][0]{%
+  \xdef\ss@in{\noexpand\ss@sec\number\ss@sec\noexpand\ss@reset}
+  \global\advance\ss@sec #1
+  \ss@rel}
+%    \end{macrocode}
+% 
+%    \begin{macrocode}
+\def\ss@reset{\let\ss@in\@empty}
+\ss@reset
+%    \end{macrocode}
+% 
+%    \begin{macrocode}
+\newenvironment{sect}
+ {\if@ss@in@sect@
+    \advance\ss@sec\@ne
+  \else
+    \@ss@in@sect@true
+  \fi
+  \ss@rel}
+ {\par}
+\newenvironment{sect*}{\sect*}{\endsect}
+%    \end{macrocode}
+% 
+%    \begin{macrocode}
+\providecommand\g@let@co[2]{%
+  \expandafter\global\expandafter\let\csname #1\expandafter\endcsname#2}
+\providecommand\string@o{\expandafter\string}
+%    \end{macrocode}
+% 
+% \begin{macro}{\ss@levels}
+% This macro loops over its input to define the equivalent of
+% \begin{Verbatim}
+% \let\ss@chapter\chapter
+% \def\chapter{\ss@sec 0\ss@chapter}
+% \end{Verbatim}
+% for each one. The case statement is also created for the relative sections.
+%    \begin{macrocode}
+\def\ss@levels#1{%
+  \begingroup
+  \escapechar\m@ne
+  \@tempcnta\z@
+  \let\ss@case@levels\@empty
+  \@tfor\@ii:=#1\do{%
+    \g@let@co{ss@\string@o\@ii}{\@ii}%
+    \expandafter\xdef\@ii{%
+      \noexpand\ss@sec\number\@tempcnta
+      \expandafter\noexpand\csname ss@\string@o\@ii\endcsname}%
+    \expandafter\ss@addto@case\expandafter{\csname ss@\string@o\@ii\endcsname}%
+    \advance\@tempcnta\@ne}%
+  \endgroup}
+%    \end{macrocode}
+% \end{macro}
+%
+% Dealing with expansion. This is ugly because of the case statement, but it works for now.
+% I'll revise it at some stage to use csname+counters instead.
+%    \begin{macrocode}
+\def\ss@addto@case#1{%
+  \expandafter\ss@addto@case@i\expandafter{\ss@case@levels}{#1}}
+\def\ss@addto@case@i#1#2{%
+  \gdef\ss@case@levels{#1\ss@in\expandafter#2\or}}
+%    \end{macrocode}
+% 
+% Defining the section levels that \pkg{newsec} knows about.
+%    \begin{macrocode}
+\ifdefined\chapter
+  \ss@levels{\chapter\section\subsection\subsubsection\paragraph\subparagraph}%
+\else
+  \ss@levels{\section\subsection\subsubsection\paragraph\subparagraph}%
+\fi
+%    \end{macrocode}
+% 
+%    \begin{macrocode}
+\newcommand\ss@rel{%
+  \expandafter
+  \ifcase\expandafter\ss@sec
+    \ss@case@levels
+  \else
+    \PackageError{newsec}{No section level \number\ss@sec\space defined.}
+      {You'll need to define more section levels to go this high or deep.}%
+  \fi}
+%    \end{macrocode}
+% \section{Testing}
+% \def\TEST#1{\par\bigskip\noindent\texttt{\detokenize{#1}}: #1}
+% \TEST{\begin{sect}{Sect} test\end{sect}}
+% \TEST{\downsec{Down}}
+% \TEST{\relsec{Rel}}
+% \TEST{\begin{sect}{Sect} test\end{sect}}
+% \TEST{\relsec[2]{Rel +2}}
+% \TEST{\relsec[1]{Rel +1}}
+% \TEST{\relsec{Rel rel}}
+%
+%\iffalse
+%</package>
+%\fi
+%
+%
+%\iffalse
+%<*dtx-style>
+%    \begin{macrocode}
+\ProvidesPackage{dtx-style}
+
+\errorcontextlines=999
+
+\def\@dotsep{1000}
+\setcounter{tocdepth}{2}
+\setlength\columnseprule{0.1pt}
+\renewcommand\tableofcontents{\relax
+  \begin{multicols}{2}[\section*{\contentsname}]\small
+    \@starttoc{toc}\relax
+  \end{multicols}}
+
+\setcounter{IndexColumns}{2}
+\renewenvironment{theglossary}
+  {\small\list{}{}
+     \item\relax
+     \glossary@prologue\GlossaryParms 
+     \let\item\@idxitem \ignorespaces 
+     \def\pfill{\hspace*{\fill}}}
+  {\endlist}
+
+\usepackage[svgnames]{xcolor}
+\usepackage{amsmath,array,bm,booktabs,calc,enumitem,fancyvrb,graphicx,ifthen,longtable,refstyle,subfig,varioref}
+
+\usepackage{\jobname}
+
+\usepackage{hyperref}
+
+\usepackage{url}
+
+\usepackage[sc,osf]{mathpazo}
+
+\linespread{1.1}      % A bit more space between lines
+\frenchspacing         % Remove ugly extra space after punctuation
+  
+\definecolor{niceblue}{rgb}{0.2,0.4,0.8}
+\newenvironment{example}[1]
+  {\VerbatimEnvironment
+   \def\Options{#1}%
+   \begin{VerbatimOut}[gobble=2]{\examplefilename}}
+  {\end{VerbatimOut}\relax
+   \typesetexample}
+
+\fvset{formatcom=\color{niceblue},gobble=2}
+\DefineShortVerb{\|}
+
+\def\theCodelineNo{\textcolor{niceblue}{\sffamily\tiny\arabic{CodelineNo}}}
+
+\let\examplesize\normalsize
+\let\auxwidth\relax
+
+\newlength\examplewidth\newlength\verbatimwidth
+\newlength\exoutdent   \newlength\exverbgap
+\setlength\exverbgap{1em}
+\setlength\exoutdent{-0.15\textwidth}
+\newsavebox\verbatimbox
+\edef\examplefilename{\jobname.example}
+
+\newcommand\typesetexample{\relax
+   \smallskip
+   \noindent
+   \begin{minipage}{\linewidth}
+   \color{niceblue}
+   \hrulefill\par
+   \edef\@tempa{[gobble=0,fontsize=\noexpand\small,\Options]}%
+   \begin{lrbox}{\verbatimbox}\relax
+     \expandafter\BVerbatimInput\@tempa{\examplefilename}%
+   \end{lrbox}
+   \begin{list}{}{\setlength\itemindent{0pt}
+                  \setlength\leftmargin\exoutdent
+                  \setlength\rightmargin{0pt}}\item
+   \ifx\auxwidth\relax
+     \setlength\verbatimwidth{\wd\verbatimbox}%
+   \else
+     \setlength\verbatimwidth{\auxwidth}%
+   \fi
+   \begin{minipage}[c]{\textwidth-\exoutdent-\verbatimwidth-\exverbgap}
+     \catcode`\%=14\centering\linespread{1.6}\input\examplefilename\relax
+   \end{minipage}\hfill
+   \begin{minipage}[c]{\verbatimwidth}
+     \usebox\verbatimbox
+   \end{minipage}
+   \end{list}
+   \par\noindent\hrulefill
+   \end{minipage}\par
+   \smallskip\noindent}
+
+\newcommand*\setverbwidth[1]{\def\auxwidth{#1}}
+
+\newcommand*\name[1]{{#1}}
+\newcommand*\pkg[1]{\textsf{#1}}
+\newcommand*\env[1]{\texttt{#1}}
+\newcommand*\feat[1]{\texttt{#1}}
+\newcommand*\opt[1]{\texttt{#1}}
+
+\newcommand*\ltx[1]{%
+  \ifx3#1\relax
+    \textsc{ltx3}%
+  \else
+    \LaTeXe
+  \fi}
+
+\newcommand\note{\unskip\footnote}
+
+\let\latin\textit
+\def\eg{\latin{e.g.}}
+\def\Eg{\latin{E.g.}}
+\def\ie{\latin{i.e.}}
+\def\etc{\@ifnextchar.{\latin{etc}}{\latin{etc.}\@}}
+
+\def\STIX{\textsc{stix}}
+\def\MacOSX{Mac~OS~X}
+\def\ascii{\textsc{ascii}}
+\def\OMEGA{Omega}
+\def\CTAN{\textsc{ctan}}
+
+\newcounter{argument}
+\g@addto@macro\endmacro{\setcounter{argument}{0}}
+\newcommand*\darg[1]{%
+  \stepcounter{argument}%
+  {\ttfamily\char`\#\theargument~:~}#1\par\noindent\ignorespaces}
+\newcommand*\doarg[1]{%
+  \stepcounter{argument}%
+  {\ttfamily\makebox[0pt][r]{[}\char`\#\theargument]:~}#1\par\noindent\ignorespaces}
+
+\def\codeline{\par\hspace{\parindent}}% two \indents in total
+
+\newcommand\unichar[2]{\textsc{\MakeLowercase{u+#1: #2}}}
+
+\setlength\parindent{2em}
+
+%    \end{macrocode}
+%</dtx-style>
+%
+%\fi
+%
+% \typeout{*************************************************************}
+% \typeout{*}
+% \typeout{* To finish the installation you have to move the following}
+% \typeout{* file into a directory searched by XeTeX:}
+% \typeout{*}
+% \typeout{* \space\space\space newsec.sty}
+% \typeout{*}
+% \typeout{*************************************************************}
+%
+\endinput
