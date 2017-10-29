@@ -1,0 +1,1072 @@
+% \iffalse meta-comment
+%
+%!TEX encoding = UTF-8 Unicode
+%
+% Copyright 2005 by Will Robertson <wspr81@gmail.com>
+% 
+% Distributable under the LaTeX Project Public License,
+% version 1.3c or higher (your choice). The latest version of
+% this license is at: http://www.latex-project.org/lppl.txt
+%
+% This work is "maintained" (as per LPPL maintenance status) 
+% by Will Robertson.
+% 
+% This work consists of the file  unicode-math.dtx
+%           and the derived files unicode-math.sty and unicode-math.pdf.
+%
+%
+%<*internalbatchfile>
+\begingroup
+%</internalbatchfile>
+%<*batchfile>
+\input docstrip.tex
+\keepsilent
+\preamble
+
+  __________________________________
+  Copyright (C) 2006  Will Robertson
+
+  License information appended.
+
+
+\endpreamble
+\postamble
+
+Copyright Â© 2006 by Will Robertson <wspr81@gmail.com>
+
+Distributable under the LaTeX Project Public License,
+version 1.3c or higher (your choice). The latest version of
+this license is at: http://www.latex-project.org/lppl.txt
+
+This work is "maintained" (as per LPPL maintenance status) 
+by Will Robertson.
+
+This work consists of the file  \jobname.dtx
+          and the derived files \jobname.sty and \jobname.pdf.
+
+\endpostamble
+\askforoverwritefalse
+\generate{\file{\jobname.sty}{\from{\jobname.dtx}{package}}}
+\generate{\file{\jobname.ins}{\from{\jobname.dtx}{batchfile}}}
+\nopreamble\nopostamble
+\generate{\file{dtx-style.sty}{\from{\jobname.dtx}{dtx-style}}}
+%</batchfile>
+%<batchfile>\endbatchfile
+%<*internalbatchfile>
+\endgroup
+\immediate\write18{makeindex -s gind.ist -o \jobname.ind  \jobname.idx}
+\immediate\write18{makeindex -s gglo.ist -o \jobname.gls  \jobname.glo}
+%</internalbatchfile>
+%
+%<*driver>
+\documentclass{ltxdoc}
+\EnableCrossrefs
+\CodelineIndex
+\RecordChanges
+%\OnlyDescription
+\usepackage{dtx-style}
+\begin{document}
+  \DocInput{\jobname.dtx}
+\end{document}
+%</driver>
+%
+% \fi
+%
+% \GetFileInfo{\jobname.sty}
+% \CheckSum{0}
+% \makeatletter
+%
+% \title{Logical markup for lists}
+% \author{Will Robertson}
+% \date{\filedate \qquad \fileversion}
+%
+% \maketitle
+%
+% \tableofcontents
+%
+% \section{Introduction}
+%
+% One of \LaTeX's lauded features is its separation of form and
+% content. When writing a document, they say, you can just focus on
+% the words. Well, that may be well and good for prose, but
+% mathematicians have frequently been left out in the cold. A funny
+% situation, considering \LaTeX's main audience.
+%
+% Recently, the \pkg{cool} package appeared, marking the first
+% large-scale format-independent method of writing maths in
+% \LaTeX. Need to change the brackets surrounding the arguments of
+% \cmd\sin\ and \cmd\cos, for switch from $\tan^{-1}$ to $\arctan$
+% throughout an entire document? No worries.
+%
+% This sort of initiative will allow much easier transfer of
+% mathematics from such software packages as Mathematica and Matlab,
+% if it becomes popular enough.
+%
+% This package, \pkg{\jobname}, provides a method to write various
+% sorts of mathematical lists without having to worry about
+% formatting.  When I say `lists', I mean things like
+% $\vect{A}=\vect{A}{1,2,3}$; to me as a mechanical engineer, vectors
+% and matrices; but the package is more general than that, I hope.
+%
+% You can use \pkg{\jobname} straight away with
+% \codeline \cmd\usepackage\texttt{\char`\{\jobname\char`\}}\\
+% and
+% \codeline |$\vect{A}=\vect{A}{1,2,3}$|\\
+% to get the example in the previous paragraph, but \emph{please}
+% keep reading to learn its more useful features.
+%
+% \section{Functionality}\seclabel{vect}
+%
+% \subsection{Prototypical example}
+%
+% This example demonstrates why I wrote this package. The control
+% sequence \cmd\dist\ is defined as a vector with any number of elements.  The
+% vector and its elements can be subsequently referred to without
+% hard-coding any of the mathematical symbols used.
+% \begin{example}{}
+% \newvect\dist{D}[elem={r,\phi,\theta}]
+%
+% \[ \dist \qquad \dist{2}
+%          \qquad \dist{1,2,3} \]
+% \end{example}
+% \newvect\dist{D}[elem={r,\phi,\theta}]
+%
+% \noindent That's not all the package can do, however.
+%
+% \subsection{Elements and indexing}\seclabel{indexing}
+%
+% The vector commands created in this way are rather flexible. 
+% Each command created like \cmd\dist\ takes zero or one arguments, as shown
+% above. Unlike regular \LaTeX\ commands with optional arguments, these still
+% use curly braces, and an empty argument is equivalent (by default) to omitting the argument altogether:
+% \codeline |\dist{}|~$\to~\dist{}$\quad$\equiv$\quad|\dist|~$\to~\dist$ .
+%
+% If internal elements are not defined with the \opt{elem} option, then they follow directly from
+% the argument: 
+% \codeline |\dist{x}|~$\to~\dist{x}$ .
+%
+% The input may actually be `two-dimensional'; as well as being
+% comma-separated, elements (and sets of elements) may also be
+% separated by semi-colons:
+% \codeline |\dist{x;y;z}|~$\to~\dist{x;y;z}$ .
+%
+% Input elements can also be specified with semi-colon separators to match up with two-dimensional element indexing. There are two ways to reference these elements. The implicit indexing resets for each comma-separated sublist: 
+% \begin{example}{firstline=2}
+% \makeatother
+% \newvect\V{V}[elem={a,b,c;x,y,z}]
+% \[ \V=\V{1,2,3;4,5,6} \]
+% \[ \V=\V{4,5,6} \]
+% \[ \V=\V{1,2,3;@1,@2,@3} \]
+% \end{example}
+%
+% The implicit indexing syntax will work \emph{even if} \cmd\makeatletter\ is in effect.
+%
+% \begin{table}
+% \caption{How two-dimension lists elements are indexed.}
+% \tablabel{index-syntax}\centering
+% \begin{tabular}{@{}l@{\quad\{~}c@{~,~}c@{~,~}c@{~;~}c@{~,~}c@{~;~}c@{~\}}}
+% \toprule
+% List		& a & b & c & d & e & f\\
+% Direct index	&1 & 2 & 3 & 4 & 5 &6\\
+% Implicit index& @1 & @2 & @3 & @1 & @2 & @1\\
+% \bottomrule
+% \end{tabular}
+% \end{table}
+%
+% You can also set the default element list when defining a vector. In this case, an empty list argument is not equivalent to omitting one:
+% \begin{example}{}
+% \newvect\LL{L}[elem={i,j,k},index={1,2,3}]
+% $\LL$ \quad vs.\quad $\LL{}$ 
+%       \quad vs.\quad $\LL{1,2} $
+% \end{example}
+%
+% \subsection{Shorthand indices and empty elements}
+%
+% Furthermore, shorthands are defined to allow things that
+% \emph{aren't} elements into the list.
+% In this example, the semi-colon separation is shown with the
+% \cmd\dots\ shorthand `|:|' and the \cmd\cdot\ shorthand `|.|'.
+% \begin{example}{}
+% \newvect\mset{M}
+% \[ \mset=\mset{1,2,:,5;a,b,.,d} \]
+% \end{example}
+%
+%  Empty arguments are ignored (where `empty' $\equiv$ empty or whitespace). 
+% \begin{example}{}
+% \newvect\nset{N}
+% \[ \nset=\nset{1,,,3, ,5;;,2,;} \]
+% \end{example}
+%
+% Finally, some macros are defined in order to be able to typeset
+% unknown ranges ($1,2,\dots,N$) without hard-coding the symbol of the
+% maximum element. Similarly, it is also useful to denote a
+% `mid-range' element somewhere inside the ellipses. Note the equivalence in defining the mid and last elements and indexing them.
+% \begin{example}{}
+% \newvect\W{W}[elem={i,j,k,:,w}]
+% \newvect\Y{Y}[elem={i,j,k,:,p,:,y}]
+% \[ \W=\W{1,2,:,\LAST-1,\LAST} \]
+% \[ \Y=\Y{1,2,:,\MID,:,\LAST} \]
+% \end{example}
+%
+% \begin{example}{firstline=1}
+% \newvect\X{X}[%
+%   elem={i,j,k,:,m,:,w;ii,jj,kk,:,mm,:,ww}]
+% \[ \X{1,:,\MID,:,\LAST;@1,:,\MID,:,\LAST} \]
+% \end{example}
+%
+% \subsection{Delimiter formatting}
+%
+% The \opt{wrap} and \opt{wrapone} options are used to change the way
+% elements are displayed together. Each take two
+% arguments to define the opening and closing material. 
+%
+% By default, if there is more than one element, it is surrounded by
+% square brackets: |wrap=[]|. A single element is typeset naked:
+% |wrapone={}{}|.  If \opt{wrapone} is called with no `|=|' argument, it
+% takes the same value as \opt{wrap}.
+%
+% In this example, the brackets around the sets are changed to
+% parentheses, including single elements. The behaviour for a single
+% element is then changed to use angle brackets:
+% \begin{example}{firstline=2}
+% \parskip1ex
+% \newvect\Q{Q}
+% $\Q + \Q{1} + \Q{a,b}$
+%
+% \newvect\QQ{Q}[wrap=(),wrapone]
+% $\QQ + \QQ{1} + \QQ{a,b}$
+%
+% \newvect\QQQ{Q}[wrapone={\left<}{\right>}]
+% $\QQQ + \QQQ{1} + \QQQ{a,b}$
+% \end{example}
+%
+% Rather than defining the open/close material around a set of
+% elements, it can often be necessary to define a macro that defines
+% the formatting of the set. The \opt{wrapcmd} and \opt{wraponecmd}
+% options are used for this purpose, and take as argument a single
+% macro that accepts one argument.
+%
+% The form of these options make them more convenient when specifying
+% more complex formatting. These commands must take \emph{two} arguments:
+% \marg{main symbol}\marg{elements list}.
+% \begin{example}{firstline=2}
+% \parskip1ex
+% \newvect\R{R}
+% $\R + \R{1} + \R{a,b}$
+%
+% \newcommand\mywrap[2]{\langle{\color{red}#2}\rangle_{#1}}
+% \newvect\RR{R}[wrapcmd=\mywrap,wraponecmd]
+% $\RR + \RR{1} + \RR{a,b}$
+%
+% \newcommand\mywrapone[2]{\{{\color{green}#2}\}^{#1}}
+% \newvect\RRR{R}[
+%   wrapcmd=\mywrap,
+%   wraponecmd=\mywrapone]
+% $\RRR + \RRR{1} + \RRR{a,b}$
+% \end{example}
+%
+%
+% \section{Generalisation}
+%
+% In the previous section, all examples used the \cmd\newvect\ command to create relatively similar commands. There was a brief mention of |\vect|, a non-specific method of typesetting things in the same style but without the advantage of named macros.
+%
+% But this package isn't called \pkg{newvect}, it's \pkg{mlist}. The previous section was only a specific example of the things of which this package is capable. 
+%
+% \DescribeMacro{\newmlist} \cmd\newvect\ is an example of a macro created with \cmd\newmlist, which can be considered something like an \emph{instance generator} for the types of lists we're dealing with.
+%
+% \cmd\newmlist\cs{<list>}\marg{list options} creates macros \cs{<list>} and \cs{new<list>} that are analogous to \cmd\vect\ and \cmd\newvect\ seen in \secref{vect}. \meta{list options} can contain any of those seen so far in previous \cmd\newvect\ macros, plus more to be introduced soon.
+%
+% In the examples to follow, \cmd\vect\ and \cmd\newvect\ are often still used to demonstrate various options, overriding the defaults.
+%
+% \subsection{Head and element formatting}
+%
+% The \opt{headcmd} and \opt{elemcmd} options are used to alter the
+% formatting of the vector symbol and its elements. They are passed
+% \emph{macros} that take, respectively, one and two arguments that
+% define the formatting.
+%
+% For \cmd\vect, |headcmd=\mathbf| and |elemcmd=\subscriptXY|, where
+% \codeline \cmd\subscriptXY |{#1}{#2}|~$\to$~|#1_{#2}|.\\
+% \cmd \superscriptXY, the
+% analogous command for creating superscripts, is defined by the
+% package in case you need it.
+%
+% In this example, the vector symbol is formatted with an arrow accent,
+% and the elements are exactly as specified in \opt{elem}.
+% \begin{example}{}
+% \newvect\A{A}[%
+%   headcmd=\vec,
+%   elemcmd=\onlyelem,
+%   elem={a,b,c,d}]
+%
+% \[\A \qquad \A{1,2,3,4} \qquad \A{3} \]
+% \end{example}
+%
+% The \cmd\onlyelem\ command (with its friend, \cmd\onlyhead) is defined as follows:
+% \codeline\cmd\onlyelem|{#1}{#2}|~$\to$~|#2|
+% \codeline\cmd\onlyhead|{#1}{#2}|~$\to$~|#1|
+%
+% In \secref{indexing}, we saw that list indexing doesn't \emph{have} to be numerical.
+% In this example, the use of \cmd\@alph\ allows alphabetic subscripts but non-numeric indices will produce errors:
+% \begin{example}{}
+% \newcommand\subalph[2]{#1_{\@alph{#2}}}
+% \makeatother
+% \newvect\A{A}[%
+%   elemcmd=\subalph]
+%
+% \[ \A{1,2,3,4} \qquad \A{3} \]
+% \end{example}
+%
+%
+% \subsubsection{An example of functions}
+%
+% The examples so far have focused on vectors of various forms.
+% The \pkg{\jobname} also defines some other data structures that I find convenient. Here is a command to typeset functions with arguments: 
+% \begin{example}{}
+% \newcommand\wrapfunc[2]{%
+%   #1\left(#2\right)}
+% \newmlist\func[
+%   headcmd=\onlyhead,
+%   elemcmd=\onlyelem,
+%   wrapcmd=\wrapfunc,
+%   wraponecmd]
+%
+% \newfunc\F{F}[
+%   elem={x_0;x,t},index={1;2,3}]
+% $ \F $ 
+% \end{example}
+%
+% Defining commands in this way makes it very easy at a later stage to adjust the typesetting of the functions in your text. For example, Mathematica users may wish to typeset their arguments with square brackets, but this will be fairly unusual for a regular audience.
+%
+% \subsubsection{An example of matrices}
+% 
+% \begin{example}{}
+% \newmlist\matrx[
+%   sep=&,sepsep=\\,
+%   elemcmd=\onlyelem,
+%   wrap={\begin{bmatrix}}
+%         {\end{bmatrix}}]
+%
+% \newmatrx\qq{Q}
+% \[ \qq = \qq{1,2,3;4,5,6;7,8,9} \]
+% \end{example}
+% (For complex and obscure reasons, it is important to `hide' 
+%  the |&| in the |sep| argument when using \pkg{amsmath}.)
+%
+% \newmlist\matrx[
+%   sep=&,sepsep=\\,
+%   elemcmd=\onlyelem,
+%   wrap={\begin{bmatrix}}
+%         {\end{bmatrix}}]
+%
+% Continuing the example, here's a practical example that I think demonstrates
+% the advantages of using this package:
+% \begin{example}{}
+% \newmatrx\state{x}
+%   [elem={x_1;\dot x_1},index={1;2}]
+% \newmatrx\dyn{A}
+%   [elem={1,0;-\omega^2,2\omega\zeta},
+%    index={1,2;3,4}]
+% \[ \dot{\state{}} = \dyn{}\state{} \]
+% \[ \state{} = \state \]
+% \[ \dyn{} = \dyn \]
+% \[ \frac\partial{\partial t} 
+%     \state{} = \dyn{} \state{} \]
+% \end{example}
+%
+%
+% \section{TODO}
+% \begin{itemize}
+% \item generalise escaped cmds like |\dots|, etc. in a |\noelemlist|
+% \item changing features of `newvect' constructions
+% \item auto print of entire lists as defined by |elem|: `|index=ALL|' or something
+% \item coercing one type of list into another 
+%       (and retrieving non-wrapped lists as a special case)
+% \item depending on the next one, use suffix to get rid of ugly code
+% \item use ltx3!
+% \end{itemize}
+%
+% \section{Prior art}
+%
+% With \CTAN\ getting so big these days, it's quite necessary to
+% undertake extensive literature reviews before writing your own
+% package. I've been burned before, spending a couple of days playing
+% with ideas and then realising that someone's already done what I wanted.
+% So this time I looked before I jumped.
+%
+% \paragraph{easyvector}
+% The most similar package to this one (that I could find) is
+% \pkg{easyvector}.
+% \note{\url|http://tug.ctan.org/cgi-bin/ctanPackageInformation.py?id=easyvector|}
+% Superficially, there are a number of similarities, but it didn't
+% quite do what I wanted. Here's an example demonstrating the creation
+% of new vector macros:
+% \begin{example}{}
+% \newvector[Z,\mathbf{Z}]{X}
+% \[ \X = (\X[i,j;k]) \qquad 
+%    \X[1,2,3] \neq \X![1,2,3] \]
+% \end{example}
+%
+% Note that each macro refers only to a single vector element. This is a package
+% to simplify input (and abstract formatting) of vectors with complex notation.
+% \pkg{easyvector} also allows you to customise the form of the
+% vectors it produces, but this is rather inflexible without a good
+% deal of work.
+% \begin{example}{}
+% \def\myindex[#1,#2,#3]{_{#1_{#2}}^{#3}}
+% \newcustomvector[\mathtt{b},\mathbf{b}]{bb}\myindex
+% \[ \bb \qquad \bb[1,2,3] \qquad \bb[3,2,1] \]
+% \end{example}
+%
+% Note also that the main symbol (`$\mathtt{b}$', here) is not
+% available even in this case, so prepended sub-/superscripts are not possible.
+%
+% Has the interesting option to reference matrix row/column sub-vectors: (careful to ensure \cmd\makeatother\ manually)
+% \makeatother
+% \begin{example}{}
+% \newvector(W)[wvec]
+% \[ \wvec = (\wvec[@,j]) \qquad \wvec[a,b;@] \]
+% \end{example}
+% \makeatletter
+%
+% I like this idea of `shorthand' symbols.
+%
+% \paragraph{\pkg{vector}}
+% The package \pkg{vector} 
+%  \note{\url|http://tug.ctan.org/cgi-bin/ctanPackageInformation.py?id=vector|}
+% provides a few commands for setting vector and matrix symbols, shown in \tabref{vectorpkg}.
+% Just a few basic macros to simplify input, but not really to separate form and content.
+%  
+% \pkg{vector} provided the inspiration to add |\dots| ideas to this package. It also highlights that
+% something specific should be done with accents in general and provide a content macro for unit vectors.
+%
+% \begin{table}
+% \centering
+% \begin{tabular}{@{}ccccccc@{}}
+% \toprule
+% |\bvec| & |\buvec| & |\svec| & |\suvec| & |\uvec| & |\uuvec| & |\irvec| \\
+% \bvec{a} & \buvec{a} & \svec{a} & \suvec{a} & \uvec{a} & \uuvec{a} & \irvec{a} \\
+% \bottomrule
+% \end{tabular}
+% \caption{Commands defined by the \pkg{vector} package. 
+%   \cmd\uvec\ and \cmd\uuvec\ can be configured to produce an under-tilde instead.
+%   \cmd\irvec\ takes an optional argument for `$n$' and can be configured (globally) to begin from a different index.}
+%  \label{tab:vectorpkg}
+% \end{table}
+%
+% \paragraph{hhtensor}
+% The hhtensor package 
+%  \note{\url|http://tug.ctan.org/cgi-bin/ctanPackageInformation.py?id=hhtensor|}
+% provides a few content-based macros with global options to specify their appearance.
+% \cmd\vec, \cmd\matr\, and \cmd\tens\ are provided for vectors, matrices, and tensors, with
+% mathematical symbols \cmd\dcdot\ to denote double scalar products, and \cmd\trans\ for printing
+% an upright superscript `T' to denote the transpose operator.
+% 
+% This package was the inspiration for pre-defined macros for specific meanings.
+% While I approve of defining the transpose symbol, it's outside the scope of \pkg\jobname.
+%
+% \paragraph{Other tensor packages}
+% There are three main packages for typesetting tensors. 
+% These start to stray from the interest of \pkg\jobname.
+% The relevant packages are 
+% \pkg{tensind},
+%    \note{\url|http://tug.ctan.org/cgi-bin/ctanPackageInformation.py?id=tensind|}
+% \pkg{tensor},
+%    \note{\url|http://tug.ctan.org/cgi-bin/ctanPackageInformation.py?id=tensor|}
+% and \pkg{mattens}.
+%    \note{\url|http://tug.ctan.org/cgi-bin/ctanPackageInformation.py?id=mattens|}
+% Each focuses on typesetting various forms of tensor notation, which differ from what
+% this package is trying to do. Integration between this package and those three above are possible,
+% but has not yet been investigated.
+%
+% \StopEventually{}
+%
+% \clearpage
+% \part{\pkg{\jobname} implementation}
+%\iffalse
+%<*package>
+%\fi
+% This is the package.
+%
+%    \begin{macrocode}
+\ProvidesPackage{mlist}
+  [30/04/2007 v0.3 Typesetting maths lists]
+%    \end{macrocode}
+%
+% \PrintChanges
+% \changes{v0.1}{27/04/2007}{Code tidy up; first decent version.}
+% \changes{v0.2}{30/04/2007}{More documentation; list indexing not finalised.}
+% \changes{v0.3}{2007/05/02}{List indexing decided; empty arguments ignored.}
+%
+% \subsection{User shorthands}
+% Put this somewhere better:
+%    \begin{macrocode}
+\let\onlyhead\@firstoftwo
+\let\onlyelem\@secondoftwo
+%    \end{macrocode}
+%
+%
+% \subsection{Packages}
+%    \begin{macrocode}
+\RequirePackage{xkeyval,ifmtarg}
+%    \end{macrocode}
+% \subsection{Code we need}
+% Another temporary conditional:
+%    \begin{macrocode}
+\unless\ifdefined\if@tempswb\newif\if@tempswb\fi
+\unless\ifdefined\if@tempswc\newif\if@tempswc\fi
+\unless\ifdefined\@tempcntc\newcount\@tempcntc\fi
+\def\@gobblenil#1\@nil{}
+%    \end{macrocode}
+% Some specific things:
+%    \begin{macrocode}
+%    \end{macrocode}
+% Semi-colon delimited iteration: (from ltx2e)
+%    \begin{macrocode}
+\long\def\@sfor#1:=#2\do#3{%
+ \expandafter\def\expandafter\@sfortmp\expandafter{#2}%
+ \ifx\@sfortmp\@empty \else
+ \expandafter\@sforloop#2;\@nil;\@nil\@@#1{#3}\fi}
+\long\def\@sforloop#1;#2;#3\@@#4#5{\def#4{#1}\ifx #4\@nnil \else
+ #5\def#4{#2}\ifx #4\@nnil \else#5\@siforloop #3\@@#4{#5}\fi\fi}
+\long\def\@siforloop#1;#2\@@#3#4{\def#3{#1}\ifx #3\@nnil
+ \expandafter\@fornoop \else
+ #4\relax\expandafter\@siforloop\fi#2\@@#3{#4}}
+%    \end{macrocode}
+% Shorthand to execute a c.s. if it exists otherwise something else:
+%    \begin{macrocode}
+\newcommand\ifcs@else[2]{%
+  \ifcsname#1\endcsname
+    \expandafter\@firstoftwo
+  \else
+    \expandafter\@secondoftwo
+  \fi{\csname#1\endcsname}{#2}}
+\newcommand\add@ifcs@else[2]{%
+  \ifcsname#1\endcsname
+    \expandafter\@firstoftwo
+  \else
+    \expandafter\@secondoftwo
+  \fi{\expandafter\mlist@add\expandafter{\expandafter{\csname#1\endcsname}}}
+     {\expandafter\mlist@add\expandafter{\expandafter{#2}}}}
+%    \end{macrocode}
+%
+% \begin{macro}{\mlist@add}
+% Used in the above.
+%    \begin{macrocode}
+\newcommand\mlist@add[1]{%
+  \expandafter\gdef
+  \expandafter\mlist@list@elems
+  \expandafter{\mlist@list@elems#1}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\mlist@count}
+%    \begin{macrocode}
+\def\mlist@count{%
+  \expandafter\mlist@add
+  \expandafter{%
+  \expandafter\@tempcnta\the\@tempcnta\relax}}
+%    \end{macrocode}
+% \end{macro}
+%
+% ltx3-inspired syntax. \cmd\def@c\ still needs arguments.
+%    \begin{macrocode}
+\providecommand\let@cc[2]{%
+  \expandafter\let\csname#1\expandafter\endcsname\csname#2\endcsname}
+\providecommand\def@c[1]{%
+  \expandafter\def\csname#1\endcsname}
+\providecommand\newdef@c[1]{%
+  \expandafter\newcommand\csname#1\endcsname}
+%    \end{macrocode}
+% Shorthand to test for optional brace arguments:
+%    \begin{macrocode}
+\newcommand\@ifnextbrace{\expandafter\@ifnextchar\bgroup}
+%    \end{macrocode}
+% Shorthand string definitions for ifx tests:
+%    \begin{macrocode}
+\def\mlist@colon{:}
+\def\mlist@period{.}
+%    \end{macrocode}
+% This is for checking for |@| with an `other' catcode:
+%    \begin{macrocode}
+\makeatother
+\expandafter\def\csname mlist@ampersat\endcsname{@}
+\makeatletter
+%    \end{macrocode}
+% (`Ampersat' is a name for |@| I find amusing. It doesn't seem to have definitive name.)
+%
+% \section{keyval options}
+%
+%    \begin{macrocode}
+\define@cmdkeys[mlist]{sym}[mlist@]{%
+  symbol,index,sep,sepsep,elem,
+  elemcmd,headcmd,dot,dots} 
+%    \end{macrocode}
+% 
+%    \begin{macrocode}
+\define@key[mlist]{sym}{wrap}{%
+  \def\mlist@wrap##1##2{\@firstoftwo#1##2\@secondoftwo#1}}
+\define@key[mlist]{sym}{wrapcmd}{\let\mlist@wrap#1}
+\define@key[mlist]{sym}{wrapone}[]{%
+  \ifx\relax#1\relax
+    \let\mlist@wrapone\mlist@wrap
+  \else
+    \def\mlist@wrapone##1##2{\@firstoftwo#1##2\@secondoftwo#1}%
+  \fi}
+\define@key[mlist]{sym}{wraponecmd}[]{%
+  \ifx\relax#1\relax
+    \let\mlist@wrapone\mlist@wrap
+  \else
+    \let\mlist@wrapone#1%
+  \fi}
+%    \end{macrocode}
+% 
+%    \begin{macrocode}
+\define@key[mlist]{sym}{elem}{%
+%    \end{macrocode}
+% \begin{itemize}
+% \item[\cmd\@tempcnta] Number of semicolon list.
+% \item[\cmd\@tempcntb] Element number of this comma list.
+% \item[\cmd\@tempcntc] Combined element number.
+% \end{itemize}
+%    \begin{macrocode}
+  \@tempcnta\z@
+  \@tempcntb\z@
+  \@tempcntc\z@
+%    \end{macrocode}
+% Iterate over every semicolon list.
+% Set \cs{if@tempswa} true only after every |:| element, for each semicolon list.
+% Maybe we should use a counter for this, instead?
+%    \begin{macrocode}
+  \@sfor\@jj:=#1\do{%
+    \advance\@tempcnta\@ne
+    \@tempcntb\z@
+    \@tempswafalse
+%    \end{macrocode}
+% Iterate over every comma list:
+%    \begin{macrocode}
+    \@for\@ii:=\@jj\do{%
+%    \end{macrocode}
+% If the element is |:|, set the switch for the next comma-iteration.
+%    \begin{macrocode}
+      \ifx\@ii\mlist@colon
+        \@tempswatrue
+      \else
+%    \end{macrocode}
+% If the previous element was |:|, save the `last' element: (TODO: add error check for too many |:|).  If we've already defined the `last' element and run into |:| again, that means we actually wanted `mid' so make the redefinition. This should only happen once anyway so it can occur every time \cs{if@tempswa} is true.
+%    \begin{macrocode}
+        \if@tempswa
+          \let@cc{mlist@\the\@tempcnta @mid}{mlist@\the\@tempcnta @last}%
+          \def\@tempa{\def@c{mlist@\the\@tempcnta @last}}%
+          \expandafter\@tempa\expandafter{\@ii}%
+        \else        
+%    \end{macrocode}
+% Otherwise, bump up the counters and define the elements:
+%    \begin{macrocode}
+          \advance\@tempcntb\@ne
+          \advance\@tempcntc\@ne
+          \def\@tempa{\def@c{mlist@\the\@tempcnta @\the\@tempcntb}}%
+          \expandafter\@tempa\expandafter{\@ii}%
+          \def\@tempa{\def@c{mlist@@\the\@tempcntc}}%
+          \expandafter\@tempa\expandafter{\@ii}%
+        \fi
+      \fi}%
+%    \end{macrocode}
+% If swa is true, we are in an element after a |:|, so turn it off.
+% TODO: I guess no more regular elements can turn up anyway so this is probably overkill!
+%    \begin{macrocode}
+    \if@tempswa\@tempswafalse\fi}}
+%    \end{macrocode}
+% \changes{v0.3}{2007/05/09}{Tidied up the \cmd\MID/\cmd\LAST\ element stuff a bit.}
+%    \begin{macrocode}
+\define@key[mlist]{sym}{shorthand}{%
+  \mlist@def@shorthand#1%
+  \def@c{mlist@@\@tempa\expandafter}\expandafter{\@tempb}}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\def\mlist@def@shorthand#1#{%
+  \def\@tempa{\string#1}
+  \def\@tempb}
+%    \end{macrocode}
+%
+% \section{List creation}
+%
+% This is the idea behind the user level macros of the package:
+% \begin{verbatim}
+% \newmlist\vect[all-vect-opts]
+% \vect{v}[ind] == \@mlist{symbol={v},all-vect-opts,index={ind}}
+%
+% \newvect\vv{v}[this-v-options]
+% \vv[ind] == \@mlist{symbol={v},all-vect-opts,this-v-options,index={ind}}
+% \end{verbatim}
+%
+% \begin{macro}{\newmlist}
+%   Things get pretty hairy because I have to do all the optional
+%   argument processing manually. \ltx3 will make things much easier.
+%    \begin{macrocode}
+\newcommand\newmlist[1]{%
+  \@ifnextchar[%]
+    {\@newmlist@opt{#1}}
+    {\@newmlist@noopt{#1}}}
+\def\@newmlist@opt#1[#2]{\@newmlist{#1}{#2}}
+\def\@newmlist@noopt#1{\@newmlist{#1}{}}
+%    \end{macrocode}
+% Processing |#1| = thislist-cmd, |#2| = all-thislist-opts
+%    \begin{macrocode}
+\newcommand\@newmlist[2]{%
+  \newcommand#1[1]{%
+    \@ifnextbrace
+      {\csname\string#1@opt\endcsname{##1}}
+      {\csname\string#1@noopt\endcsname{##1}}}%
+  \def@c{\string#1@opt}##1##2{%
+    \csname\string#1\endcsname{##1}{##2}}%
+  \def@c{\string#1@noopt}##1{%
+    \csname\string#1\endcsname{##1}{}}%
+  \newdef@c{\string#1}[2]{\@mlist{symbol=##1,#2,index={##2}}}%
+  \newdef@c{new\expandafter\@gobble\string#1}[2]{%
+    \@ifnextchar[%]
+      {\csname @new\string#1@opt\endcsname{##1}{##2}}
+      {\csname @new\string#1@noopt\endcsname{##1}{##2}}}%
+  \def@c{@new\string#1@opt}##1##2[##3]{%
+    \csname @new\string#1\endcsname{##1}{##2}{##3}}%
+  \def@c{@new\string#1@noopt}##1##2{%
+    \csname @new\string#1\endcsname{##1}{##2}{}}%
+%    \end{macrocode}
+% Processing |##1| = this-sym-cmd, |##2| = symbol, |##3| = this-sym-options
+%    \begin{macrocode}
+  \expandafter\newcommand\csname @new\string#1\endcsname[3]{%
+    \newcommand##1{%
+      \@ifnextbrace
+        {\csname @new\string##1@opt\endcsname}
+        {\@mlist{symbol=##2,#2,##3}}%
+    }%
+  \def@c{@new\string##1@opt}####1{%
+    \@mlist{symbol=##2,#2,##3,index={####1}}}}%
+  }
+%    \end{macrocode}
+% \end{macro}
+% 
+% \begin{example}{firstline=2}
+% \raggedright\ttfamily\slshape
+% \def\@mlist#1{MLIST: #1\par}
+% \newmlist\testlist[opt1=one]
+% \newtestlist\testone{S}
+% \testone
+% \testone{1,2,3}
+% \newtestlist\testtwo{T}[opt2=two]
+% \testtwo
+% \testtwo{1,2,3}
+% \end{example}
+%
+% \subsection{Indexing}
+%
+% How do I want indexing to work?
+% Originally, the input was a one dimensional list with the output directly following the indexing:
+% \begin{verbatim}
+% A = {a1,a2,a3,a4}
+% A{1,2;3,4} == {a1,a2;a3,a4}
+% \end{verbatim}
+% I tried a couple of other things, but back to this idea plus the implicit indexing.
+%
+%    \begin{macrocode}
+\newcommand\@mlist[1]{%
+  \begingroup
+  \let\mlist@list@elems\@empty
+  \@tempcnta\@ne
+  \mlist@count
+%    \end{macrocode}
+% The \cmd\setkeys\ code to extract our mlist is flanked by some scary code to protect ourselves inside things like |{array}| environments. Thanks Morten.
+%    \begin{macrocode}
+  \iffalse{\fi\ifnum0=`}\fi
+  \setkeys[mlist]{sym}{#1}%
+  \ifnum0=`{\fi\iffalse}\fi
+%    \end{macrocode}
+% Only inside an index:
+%    \begin{macrocode}
+  \def\MID{\csname mlist@\the\@tempcnta @mid\endcsname}%
+  \def\LAST{\csname mlist@\the\@tempcnta @last\endcsname}%
+%    \end{macrocode}
+% If there are no optional arguments, typeset the plain vector symbol.
+%    \begin{macrocode}
+  \ifx\@empty\mlist@index\relax
+    \def\mlist@list{\mlist@headcmd{\mlist@symbol}}%
+  \else
+%    \end{macrocode}
+% Need an |AND| boolean to test if there is a \emph{single} element in the optional list:
+%    \begin{macrocode}
+    \@tempswafalse
+    \expandafter\in@\expandafter,\expandafter{\mlist@index}%
+    \unless\ifin@
+      \expandafter\in@\expandafter;\expandafter{\mlist@index}%
+      \unless\ifin@
+        \@tempswatrue
+      \fi
+    \fi
+%    \end{macrocode}
+% If we do only have a single element:        
+%    \begin{macrocode}
+    \if@tempswa
+      \def\mlist@list{%
+        \mlist@wrapone{\mlist@symbol}{%
+          \mlist@elemcmd{\mlist@symbol}{%
+            \ifcs@else{mlist@@\mlist@index}{\mlist@index}}}}%
+    \else
+%    \end{macrocode}
+% Otherwise, iterate over every semicolon-separated list:
+%    \begin{macrocode}
+        \@tempcnta\z@
+        \@tempswafalse
+        \@sfor\@jj:=\mlist@index\do{%
+          \global\let\@jj\@jj% in case of array use
+          \global\advance\@tempcnta\@ne
+          \mlist@count
+          \expandafter\@ifmtarg\expandafter{\@jj}{}% ignore if empty
+            {\if@tempswa\mlist@add\mlist@sepsep\fi
+             \global\@tempswatrue}%
+%    \end{macrocode}
+% And (sub-)iterate over every comma-separated list:
+%    \begin{macrocode}
+          \@tempcntb\z@
+          \@tempswbfalse
+          \@for\@ii:=\@jj\do{%
+            \global\let\@ii\@ii% in case of array use
+            \global\advance\@tempcntb\@ne
+%    \end{macrocode}
+% Now typeset the symbol we're up to:
+%    \begin{macrocode}
+            \expandafter\@ifmtarg\expandafter{\@ii}% true:
+              {\global\advance\@tempcntb\m@ne
+               \mlist@add{\@gobbletwo{\mlist@symbol}}%
+               }% false:
+              {\if@tempswb\mlist@add\mlist@sep\fi
+               \global\@tempswbtrue
+               \ifx\@ii\mlist@colon
+                 \mlist@add{\mlist@dots{\mlist@symbol}}%
+               \else
+                 \ifx\@ii\mlist@period
+                   \mlist@add{\mlist@dot{\mlist@symbol}}%
+                 \else
+                   \mlist@add{\mlist@elemcmd{\mlist@symbol}}%
+                 \fi
+               \fi}%
+%    \end{macrocode}
+% Parse the index to see if it's an implicit reference: |@|$n$. The idea is to expand out the index, set a conditional if the first char is an |@|, and then gobble up the whole thing. We do this twice for the two common catcodes that |@| could be.
+%    \begin{macrocode}
+            \@tempswcfalse
+            \def\@tempb{%
+              \expandafter\@ifnextchar\mlist@ampersat
+                {\@tempswctrue\@gobblenil}
+                {\@tempswcfalse\@gobblenil}}%
+            \expandafter\@tempb\@ii\@nil
+            \unless\if@tempswc
+              \def\@tempb{%
+                \@ifnextchar @
+                  {\@tempswctrue\@gobblenil}
+                  {\@tempswcfalse\@gobblenil}}%
+              \expandafter\@tempb\@ii\@nil
+            \fi
+%    \end{macrocode}
+% \changes{v0.3}{2007/05/09}{Added second check to \cmd\@ifnextchar |@| for catcode letter.}
+% Because \cmd\@ii, \cmd\@jj\ can contain any possible index that might be passed through the macro, we use eTeX's \cmd\detokenize\ to prevent expansion of any weird argument that might be given.
+%    \begin{macrocode}
+            \if@tempswc
+              \add@ifcs@else{%
+                mlist@\the\@tempcnta @\expandafter\@gobble\@ii
+              }{\@ii}%
+            \else
+              \add@ifcs@else{%
+                mlist@@\expandafter\detokenize\expandafter{\@ii}%
+              }{\@ii}%
+            \fi
+          }% end comma-sep iteration
+        }% end semicolon-sep iteration
+        \def\mlist@list{\mlist@wrap{\mlist@symbol}{\mlist@list@elems}}%
+    \fi
+  \fi
+  \mlist@list
+  \endgroup}
+%    \end{macrocode}
+% TODO: move \cmd\mlist@list after the endgroup?
+%
+%
+% The |sym| keys contain global definitions of control sequences of
+% the form |mlist@\mlist@cs @cmd|, where \cmd\mlist@cs\ is the name
+% of the `vector' macro being defined. For global options, we gobble the
+% second |@| to end up with the generic |\mlist@cs|.
+%    \begin{macrocode}
+\newcommand\mlistsetup[1]{\setkeys[mlist]{sym}{#1}}
+%    \end{macrocode}
+%    \begin{macrocode}
+\def\subscriptXY#1#2{#1_{#2}}
+\def\superscriptXY#1#2{#1^{#2}}
+\def\mlist@short@dots#1#2{\dots}            
+\def\mlist@short@dot#1#2{\,\cdot\,}            
+\def\mlistreset{\mlistsetup{%
+  sep={,},
+  sepsep=;,
+  wrap={\left[}{\right]},
+  wrapone={}{},
+  dots=\mlist@short@dots,
+  dot=\mlist@short@dot,
+  elemcmd=\subscriptXY,
+  headcmd=\mathbf,
+  index={},
+}}%
+\mlistreset
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\newmlist\vect
+%    \end{macrocode}
+%
+%\iffalse
+%</package>
+%\fi
+%
+%
+%\iffalse
+%<*dtx-style>
+%    \begin{macrocode}
+\ProvidesPackage{dtx-style}
+
+\errorcontextlines=999
+
+\def\@dotsep{1000}
+\setcounter{tocdepth}{2}
+\setlength\columnseprule{0.4pt}
+\renewcommand\tableofcontents{\relax
+  \begin{multicols}{2}[\section*{\contentsname}]\relax
+    \@starttoc{toc}\relax
+  \end{multicols}}
+
+\setcounter{IndexColumns}{2}
+\renewenvironment{theglossary}
+  {\small\list{}{}
+     \item\relax
+     \glossary@prologue\GlossaryParms 
+     \let\item\@idxitem \ignorespaces 
+     \def\pfill{\hspace*{\fill}}}
+  {\endlist}
+
+\usepackage[svgnames]{xcolor}
+\usepackage{amsmath,array,bm,booktabs,calc,enumitem,fancyvrb,graphicx,ifthen,longtable,refstyle,subfig,topcapt,varioref,\jobname}
+
+\usepackage{easyvector,vector,tensind}
+\usepackage{url}
+
+\usepackage[sc,osf]{mathpazo}
+
+\linespread{1.069}      % A bit more space between lines
+\frenchspacing         % Remove ugly extra space after punctuation
+  
+\definecolor{niceblue}{rgb}{0.2,0.4,0.8}
+\newenvironment{example}[1]
+  {\VerbatimEnvironment
+   \def\Options{#1}%
+   \begin{VerbatimOut}[gobble=2]{\examplefilename}}
+  {\end{VerbatimOut}\relax
+   \typesetexample\mlistreset}
+
+\fvset{formatcom=\color{niceblue}}
+\DefineShortVerb{\|}
+
+\def\theCodelineNo{\textcolor{niceblue}{\sffamily\tiny\arabic{CodelineNo}}}
+
+\let\examplesize\normalsize
+\let\auxwidth\relax
+
+\newlength\examplewidth\newlength\verbatimwidth
+\newlength\exoutdent   \newlength\exverbgap
+\setlength\exverbgap{1em}
+\setlength\exoutdent{-0.15\textwidth}
+\newsavebox\verbatimbox
+\edef\examplefilename{\jobname.example}
+
+\newcommand\typesetexample{\relax
+   \smallskip
+   \noindent
+   \begin{minipage}{\linewidth}
+   \color{niceblue}
+   \hrulefill\par
+   \edef\@tempa{[gobble=0,fontsize=\noexpand\small,\Options]}%
+   \begin{lrbox}{\verbatimbox}\relax
+     \expandafter\BVerbatimInput\@tempa{\examplefilename}%
+   \end{lrbox}
+   \begin{list}{}{\setlength\itemindent{0pt}
+                  \setlength\leftmargin\exoutdent
+                  \setlength\rightmargin{0pt}}\item
+   \ifx\auxwidth\relax
+     \setlength\verbatimwidth{\wd\verbatimbox}%
+   \else
+     \setlength\verbatimwidth{\auxwidth}%
+   \fi
+   \begin{minipage}[c]{\textwidth-\exoutdent-\verbatimwidth-\exverbgap}
+     \catcode`\%=14\centering\linespread{1.6}\input\examplefilename\relax
+   \end{minipage}\hfill
+   \begin{minipage}[c]{\verbatimwidth}
+     \usebox\verbatimbox
+   \end{minipage}
+   \end{list}
+   \par\noindent\hrulefill
+   \end{minipage}
+   \smallskip}
+
+\newcommand*\setverbwidth[1]{\def\auxwidth{#1}}
+
+\newcommand*\name[1]{{#1}}
+\newcommand*\pkg[1]{\textsf{#1}}
+\newcommand*\feat[1]{\texttt{#1}}
+\newcommand*\opt[1]{\texttt{#1}}
+
+\newcommand*\ltx[1]{%
+  \ifx3#1\relax
+    \textsc{ltx3}%
+  \else
+    \LaTeXe
+  \fi}
+
+\newcommand*\note[1]{\unskip\footnote{#1}}
+
+\let\latin\textit
+\def\eg{\latin{e.g.}}
+\def\Eg{\latin{E.g.}}
+\def\ie{\latin{i.e.}}
+\def\etc{\@ifnextchar.{\latin{etc}}{\latin{etc.}\@}}
+
+\def\STIX{\textsc{stix}}
+\def\MacOSX{Mac~OS~X}
+\def\ascii{\textsc{ascii}}
+\def\OMEGA{Omega}
+\def\CTAN{\textsc{ctan}}
+
+\newcounter{argument}
+\g@addto@macro\endmacro{\setcounter{argument}{0}}
+\newcommand*\darg[1]{%
+  \stepcounter{argument}%
+  {\ttfamily\char`\#\theargument~:~}#1\par\noindent\ignorespaces}
+\newcommand*\doarg[1]{%
+  \stepcounter{argument}%
+  {\ttfamily\makebox[0pt][r]{[}\char`\#\theargument]:~}#1\par\noindent\ignorespaces}
+
+\def\codeline{\par\hspace{\parindent}}% two \indents in total
+
+\newcommand\unichar[2]{\textsc{\MakeLowercase{u+#1: #2}}}
+
+\setlength\parindent{2em}
+
+%    \end{macrocode}
+%</dtx-style>
+%\fi
+%
+% \typeout{*************************************************************}
+% \typeout{*}
+% \typeout{* To finish the installation you have to move the following}
+% \typeout{* file into a directory searched by XeTeX:}
+% \typeout{*}
+% \typeout{* \space\space\space unicode-math.sty}
+% \typeout{* \space\space\space unicode-math.tex}
+% \typeout{*}
+% \typeout{*************************************************************}
+%
+\endinput

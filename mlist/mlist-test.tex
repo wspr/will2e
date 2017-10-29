@@ -1,0 +1,18 @@
+\documentclass[12pt]{article}
+\usepackage{mlist}
+\begin{document}
+\makeatletter
+\newmlist\func[  
+  headcmd=\mlisthead,
+  elemcmd=\mlistelem,
+  wrapcmd=\mlistheadparen,
+  wraponecmd]
+\[
+\func{f}
+\]
+\renewmlist\func[
+  headcmd=\mlisthead,
+  elemcmd=\mlistelem,
+  wrapcmd=\mlistheadparen,
+  wraponecmd]
+\end{document}

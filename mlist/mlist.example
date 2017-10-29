@@ -1,0 +1,9 @@
+\raggedright\ttfamily\slshape
+\def\@mlist#1{MLIST: #1\par}
+\newmlist\testlist[opt1=one]
+\newtestlist\testone{S}
+\testone
+\testone{1,2,3}
+\newtestlist\testtwo{T}[opt2=two]
+\testtwo
+\testtwo{1,2,3}
