@@ -1,56 +1,15 @@
-% \iffalse 
+% \iffalse
 %<*internal>
-\iffalse
-%</internal>
-%<*readme>
-_________________
-The VWCOL package
-v0.1
-
-This package provides a crude environment
-called 'vwcol' for typesetting multicolumn
-paragraph text of various column widths on
-a single page.
-
-For example,
-
-\documentclass{article}
-\usepackage{vwcol,lipsum}
-\begin{document}
-\begin{vwcol}[widths={0.3,0.2,0.5}]
-  \lipsum[1]
-\end{vwcol}
-\end{document}
-
-Note again that only paragraph text is 
-supported at present.
-
-______________
-Will Robertson
-wspr 81 [at] gmail [dot] com
-
-Copyright 2008
-Distributed under the LaTeX Project Public License
-%</readme>
-%<*internal>
-\fi
 \begingroup
 %</internal>
 %<*batchfile>
 \input docstrip.tex
 \keepsilent
 \preamble
+___________________________________________________________
 
-  __________________________________
-  Copyright (C) 2008  Will Robertson
-
-  License information appended.
-
-
-\endpreamble
-\postamble
-
-Copyright (C) 2008 by Will Robertson <wspr81@gmail.com>
+Copyright (C) 2008, 2015  Will Robertson
+                         <will.robertson@latex-project.org>
 
 Distributable under the LaTeX Project Public License,
 version 1.3c or higher (your choice). The latest version of
@@ -63,16 +22,17 @@ This work consists of the file  vwcol.dtx
           and the derived files vwcol.sty,
                                 vwcol.ins, and
                                 vwcol.pdf.
-
+___________________________________________________________
+\endpreamble
+\postamble
 \endpostamble
 \askforoverwritefalse
 \generate{\file{\jobname.sty}{\from{\jobname.dtx}{package}}}
 %</batchfile>
 %<batchfile>\endbatchfile
 %<*internal>
-\generate{\file{\jobname.ins}{\from{\jobname.dtx}{batchfile}}}
 \nopreamble\nopostamble
-\generate{\file{README.txt}{\from{\jobname.dtx}{readme}}}
+\generate{\file{\jobname.ins}{\from{\jobname.dtx}{batchfile}}}
 \generate{\file{dtx-style.sty}{\from{\jobname.dtx}{dtx-style}}}
 \endgroup
 \immediate\write18{mv README.txt README}
@@ -119,18 +79,25 @@ This work consists of the file  vwcol.dtx
 %
 % \section{Options}
 %
-% As shown above, at heart this package is quite simple. This section discusses the options that can be passed to the |vwcol| environment. The basic options are:
+% As shown above, at heart this package is quite simple. This section discusses the options that can be passed to the |vwcol| environment. The options are:
 % \begin{description}[noitemsep,font=\ttfamily,leftmargin=6em,style=nextline]
 % \item [widths] The number and size of the columns.
 % \item [sep] The width of the space between the columns.
+% \item [sidesep] Whether to add space on the outside of the columns (equiv.\ to the following two options together).
+% \item [presep]  Whether to add space before the columns.
+% \item [postsep] Whether to add space after the columns.
 % \item [rule] The width of the rule.
-% \item [sidesep] Whether to add space on the outside of the columns.
-% \item [siderule] Whether to draw a rule on the outside of the columns.
-% \item [rule-color] The colour of the rule.
+% \item [siderule] Whether to draw a rule on the outside of the columns (equiv.\ to the following two options together).
+% \item [prerule]  Whether to draw a rule before the columns.
+% \item [postrule] Whether to draw a rule after the columns.
+% \item [rulecolor] The colour of the rule.\footnote{Added in v0.2.}
+% \item [justify] Paragraph justification within the columns.
+% \item [indent]  Indentation size within the columns (if relevant).
 % \end{description}
-% Paragraph options |justify| and |indent| are covered in \secref[vref]{para}, and
-% advanced options are discussed in \secref[vref]{advanced}.
-% 
+% Paragraph options |justify| and |indent| are covered in \secref[vref]{para}, and some advanced options are discussed in \secref[vref]{advanced}.
+%
+% \bigskip 
+%
 % \noindent\DescribeMacro{\vwcolsetup}
 % This macro may be used to set the default values for the options (described subsequently) of the |vwcol| environment.
 % \begin{example}{firstline=2}
@@ -142,7 +109,7 @@ This work consists of the file  vwcol.dtx
 % \end{example}
 %
 % \noindent\DescribeMacro{widths} 
-% This option must always be present (either as a default value previously set in \cmd\vwcolsetup\ or specified in the environment directly) and consists of any number of comma separated lengths or ratios. Lengths set the column width to an explicit size, whereas a ratio (as above) sets the column width to a fraction of the available linewidth (leaving some space for some separation between the columns). 
+% This option must always be present (either as a default value previously set in \cmd\vwcolsetup\ or specified in the environment directly) and consists of any number of comma-separated lengths or ratios. Lengths set the column width to an explicit size, whereas a ratio (as above) sets the column width to a fraction of the available linewidth (leaving some space for some separation between the columns). 
 %
 % As shown in the example in \secref{intro}, when the width ratios sum to 100\% then the multi-columns will span the entire line width regardless of the chosen separation between the columns. A set of widths may be any combination of ratios and lengths, but the total width should not exceed the linewidth available (a warning will be given if so).
 %
@@ -214,18 +181,18 @@ This work consists of the file  vwcol.dtx
 %   \end{vwcol}
 % \end{example}
 %
-% \newpage
-% \bigskip\noindent\DescribeMacro{rule-color}
+% \bigskip\noindent\DescribeMacro{rulecolor}
 % The colour of each rule.
 % Either used a pre-defined name or define your own using \pkg{color} or \pkg{xcolor}.
 % The \pkg{color} package is loaded by this package.
 % \begin{example}{firstline=2}
 %   \tiny
-%   \begin{vwcol}[widths={0.35,0.25,0.4},siderule,rule-color=red]
+%   \vwcolsetup{widths={0.35,0.25,0.4},siderule,rule=2pt}
+%   \begin{vwcol}[rulecolor=red]
 %     \lipsum[6]
 %   \end{vwcol}
 %   \definecolor{myrulecol}{rgb}{0.1,0.6,0.3}
-%   \begin{vwcol}[widths={0.35,0.25,0.4},siderule,rule-color=myrulecol]
+%   \begin{vwcol}[rulecolor=myrulecol]
 %     \lipsum[6]
 %   \end{vwcol}
 % \end{example}
@@ -293,7 +260,6 @@ This work consists of the file  vwcol.dtx
 %
 % The default is |5|, but I'd be surprised if you ever need to adjust this parameter.
 % 
-% \newpage
 % \section{Usage notes}
 %
 % If you want the |widths| ratios to use a different width to denote 100\% (instead of \cmd\linewidth), put the whole thing in a |minipage| or \cmd\parbox:
@@ -329,6 +295,7 @@ This work consists of the file  vwcol.dtx
 %
 % \StopEventually{}
 %
+% \clearpage
 % \part{\pkg{\jobname} implementation}
 %\iffalse
 %<*package>
@@ -340,7 +307,7 @@ This work consists of the file  vwcol.dtx
 %
 %    \begin{macrocode}
 \ProvidesPackage{vwcol}
-  [2008/06/24 v0.1 Variable-width multicolumn text]
+  [2015/02/10 v0.2 Variable-width multicolumn text]
 %    \end{macrocode}
 %
 % \section{Preamble}
@@ -712,10 +679,10 @@ This work consists of the file  vwcol.dtx
 \vwcolsetup{indent=1.5em}
 %    \end{macrocode}
 %
-% \paragraph{rule-color} The colour of each rule.
+% \paragraph{rulecolor} The colour of each rule.
 %    \begin{macrocode}
-\define@key{vwcol}{rule-color}{\def\vwcol@rulecol{#1}}
-\vwcolsetup{rule-color=black}
+\define@key{vwcol}{rulecolor}{\def\vwcol@rulecol{#1}}
+\vwcolsetup{rulecolor=black}
 %    \end{macrocode}
 % No defaults.
 %
@@ -788,14 +755,16 @@ This work consists of the file  vwcol.dtx
       \parbox{\vwcol@averagewidth}{\vwcol@justify\BODY}}%
     \hbadness=\@tempcnta
 %    \end{macrocode}
-% Now the estimate of the number of lines, $L$, can be calculated. Start by assuming that the `area' of the material in the single block will be able the same when split into columns of un-equal width ($w_i$). If $T$ is the total number of lines of the single block typeset above (which is calculated by dividing the height of the block by the baselineskip), this gives
+% Now the estimate of the number of lines per column, $L$, can be calculated.
+% Start by assuming that the `area' of the material in the single block will be about the same when split into columns of un-equal width, $w_i$.
+% (By `area' we \emph{actually} mean the number of lines in a block multiplied by the number of lines $N$.)
+% If $T$ is the total number of lines of the single block typeset above (which is calculated by dividing the height of the block by the baselineskip), this gives
 % \[ T\times w_a \approx L\times w_1+L\times w_2+\cdots = L\times\sum_{i=1}^N w_i .\]
-% The width of the single block is the average of column widths:
+% The width of the single block is defined above to be the average of the column widths:
 % \[ w_a = \mathrm{ave}(w_i) = \sum_{i=1}^N w_i/N\]
-% (Where by `area' we \emph{actually} mean the number of lines in a block multiplied by the number of lines.)
 % These two expressions are easily combined to give 
 % \[ L = \frac{T\times \mathrm{ave}(w_i)}{\sum_{i=1}^N w_i} = \frac{T}{N} . \]
-% In other words, the expression for the number of lines per columns simplifies to simply dividing the single block into equal sections.
+% In words, the number of lines per column is simply to simply the number of lines in the single block divided by the number of columns.
 %    \begin{macrocode}
     \vwcol@Nlines=\numexpr 
         (\ht\vwcol@plainbox+\dp\vwcol@plainbox)/
@@ -1106,6 +1075,8 @@ This work consists of the file  vwcol.dtx
 % \end{example}
 % This is why this package uses \pkg{ragged2e}'s \cmd\RaggedRight\ instead of \LaTeX's \cmd\raggedright.
 %
+% In actual fact, when isolated into plain \TeX\ code this reveals a legitimate bug in \TeX's line-breaking algorithm. Unfortunately discovered too late in \TeX's life to be awarded a cheque.
+%
 %\iffalse
 %</package>
 %\fi
@@ -1143,6 +1114,8 @@ This work consists of the file  vwcol.dtx
 \usepackage[center,it]{titlesec}
 \usepackage[quiet]{vwcol}
 
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
 \usepackage[sc,osf]{mathpazo}
 
 \linespread{1.1}      % A bit more space between lines

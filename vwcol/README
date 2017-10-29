@@ -1,6 +1,6 @@
 _________________
 The VWCOL package
-v0.1
+v0.2
 
 This package provides a crude environment
 called 'vwcol' for typesetting multicolumn
@@ -20,9 +20,12 @@ For example,
 Note again that only paragraph text is
 supported at present.
 
+See the PDF documentation for full details.
+Report bugs at <https://github.com/wspr/vwcol>
+
 ______________
 Will Robertson
-wspr 81 [at] gmail [dot] com
+will.robertson@latex-project.org
 
-Copyright 2008
+Copyright 2008, 2015
 Distributed under the LaTeX Project Public License
