@@ -1,0 +1,58 @@
+
+# [doc] how many expansion steps ?
+
+It is not clear from docs if one can use the macros in purely expandable context, for example by twice expansion or by `\romannumeral` governed expansion.
+
+The docs only give examples using `\edef`.
+
+But in `environ.sty` one finds 
+
+```latex
+110 \long\def\env@save#1#2\env@nil{%
+111   \edef#1{%
+112     \unexpanded\expandafter
+113       \expandafter\expandafter{\trim@spaces{#2}}}}
+```
+
+which suggests two expansions suffice.
+
+
+# [doc] not clear from docs that only one space token is removed on each side
+
+From brief testing it appears that only one space token is removed on each side, which is counter-intuitive in view of the name of the macros (with `spaces` in plural).
+
+I used this:
+
+```latex
+\documentclass{article}
+
+\usepackage{trimspaces}
+\begin{document}
+
+\edef\foo{%
+  \space\space\space\space\space\space\space\space% 8 spaces
+  \noexpand\noexpand\noexpand\FOO
+  \space\space\space\space\space\space\space\space}
+
+\makeatletter
+\edef\bar{\noexpand\trim@spaces@noexp{\foo}}
+
+\show\bar
+
+\edef\bar{\bar}
+
+\show\bar
+\end{document}
+```
+
+Produces:
+```
+> \bar=macro:
+->\trim@spaces@noexp {        \FOO         }.
+l.14 \show\bar
+              
+> \bar=macro:
+->       \FOO        .
+l.18 \show\bar
+```
+
