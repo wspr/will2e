@@ -1,0 +1,141 @@
+\def\pkgname{minibox}
+
+\RequirePackage{filecontents}
+
+%%%%%%%%%1%%%%%%%%%2%%%%%%%%%3%%%%%%%%%4%%%%%%%%%5%%%%%%%%%6%%%%%%%%%7%%%%%%%%%
+\begin{filecontents}{minibox.sty}
+\ProvidesPackage{minibox}[2009/04/21 v0.1
+  Another type of box.]
+
+% This is the simplest definition I can get away with.
+% But it's not perfect; expect changes in the future.
+\newcommand\minibox[2][l]{%
+  \begin{tabular}{@{}#1@{}}
+    #2
+  \end{tabular}%
+}
+
+\end{filecontents}
+%%%%%%%%%1%%%%%%%%%2%%%%%%%%%3%%%%%%%%%4%%%%%%%%%5%%%%%%%%%6%%%%%%%%%7%%%%%%%%%
+
+
+
+
+% Conditionally compile the documentation & generate the .ins file:
+\providecommand\pstoolCompile{Y}
+\if\pstoolCompile N
+  \expandafter\endinput
+\fi
+
+
+\begin{filecontents*}{\pkgname.ins}
+%&latex
+\def\pstoolCompile{N}
+\input minibox.tex
+\csname@@end\endcsname
+\end{filecontents*}
+
+
+
+
+\makeatletter
+\documentclass{article}
+
+\usepackage[rm,medium]{titlesec}
+
+\usepackage{bigfoot,xcolor}
+\usepackage[colorlinks,linktocpage]{hyperref}
+\usepackage{gmdoc}
+\usepackage{gmverb}
+\dekclubs
+\stanzaskip=\bigskipamount 
+\CodeSpacesGrey
+
+\usepackage{tocloft,varwidth}
+\setcounter{tocdepth}{1}
+\def\tocwidthA{0.45}
+\def\tocwidthB{0.45}
+\def\cftpartfont{\scshape}
+\def\cftsecfont{\small}
+\cftbeforesecskip=0pt
+\def\cftpartleader{}
+\def\cftpartafterpnum{\cftparfillskip}
+\def\cftsecleader{}
+\def\cftsecafterpnum{\cftparfillskip}
+
+\let\pkg\textsf
+\def\pkgopt#1{\texttt{[#1]}}
+
+\def\PDF{\textsc{pdf}}
+\def\PS{\textsc{ps}}
+\def\DVI{\textsc{dvi}}
+\def\EPS{\textsc{eps}}
+
+\usepackage{\pkgname}
+\usepackage[T1]{fontenc}
+\usepackage{microtype}
+\usepackage{lmodern}
+\usepackage[sc,osf]{mathpazo}
+\linespread{1.1}
+\frenchspacing
+
+\GetFileInfo{\pkgname.sty}
+\begin{document}
+
+\title{The \pkg{\pkgname} package}
+\author{Will Robertson\\\texttt{wspr81@gmail.com}}
+\date{\fileversion\qquad\filedate}
+
+\maketitle
+
+\part{User documentation}
+
+\section{The \cmd\minibox\ command}
+
+It's sometimes useful to be able to stack text over lines
+in a small box; this is similar to paragraph text broken over lines, but 
+for small amounts of text when automatic line breaking is not required.
+In other words, I'm looking for an \cmd\mbox\ that allows manual line breaks.
+\begin{center}
+\fbox{\vbox{\hbox{abcd}\hbox{efg}\hbox{h}}}
+\end{center}
+This sort of thing is a little awkward in plain \TeX\ and \LaTeX.
+\begin{center}
+|\vbox{\hbox{abcd}\hbox{efg}\hbox{h}}|\par
+\end{center}
+This package defines the \cmd\minibox\DescribeMacro{\minibox}\ command
+to write this more conveniently. Here's an example:
+\begin{center}
+\verb|\def\x{abcd\\efg\\h}|
+\def\x{abcd\\efg\\h}
+\begin{tabular}{ccc}
+\verb"\minibox{\x}" &
+\verb"\minibox[c]{\x}" &
+\verb"\minibox[r]{\x}" \\
+\fbox{\minibox{\x}} &
+\fbox{\minibox[c]{\x}} &
+\fbox{\minibox[r]{\x}}
+\end{tabular}
+\end{center}
+
+Note that all examples here have been framed with the \cmd\fbox\ command
+to show the extent of the box; the output of \cmd\minibox\ itself does not have this border!
+Actually, if you look (not too) closely, the \cmd\minibox\ output has a little more padding
+than the |\vbox{\hbox{...}}| version; this will be rectified in a future release
+of the package.
+
+If you look at the source you'll see that the way \cmd\minibox\ command is 
+implemented lends itself to begin mis-used to input generic tabular material;
+this is not the intention of the command, however, and any such usage may
+break in future versions of this package.
+
+\section{Licence}
+
+This package is freely modifiable and distributable under the terms and conditions of the \LaTeX\ Project Public Licence, version 1.3c or greater (your choice). The latest version of
+this license is available at: \url{http://www.latex-project.org/lppl.txt}. This work is maintained by \textsc{Will Robertson}.
+
+\clearpage
+\part{Implementation}
+\parindent=0pt
+\DocInput{\pkgname.sty}
+\end{document}
