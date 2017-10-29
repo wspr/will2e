@@ -19,6 +19,17 @@ Booleans provided are:
 Finally, the \platformname macro is also provided that
 expands to a string of the platform name.
 
+# TODO
+
+## Fails if spaces appear in \jobname (@rgov)
+
+> The issue seems to be that ifplatform is naming the file "Foo Bar".w18 (due to LaTeX automatically adding quotes to\jobname), which causes the shell commands it executes to do unexpected things. For instance, when you execute uname -s > ""Foo Bar".w18" this outputs to a file named Foo; ifplatform then tries to use catchfile to read in "Foo Bar".w18 (which doesn't exist), and then deletes Foo.
+
+> I think the best bet is to remove the quotes around \ip@file in the shell commands.
+
+
+
+
 Will Robertson         wspr 81 at gmail dot com
 Johannes Große
 
