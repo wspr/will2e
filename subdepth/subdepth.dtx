@@ -1,0 +1,451 @@
+% \iffalse 
+%<*internal>
+\iffalse
+%</internal>
+%<*readme>
+____________________
+The SUBDEPTH package
+v0.2
+
+This package uses some Donald Arseneau code to unify the heights
+of math subscripts regardless of the presence of a superscript above.
+Compare $M_n$ to $M_n'$ in regular LaTeX for why this can be desirable.
+
+v0.2 makes some changes deviating from Don's original algorith.
+
+__________________________
+Packaged by Will Robertson
+wspr 81 [at] gmail [dot] com
+
+Copyright 2007
+Distributed under the LaTeX Project Public License
+%</readme>
+%<*internal>
+\fi
+\begingroup
+%</internal>
+%<*batchfile>
+\input docstrip.tex
+\keepsilent
+\preamble
+
+  __________________________________
+  Copyright (C) 2007  Will Robertson
+
+  License information appended.
+
+
+\endpreamble
+\postamble
+
+Copyright (C) 2007 by Will Robertson <wspr81@gmail.com>
+
+Distributable under the LaTeX Project Public License,
+version 1.3c or higher (your choice). The latest version of
+this license is at: http://www.latex-project.org/lppl.txt
+
+This work is "maintained" (as per LPPL maintenance status) 
+by Will Robertson.
+
+This work consists of the file  subdepth.dtx
+          and the derived files subdepth.pdf,
+                                subdepth.sty, and
+                                subdepth.ins.
+
+\endpostamble
+\askforoverwritefalse
+\generate{\file{subdepth.sty}{\from{subdepth.dtx}{package}}}
+%</batchfile>
+%<batchfile>\endbatchfile
+%<*internal>
+\generate{\file{\jobname.ins}{\from{\jobname.dtx}{batchfile}}}
+\nopreamble\nopostamble
+\generate{\file{README.txt}{\from{\jobname.dtx}{readme}}}
+\generate{\file{prepare.sh}{\from{\jobname.dtx}{prepare}}}
+\generate{\file{dtx-style.sty}{\from{\jobname.dtx}{dtx-style}}}
+\endgroup
+\immediate\write18{makeindex -s gind.ist -o \jobname.ind  \jobname.idx}
+\immediate\write18{makeindex -s gglo.ist -o \jobname.gls  \jobname.glo}
+%</internal>
+%
+%<*driver>
+\documentclass{ltxdoc}
+\EnableCrossrefs
+\CodelineIndex
+\RecordChanges
+%\OnlyDescription
+\usepackage{dtx-style}
+\begin{document}
+  \DocInput{\jobname.dtx}
+\end{document}
+%</driver>
+%
+%
+% \fi
+%
+% \GetFileInfo{subdepth.sty}
+% \CheckSum{0}
+% \makeatletter
+%
+% \title{Unify subscript depths}
+% \author{Original code by Donald Arseneau\\ Maintained by Will Robertson}
+% \date{\filedate \qquad \fileversion}
+%
+% \maketitle
+%
+% \begin{quote}\small
+% This package arose from the following \texttt{comp.text.tex} post by Donald Arseneau: \url{http://groups.google.com/group/comp.text.tex/msg/f207c7535810d2c1}.
+% \end{quote}
+%
+% Consider the standard output of a subscript with and without a superscript above:
+% \begin{center}
+% \usebox\default
+% \end{center}
+% The second $n$ is lower due to \TeX's default of jiggling the space when there are both superscripts and subscripts attached to a math symbol.
+%
+% In some circumstances, this isn't particularly desirable; this package adjusts \LaTeX's behaviour to unify the position of the subscript in both cases:
+% \begin{center}
+% \text
+% \end{center}
+%
+% Notice that to compensate for the higher subscript, the superscript position is slightly raised. The |[low-sup]| package option will suppress this change to the height of the superscripts.
+%
+% \section{Fine tuning}
+%
+% The original code was originally developed for typesetting symbols in chemistry such as $H_2$ and $H_2^+$, where you don't want the subscript to be moving around. Indeed, \pkg{subdepth} uses this example to measure the lengths it needs to do its adjustments nicely.
+%
+%
+% \StopEventually{}
+%
+% \clearpage
+% \part{\textsf{\jobname} implementation}
+%\iffalse
+%<*package>
+%\fi
+%
+%
+% \def\supsym#1{%
+%   \smash{\color{red}%
+%     \makebox[0pt][l]{\rule[-0.4pt]{0.7cm}{0.4pt}}
+%     \rule
+%       [-\the\fontdimen#1\textfont2]
+%       {0.4pt}{\the\fontdimen#1\textfont2}}
+%    i}
+% \def\subsym#1{%
+%   \smash{\color{red}%
+%     \makebox[0pt][l]{\rule[-0.4pt]{0.7cm}{0.4pt}}
+%     \rule{0.4pt}{\the\fontdimen#1\textfont2}}
+%    i}
+%
+% \savebox\@tempboxa{$~$}%
+% \edef\reset{%
+%    \fontdimen13\noexpand\textfont2=\the\fontdimen13\textfont2
+%    \fontdimen14\noexpand\textfont2=\the\fontdimen14\textfont2
+%    \fontdimen15\noexpand\textfont2=\the\fontdimen15\textfont2
+%    \fontdimen16\noexpand\textfont2=\the\fontdimen16\textfont2
+%    \fontdimen17\noexpand\textfont2=\the\fontdimen17\textfont2
+%  }
+%
+% \def\a#1{\noindent
+% {\footnotesize\ttfamily1.5\cmd{\fontdimen#1}:}
+% \hfill
+% \reset$\displaystyle\sum A^{\supsym{13}}$\quad
+% \fontdimen#1\textfont2=1.5\fontdimen#1\textfont2
+% $\displaystyle A^{\supsym{13}}$\hfill
+% \reset$\sum A^{\supsym{14}}$\quad
+% \fontdimen#1\textfont2=1.5\fontdimen#1\textfont2
+% $A^{\supsym{14}}$\hfill
+% \reset$\sqrt{A^{\supsym{15}}}$\quad
+% \fontdimen#1\textfont2=1.5\fontdimen#1\textfont2
+% $\sqrt{A^{\supsym{15}}}$\hfill
+% \reset\null\par\bigskip}
+%
+% \def\b#1{\noindent
+% {\footnotesize\ttfamily2\cmd{\fontdimen#1}:}\hfill
+% \reset$A_{\subsym{16}}$\quad
+% \fontdimen#1\textfont2=2\fontdimen#1\textfont2
+% $A_{\subsym{16}}$\hfill
+% \reset$A^B_{\subsym{17}}$\quad
+% \fontdimen#1\textfont2=2\fontdimen#1\textfont2
+% $A^B_{\subsym{17}}$\hfill
+% \reset\null\par\bigskip}
+%
+% \section{Algorithm}
+% The intricacies of \TeX's behaviour for maths typesetting are well described by Bogusław `Jacko' Jackowski in his TUGboat paper `Appendix G illuminated':
+% \url{https://www.tug.org/members/TUGboat/tb27-1/tb86jackowski.pdf} 
+%
+% Superscript symbols are placed vertically according to fontdimens 13 (display), 14 (text), and~15 (cramped). 
+%
+% \bigskip
+% \a{13}
+% \a{14}
+% \a{15}
+%
+% For subscripts, fontdimens 16 and 17 are used when and when not a superscript is also present, respectively.
+%
+% \bigskip
+% \b{16}
+% \b{17}
+% 
+% Fontdimens 18 and 19 are used to place the subscript and superscript, respectively, when they are attached to a boxed formula. But we don't care for that special case, because it already looks fine.
+%
+% Furthermore, if subscripts and superscripts clash then their spacing will be adjusted to compensate. 
+%
+% First of all, the superscript must not extend too low, or it is raised to not exceed this minimum:
+% \begin{center}
+% \@for\@ii:={0pt,1pt,2pt,3pt,4pt,5pt,6pt}\do{%
+%   \scalebox{2}{$A^{\rule[-\@ii]{0.5ex}{0.5ex+\@ii}}$\quad}}
+% \end{center}
+% Similarly, the subscript cannot extend too high:
+% \begin{center}
+% \@for\@ii:={0pt,1pt,2pt,3pt,4pt,5pt,6pt}\do{%
+%   \scalebox{2}{$A_{\rule{0.5ex}{0.5ex+\@ii}}$\quad}}
+% \end{center}
+% Note that the `too low' for the superscript and the `too high' for the subscript overlap. There are further restrictions when they clash. When the superscript clashes with the subscript:
+% \begin{center}
+% \@for\@ii:={0pt,1pt,2pt,3pt,4pt,5pt,6pt}\do{%
+%   \scalebox{2}{$A_{\rule{0.5ex}{0.5ex}}^{\rule[-\@ii]{0.5ex}{0.5ex+\@ii}}$\quad}}
+% \end{center}
+% And when the subscript clashes when the superscript:
+% \begin{center}
+% \@for\@ii:={0pt,1pt,2pt,3pt,4pt,5pt,6pt}\do{%
+%   \scalebox{2}{$A^{\rule{0.5ex}{0.5ex}}_{\rule{0.5ex}{0.5ex+\@ii}}$\quad}}
+% \end{center}
+% And when they both grow:
+% \begin{center}
+% \@for\@ii:={0pt,1pt,2pt,3pt,4pt,5pt,6pt}\do{%
+%   \scalebox{2}{$A^{\rule[-\@ii]{0.5ex}{0.5ex+\@ii}}_{\rule{0.5ex}{0.5ex+\@ii}}$\quad}}
+% \end{center}
+%
+% The parameter that mainly controls the details of all these adjustments is the x-height of the font, fontdimen 5.
+%
+% \section{Code}
+% This is the package.
+%
+%    \begin{macrocode}
+\ProvidesPackage{subdepth}
+  [2007/09/02 v0.2 Unify subscript depths]
+%    \end{macrocode}
+%
+% \changes{v0.1}{2007/08/30}{Initial version.}
+% \PrintChanges
+%
+% \section{Loading and package options}
+%
+% Since this package is extracted from \textsf{dchem}, don't bother if that package is already loaded:
+%    \begin{macrocode}
+\@ifpackageloaded{dchem}{%
+  \PackageWarning{subdepth}
+    {subdepth is derived from dchem; aborting loading}%
+  \endinput}{}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\RequirePackage{xkeyval}
+%    \end{macrocode}
+%
+% Package option to lower the superscript height.
+%    \begin{macrocode}
+\newif\if@sd@sup@low@
+\DeclareOption{low-sup}{\@sd@sup@low@true}
+\DeclareOptionX{sym}{\def\sd@sym{#1}}
+\DeclareOptionX{sub}{\def\sd@sub{#1}}
+\DeclareOptionX{sup}{\def\sd@sup{#1}}
+%    \end{macrocode}
+% Default characters to use to size subscripts and superscripts:
+%    \begin{macrocode}
+\ExecuteOptionsX{sym=H,sub=2,sup=+}
+\ProcessOptionsX
+%    \end{macrocode}
+%
+% A command to execute the csname |#1| if it exists or do |#2| if not.
+%    \begin{macrocode}
+\def\sd@exe@else#1#2{%
+  \@ifundefined{#1}{#2}{\@nameuse{#1}}}
+%    \end{macrocode}
+%
+% \LaTeX3-like shorthands:
+%    \begin{macrocode}
+\providecommand\gdef@c[1]{\expandafter\xdef\csname#1\endcsname}
+%    \end{macrocode}
+%
+% \section{Don's code}
+%
+% \textit{The comments that follow are adapted from Donald's own.}
+% 
+% Set the fontdimen parameters for subscript and superscript position 
+% so that |C_2H_5^+| has both subscripts at the same vertical position. 
+% Do this by actually comparing |H_2| with |H_2^+| and adjusting the font's 
+% sub-lowering (16, 17) by half the difference and setting the super-raising 
+% (13, 14, 15) to the matching position.  The settings (for 
+% all three fonts t,s,ss) are determined once per text-font-size and 
+% stored in the macro |\sd@sizet<size>| (e.g.\ |\csname sd@sizet12\endcsname|). 
+% Since some specific fonts are used in different roles at different 
+% text-font-sizes, the original (tfm) settings for each particular font 
+% are saved in a macro |\sd@size<size>| (no `t') before they are changed 
+% for the first time.  When that font appears in a different role for 
+% another text-font size, those original settings are restored first 
+% before making changes. 
+% 
+% \begin{macro}{\sd@scr@adjust}
+% This is the command called to adjust the fontdimens on the maths font.
+% If the csname |sd@sizet\f@size| exists, execute it.
+% Otherwise, define it in terms of the following macros.
+%    \begin{macrocode}
+\def\sd@scr@adjust{%
+  \sd@exe@else{sd@sizet\f@size}
+    {\expandafter\sd@set@script\csname sd@sizet\f@size\endcsname}} 
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\sd@set@script}
+% \darg{single-token command name for executing settings} 
+% textfont done last so it takes precedence in case it is the same as 
+% another style (like at \cmd\tiny)
+%    \begin{macrocode}
+\def\sd@set@script#1{%
+  \begingroup % fontdimen settings are global anyway 
+    \frozen@everymath{}% Prevent recursion! 
+    \let#1\@empty 
+    \let\sd@do@one\relax 
+    \sd@set@one\scriptscriptstyle\scriptscriptfont#1\ssf@size 
+    \sd@set@one\scriptstyle\scriptfont#1\sf@size 
+    \sd@set@one\textstyle\textfont#1\f@size 
+  \endgroup 
+  #1} 
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\sd@set@one}
+% \darg{math style}
+% \darg{math style font}
+% \darg{csname of \texttt{sd@sizet\string\f@size}}
+% \darg{math style size}
+% This macro records the fontdimens for a single math style and passes off the adjustments to make to \cmd\sd@do@one.
+% ({\itshape Added conditional for the |[low-sup]| package option}):
+%    \begin{macrocode}
+\def\sd@set@one#1#2#3#4{% 
+  \sd@exe@else{sd@size#4}
+   {\gdef@c{sd@size#4}{% 
+      \if@sd@sup@low@\else
+        \fontdimen13\the#2\tw@=\the\fontdimen13#2\tw@ 
+        \fontdimen14\the#2\tw@=\the\fontdimen14#2\tw@ 
+        \fontdimen15\the#2\tw@=\the\fontdimen15#2\tw@ 
+      \fi
+      \fontdimen16\the#2\tw@=\the\fontdimen16#2\tw@ 
+      \fontdimen17\the#2\tw@=\the\fontdimen17#2\tw@}}%
+  \setbox\z@\hbox{$#1\sd@sym_\sd@sub$}%
+  \@tempdima\dp\z@ 
+  \setbox\z@\hbox{$#1\sd@sym_\sd@sub^{\sd@sup\vrule \@height 1em}$}% 
+%    \end{macrocode}
+% {\itshape I've adapted Donald's code to use \eTeX\ methods for dimension calculating. But not everyone uses \eTeX, the fools.}
+%    \begin{macrocode}
+  \ifdim\@tempdima<\dp\z@ 
+    \ifx\dimexpr\@undefined
+      % for non-etex people. SIGH
+      \advance\@tempdima\dp\z@ 
+      \divide\@tempdima\tw@ % new sub lowering 
+      \@tempdimb\dp\z@ 
+      \advance\@tempdimb-\@tempdima % adjustment 
+      \advance\@tempdimb\ht\z@ 
+      \advance\@tempdimb-1em % new super raising 
+    \else
+      \@tempdima\dimexpr (\@tempdima+\dp\z@)/2 \relax 
+      \@tempdimb\dimexpr (\dp\z@-\@tempdima+\ht\z@-1em) \relax
+    \fi
+    \xdef#3{#3\sd@do@one#2{\the\@tempdimb}{\the\@tempdima}}% 
+  \fi} 
+%    \end{macrocode} 
+% \end{macro}
+%
+% \begin{macro}{\sd@do@one}
+% \darg{csname of \texttt{sd@sizet\string\f@size}}
+% \darg{dim}
+% \darg{dim}
+% ({\itshape Added conditional for the |[low-sup]| package option}):
+% TODO: different heights for fd 13--15
+%    \begin{macrocode}
+\def\sd@do@one#1#2#3{% 
+  \if@sd@sup@low@\else
+    \fontdimen13#1\tw@=#2\relax 
+    \fontdimen14#1\tw@=#2\relax
+    \fontdimen15#1\tw@=#2\relax
+  \fi
+  \fontdimen16#1\tw@=#3\relax
+  \fontdimen17#1\tw@=#3\relax} 
+%    \end{macrocode}
+% \end{macro}
+%
+% Hook this all into \LaTeX's math font routine:
+%    \begin{macrocode}
+\addto@hook\every@math@size{\sd@scr@hook} 
+\let\sd@scr@hook\sd@scr@adjust 
+\ifx\glb@currsize\f@size 
+  \sd@scr@adjust 
+\fi 
+%    \end{macrocode}
+%
+%\iffalse
+%</package>
+%<*dtx-style>
+%    \begin{macrocode}
+\ProvidesPackage{dtx-style}
+\errorcontextlines=999
+
+\def\text{\Huge 
+$\smash{M_n}$
+$\smash{M_n'}$}
+\newsavebox\default
+\savebox\default{\text}
+
+\usepackage[utf8]{inputenc}
+\usepackage[svgnames]{xcolor}
+\usepackage{booktabs,calc,enumitem,graphicx,ifthen,refstyle,subfig,varioref,subdepth,url}
+  
+\definecolor{niceblue}{rgb}{0.2,0.4,0.8}
+\def\theCodelineNo{\textcolor{niceblue}{\sffamily\tiny\arabic{CodelineNo}}}
+
+\newcommand*\name[1]{{#1}}
+\newcommand*\pkg[1]{\textsf{#1}}
+\newcommand*\feat[1]{\texttt{#1}}
+\newcommand*\opt[1]{\texttt{#1}}
+\newcommand*\note[1]{\unskip\footnote{#1}}
+\let\latin\textit
+\def\eg{\latin{e.g.}}
+\def\Eg{\latin{E.g.}}
+\def\ie{\latin{i.e.}}
+\def\etc{\@ifnextchar.{\latin{etc}}{\latin{etc.}\@}}
+\def\eTeX{$\varepsilon$-\TeX}
+
+\newcounter{argument}
+\g@addto@macro\endmacro{\setcounter{argument}{0}}
+\newcommand*\darg[1]{%
+  \stepcounter{argument}%
+  {\ttfamily\char`\#\theargument~:~}#1\par\noindent\ignorespaces}
+\newcommand*\doarg[1]{%
+  \stepcounter{argument}%
+  {\ttfamily\makebox[0pt][r]{[}\char`\#\theargument]:~}#1\par\noindent\ignorespaces}
+
+\def\codeline{\par\noindent\hspace{2\parindent}}
+\setlength\parindent{2em}
+\frenchspacing
+%    \end{macrocode}
+%</dtx-style>
+%<*prepare>
+rm subdepth.zip
+latex subdepth.dtx
+mv README.txt README
+zip subdepth.zip subdepth.dtx subdepth.ins subdepth.pdf README
+%</prepare>
+%\fi
+%
+% \typeout{*************************************************************}
+% \typeout{*}
+% \typeout{* To finish the installation you have to move the following}
+% \typeout{* file into a directory searched by XeTeX:}
+% \typeout{*}
+% \typeout{* \space\space\space subdepth.sty}
+% \typeout{*}
+% \typeout{*************************************************************}
+%
+\endinput
