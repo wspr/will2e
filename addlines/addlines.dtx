@@ -21,7 +21,7 @@
 % \makeatletter
 %
 % \title{The \pkg{\jobname} package}
-% \author{Will Robertson}
+% \author{Will Robertson\\ \url{http://github.com/wspr/will2e}}
 % \date{\filedate \qquad \fileversion}
 %
 % \maketitle
@@ -55,9 +55,16 @@
 %
 % \DescribeMacro{\addlines*}
 % A starred form of the command (\eg, \verb|\addlines*[2]|) performs
-% the same function and additionally squeezes the page where possible
-% using any shrinkability between vertical boxes on the page.
-% 
+% the same function as above without any checking and only on the current page
+%
+% \DescribeMacro{\squeezepage}
+% When needing to break troublesome material on a page, it's sometimes necessary
+% to add to the amount of space added by \cmd\addlines, and additionally to ask \LaTeX\
+% to squeeze the paage up (using shrinkability of the vertical boxes).
+% When used without an optional argument \cmd\squeezepage\ doesn't add any additional
+% space but does try to squeeze the page.
+% \cmd\squeezepage\oarg{lines} adds extra space before doing so.
+%
 % \DescribeMacro{\removelines}
 % For syntactic sugar, \cmd{\addline} is a synonym for \cmd\addlines,
 % and \cmd{\removeline\textcolor{gray}(s\textcolor{gray})} is the opposite of \cmd\addlines.
@@ -70,7 +77,7 @@
 % facing page. Conversely, on an odd page (\ie, a \emph{recto} or right-side
 % page) an error is produced, but the space is still added.
 %
-% For a two-column document the situation is rather more complex --- the \cmd\addlines
+% For a two-column document the situation is rather more complex --- the \cmd\addlines\
 % call must be located within the first column, and for a twosided twocolumn layout
 % it must be the first column of the even page. The package attempts to
 % enforce this, calling similar errors if \cmd\addlines\ is found in the wrong
@@ -83,7 +90,7 @@
 %
 % \subsection*{Notes}
 % This command is a wrapper around the more basic command
-% \cmd\enlargethispage\ and \verb|\enlargethispage*|.
+% \cmd\enlargethispage\ (for \cmd\addlines) and \verb|\enlargethispage*| (for \cmd\squeezepage).
 % It uses the \pkg{changepage} package to check if
 % the command is called on an even page, and the \pkg{afterpage}
 % package to add material to a facing odd page if necessary.
@@ -189,19 +196,19 @@
 % \begin{macro}{\addlines}
 % \oarg{Number of lines to add to the text height}
 %    \begin{macrocode}
-\newcommand\addlines@here[1]{\enlargethispage{#1\baselineskip}}
 \newcommand\addlines{\@ifstar\addlines@a\addlines@b}
-\newcommand\addlines@a[1][1]{\addlines@do{#1}{*}}
-\newcommand\addlines@b[1][1]{\addlines@do{#1}{}}
-\newcommand\addlines@do[2]{%
+\newcommand\addlines@a[1][1]{\addlines@here{#1}}
+\newcommand\addlines@b[1][1]{\addlines@do{#1}}
+\newcommand\addlines@here[1]{\enlargethispage{#1\baselineskip}}
+\newcommand\addlines@do[1]{%
   \if@twocolumn
-    \addlines@twocol{#1}{#2}%  
+    \addlines@twocol{#1}%  
   \else
-    \addlines@onecol{#1}{#2}%
+    \addlines@onecol{#1}%
   \fi
 }
-\newcommand\addlines@onecol[2]{%
-  \enlargethispage#2{#1\baselineskip}%
+\newcommand\addlines@onecol[1]{%
+  \addlines@here{#1}%
   \if@twoside
     \checkoddpage
     \ifoddpage
@@ -212,13 +219,13 @@
            This error might clear up after a recompile, though.}%
       \fi
     \else
-      \afterpage{\enlargethispage#2{#1\baselineskip}}%
+      \afterpage{\addlines@here{#1}}%
     \fi
   \fi}
-\newcommand\addlines@twocol[2]{%
-  \enlargethispage#2{#1\baselineskip}%
+\newcommand\addlines@twocol[1]{%
+  \enlargethispage{#1\baselineskip}%
   \if@firstcolumn
-    \afterpage{\enlargethispage#2{#1\baselineskip}}%
+    \afterpage{\enlargethispage{#1\baselineskip}}%
   \else
     \addlines@error{column}%
   \fi
@@ -227,8 +234,8 @@
     \ifoddpage
       \addlines@error{page}%
     \else
-      \afterpage{\afterpage{\enlargethispage#2{#1\baselineskip}}}%
-      \afterpage{\afterpage{\afterpage{\enlargethispage#2{#1\baselineskip}}}}%
+      \afterpage{\afterpage{\addlines@here{#1}}}%
+      \afterpage{\afterpage{\afterpage{\addlines@here{#1}}}}%
     \fi
   \fi}
 
@@ -250,11 +257,19 @@
 % Works with negative numbers through the miracles of $\varepsilon$-\TeX.
 %    \begin{macrocode}
 \newcommand\removelines{\@ifstar\removelines@a\removelines@b}
-\newcommand\removelines@a[1][1]{\addlines@do{\numexpr -1*(#1) \relax}{*}}
-\newcommand\removelines@b[1][1]{\addlines@do{\numexpr -1*(#1) \relax}{}}
+\newcommand\removelines@a[1][1]{\addlines@here{\numexpr -1*(#1) \relax}}
+\newcommand\removelines@b[1][1]{\addlines@do{\numexpr -1*(#1) \relax}}
 \let\removeline\removelines
 %    \end{macrocode}
 % \end{macro}
+%
+% \begin{macro}{\squeezelines}
+% \oarg{Number of lines to add to the text height}
+%    \begin{macrocode}
+\newcommand\squeezelines[1][0]{\enlargethispage*{#1\baselineskip}}
+%    \end{macrocode}
+% \end{macro}
+%
 %
 % Finally, we don't want sloppy page number checking:
 %    \begin{macrocode}
