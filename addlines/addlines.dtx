@@ -1,83 +1,10 @@
 % \iffalse 
 %<*internal>
-\iffalse
-%</internal>
-%<*readme>
-____________________
-The addlines package
-v0.2
-
-This package provides the command \addlines for adding 
-or removing space in the textblock of the page it's
-used on. E.g., adding an extra line of text to the page
-so that a section fits better on the next page.
-
-It will also add space to the *facing* page in a 
-two-sided document.
-
-An inverse command is provided if you prefer it:
-  \removelines{ x } == \addlines{ -x }
-  
-See addlines.pdf for more info.
-
-______________
-Will Robertson
-wspr 81 [at] gmail [dot] com
-
-Copyright 2007-2008
-Distributed under the LaTeX Project Public License
-%</readme>
-%<*internal>
-\fi
 \begingroup
-%</internal>
-%<*batchfile>
 \input docstrip.tex
-\keepsilent
-\preamble
-
-  _______________________________________
-  Copyright (C) 2007-2008  Will Robertson
-
-  License information appended.
-
-
-\endpreamble
-\postamble
-
-Copyright (C) 2007-2008 by Will Robertson <wspr81@gmail.com>
-
-Distributable under the LaTeX Project Public License,
-version 1.3c or higher (your choice). The latest version of
-this license is at: http://www.latex-project.org/lppl.txt
-
-This work is "maintained" (as per LPPL maintenance status) 
-by Will Robertson.
-
-This work consists of the files addlines.dtx and
-                                addlines.ins,
-          and the derived files addlines.pdf,
-                                addlines.sty, and
-                                addlines-example.ltx.
-
-\endpostamble
-\askforoverwritefalse
-\generate{\file{\jobname.sty}{\from{\jobname.dtx}{package}}}
-\generate{\file{\jobname-example.ltx}{\from{\jobname.dtx}{example}}}
-%</batchfile>
-%<batchfile>\endbatchfile
-%<*internal>
-\generate{\file{\jobname.ins}{\from{\jobname.dtx}{batchfile}}}
-\nopreamble\nopostamble
-\generate{\file{README.txt}{\from{\jobname.dtx}{readme}}}
-\generate{\file{prepare.sh}{\from{\jobname.dtx}{prepare}}}
+\keepsilent\nopreamble\nopostamble\askforoverwritefalse
 \generate{\file{dtx-style.sty}{\from{\jobname.dtx}{dtx-style}}}
 \endgroup
-\immediate\write18{makeindex -s gind.ist -o \jobname.ind  \jobname.idx}
-\immediate\write18{makeindex -s gglo.ist -o \jobname.gls  \jobname.glo}
-%</internal>
-%
-%<*driver>
 \documentclass{ltxdoc}
 \EnableCrossrefs
 \CodelineIndex
@@ -86,7 +13,7 @@ This work consists of the files addlines.dtx and
 \begin{document}
   \DocInput{addlines.dtx}
 \end{document}
-%</driver>
+%</internal>
 % \fi
 %
 % \GetFileInfo{\jobname.sty}
@@ -101,12 +28,14 @@ This work consists of the files addlines.dtx and
 %
 % \noindent
 % This is a small package that defines a user command for adding lines
-% to the current (and facing page, if appropriate). This is intended to be used in the 
-% final typesetting
+% to the current (and facing page, if appropriate) as a wrapper around the
+% \LaTeX\ command \cmd\enlargethispage.
+% This is intended to be used in the final typesetting
 % process of a manuscript for running pages long or short in order to
 % fit their material better (starting a paragraph on the next page,
 % for example).
 %
+% \DescribeMacro{\addlines}
 % The \cmd\addlines\ command adds enough vertical space to
 % the current text block to fit in one more line of text. An optional
 % argument specifies the number of lines to add; negative numbers
@@ -124,10 +53,16 @@ This work consists of the files addlines.dtx and
 % that it is intending to affect. Too near the top and it may not be
 % seen in time (\LaTeX's page breaking routine is asynchronous).
 %
+% \DescribeMacro{\addlines*}
+% A starred form of the command (\eg, \verb|\addlines*[2]|) performs
+% the same function and additionally squeezes the page where possible
+% using any shrinkability between vertical boxes on the page.
+% 
+% \DescribeMacro{\removelines}
 % For syntactic sugar, \cmd{\addline} is a synonym for \cmd\addlines,
 % and \cmd{\removeline\textcolor{gray}(s\textcolor{gray})} is the opposite of \cmd\addlines.
 %
-% As alluded to in the introduction, for a double-sided document 
+% For a double-sided document 
 % (\eg, if the class option |[twoside]| is in
 % effect) extra height must be added to \emph{both pages} on a spread
 % for things to look good. If \cmd\addlines\ is called on an even page
@@ -142,7 +77,8 @@ This work consists of the files addlines.dtx and
 %
 % \subsection*{Notes}
 % This command is a wrapper around the more basic command
-% \cmd\enlargethispage. It uses the \pkg{changepage} package to check if
+% \cmd\enlargethispage\ and \verb|\enlargethispage*|.
+% It uses the \pkg{changepage} package to check if
 % the command is called on an even page, and the \pkg{afterpage}
 % package to add material to a facing odd page if necessary.
 %
@@ -155,21 +91,25 @@ This work consists of the files addlines.dtx and
 % other packages that modify \LaTeX's output routine (\ie, the
 % algorithm used to chunk the document into discrete pages).
 %
-% Uses $\varepsilon$-\TeX\ because I'm lazy.
-%
 % \subsection*{Example document}
 % 
 %    \begin{macrocode}
 %<*example>
 \documentclass[twoside]{article}
 \usepackage[a5paper,width=30em,lines=30]{geometry}
+\setlength\parskip{8pt plus 4pt minus 3pt}
 \usepackage{lipsum}
 \usepackage{addlines}
 \begin{document}
 \lipsum[1-5]
 
-\emph{Here is the command used correctly on an even page.}
-\addlines
+\emph{Here is ADDLINES used correctly on an even page.}
+\addline
+
+\lipsum[3-6]
+
+\emph{Here is ADDLINES* used correctly on an even page.}
+\addline*
 
 \lipsum[6-15]
 
@@ -186,6 +126,7 @@ This work consists of the files addlines.dtx and
 % \item[0.1] Initial version implementing the basic commands.
 % \item[0.2] Switched from \pkg{chngpage} to \pkg{changepage} and added package options |[draft]| and |[final]|.
 % \item[0.2a] Remove \verb|\usepackage{etex}| for better compatibility with \LaTeX\ 2015.
+% \item[0.3] Add \verb|\addlines*|.
 % \end{description}
 % 
 % 
@@ -201,7 +142,7 @@ This work consists of the files addlines.dtx and
 %
 %    \begin{macrocode}
 \ProvidesPackage{addlines}
-  [2015/07/08 v0.2a Add/remove lines from a page]
+  [2018/12/04 v0.3 Add/remove lines from a page]
 %    \end{macrocode}
 %
 % Packages:
@@ -221,18 +162,21 @@ This work consists of the files addlines.dtx and
 % \begin{macro}{\addlines}
 % \oarg{Number of lines to add to the text height}
 %    \begin{macrocode}
-\newcommand\addlines[1][1]{%
-  \enlargethispage{#1\baselineskip}%
+\newcommand\addlines{\@ifstar\addlines@a\addlines@b}
+\newcommand\addlines@a[1][1]{\addlines@do{#1}{*}}
+\newcommand\addlines@b[1][1]{\addlines@do{#1}{}}
+\newcommand\addlines@do[2]{%
+  \enlargethispage#2{#1\baselineskip}%
   \if@addlines@checkpage@
     \if@twoside
       \checkoddpage
       \ifoddpage
         \PackageError{addlines}
-          {You're adding lines to the wrong page}
+          {\MessageBreak You're adding lines to the wrong page}
           {Extra lines need to be added to both sides of a doublepage spread.^^J
            This error might clear up after a recompile, though.}%
       \else
-        \afterpage{\enlargethispage{#1\baselineskip}}%
+        \afterpage{\enlargethispage#2{#1\baselineskip}}%
       \fi
     \fi
   \fi}
@@ -244,8 +188,9 @@ This work consists of the files addlines.dtx and
 % \oarg{Number of lines to remove from the text height}
 % Works with negative numbers through the miracles of $\varepsilon$-\TeX.
 %    \begin{macrocode}
-\newcommand\removelines[1][1]{%
-  \addlines[\numexpr -1*(#1) \relax]}
+\newcommand\removelines{\@ifstar\removelines@a\removelines@b}
+\newcommand\removelines@a[1][1]{\addlines@do{\numexpr -1*(#1) \relax}{*}}
+\newcommand\removelines@b[1][1]{\addlines@do{\numexpr -1*(#1) \relax}{}}
 \let\removeline\removelines
 %    \end{macrocode}
 % \end{macro}
@@ -295,11 +240,7 @@ This work consists of the files addlines.dtx and
 \definecolor{niceblue}{rgb}{0.2,0.4,0.8}
 \def\theCodelineNo{\textcolor{niceblue}{\sffamily\tiny\arabic{CodelineNo}}}
 
-\newcommand*\name[1]{{#1}}
 \newcommand*\pkg[1]{\textsf{#1}}
-\newcommand*\feat[1]{\texttt{#1}}
-\newcommand*\opt[1]{\texttt{#1}}
-\newcommand*\note[1]{\unskip\footnote{#1}}
 \let\latin\textit
 \def\eg{\latin{e.g.}}
 \def\Eg{\latin{E.g.}}
@@ -307,25 +248,9 @@ This work consists of the files addlines.dtx and
 \def\etc{\@ifnextchar.{\latin{etc}}{\latin{etc.}\@}}
 \def\CTAN{\textsc{ctan}}
 
-\newcounter{argument}
-\g@addto@macro\endmacro{\setcounter{argument}{0}}
-\newcommand*\darg[1]{%
-  \stepcounter{argument}%
-  {\ttfamily\char`\#\theargument~:~}#1\par\noindent\ignorespaces}
-\newcommand*\doarg[1]{%
-  \stepcounter{argument}%
-  {\ttfamily\makebox[0pt][r]{[}\char`\#\theargument]:~}#1\par\noindent\ignorespaces}
-
 \def\codeline{\par\hspace{\parindent}}% two \indents in total
 %    \end{macrocode}
 %</dtx-style>
-%<*prepare>
-rm addlines.zip
-latex addlines.dtx
-mv README.txt README
-
-zip addlines.zip addlines.dtx addlines.ins addlines.pdf README
-%</prepare>
 %\fi
 % \typeout{*************************************************************}
 % \typeout{*}
