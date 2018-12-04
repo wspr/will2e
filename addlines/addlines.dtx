@@ -70,6 +70,12 @@
 % facing page. Conversely, on an odd page (\ie, a \emph{recto} or right-side
 % page) an error is produced, but the space is still added.
 %
+% For a two-column document the situation is rather more complex --- the \cmd\addlines
+% call must be located within the first column, and for a twosided twocolumn layout
+% it must be the first column of the even page. The package attempts to
+% enforce this, calling similar errors if \cmd\addlines\ is found in the wrong
+% location in the source.
+%
 % These errors can be suppressed by loading \pkg{addlines} with the |[draft]|
 % package option. The option that indicates that errors should
 % be shown is |[final]|; this is activated by default but could be overridden with a |[draft]| 
@@ -91,7 +97,17 @@
 % other packages that modify \LaTeX's output routine (\ie, the
 % algorithm used to chunk the document into discrete pages).
 %
-% \subsection*{Example document}
+% \subsection*{Change history}
+% \begin{description}
+% \item[0.1] Initial version implementing the basic commands.
+% \item[0.2] Switched from \pkg{chngpage} to \pkg{changepage} and added package options |[draft]| and |[final]|.
+% \item[0.2a] Remove \verb|\usepackage{etex}| for better compatibility with \LaTeX\ 2015.
+% \item[0.3] Add \verb|\addlines*|.
+% \item[0.4] Add two-column support.
+% \end{description}
+% 
+% \newpage
+% \subsection*{One-column example document}
 % 
 %    \begin{macrocode}
 %<*example>
@@ -121,14 +137,25 @@
 %</example>
 %    \end{macrocode}
 %
-% \subsection*{Change history}
-% \begin{description}
-% \item[0.1] Initial version implementing the basic commands.
-% \item[0.2] Switched from \pkg{chngpage} to \pkg{changepage} and added package options |[draft]| and |[final]|.
-% \item[0.2a] Remove \verb|\usepackage{etex}| for better compatibility with \LaTeX\ 2015.
-% \item[0.3] Add \verb|\addlines*|.
-% \end{description}
-% 
+% \subsection*{Two-column example document}
+%
+%    \begin{macrocode}
+%<*example>
+\documentclass[twoside,twocolumn]{article}
+\usepackage[a5paper,width=30em,lines=30]{geometry}
+\setlength\parskip{8pt plus 4pt minus 3pt}
+\usepackage{lipsum}
+\usepackage{addlines}
+\begin{document}
+\lipsum[1-9]
+
+\emph{Here is ADDLINES used correctly on an even page.}
+\addline
+
+\lipsum[1-10]
+\end{document}
+%</example>
+%    \end{macrocode}
 % 
 %
 % \StopEventually{}
@@ -142,7 +169,7 @@
 %
 %    \begin{macrocode}
 \ProvidesPackage{addlines}
-  [2018/12/04 v0.3 Add/remove lines from a page]
+  [2018/12/04 v0.4 Add/remove lines from a page]
 %    \end{macrocode}
 %
 % Packages:
@@ -162,24 +189,58 @@
 % \begin{macro}{\addlines}
 % \oarg{Number of lines to add to the text height}
 %    \begin{macrocode}
+\newcommand\addlines@here[1]{\enlargethispage{#1\baselineskip}}
 \newcommand\addlines{\@ifstar\addlines@a\addlines@b}
 \newcommand\addlines@a[1][1]{\addlines@do{#1}{*}}
 \newcommand\addlines@b[1][1]{\addlines@do{#1}{}}
 \newcommand\addlines@do[2]{%
+  \if@twocolumn
+    \addlines@twocol{#1}{#2}%  
+  \else
+    \addlines@onecol{#1}{#2}%
+  \fi
+}
+\newcommand\addlines@onecol[2]{%
   \enlargethispage#2{#1\baselineskip}%
-  \if@addlines@checkpage@
-    \if@twoside
-      \checkoddpage
-      \ifoddpage
+  \if@twoside
+    \checkoddpage
+    \ifoddpage
+      \if@addlines@checkpage@
         \PackageError{addlines}
           {\MessageBreak You're adding lines to the wrong page}
           {Extra lines need to be added to both sides of a doublepage spread.^^J
            This error might clear up after a recompile, though.}%
-      \else
-        \afterpage{\enlargethispage#2{#1\baselineskip}}%
       \fi
+    \else
+      \afterpage{\enlargethispage#2{#1\baselineskip}}%
     \fi
   \fi}
+\newcommand\addlines@twocol[2]{%
+  \enlargethispage#2{#1\baselineskip}%
+  \if@firstcolumn
+    \afterpage{\enlargethispage#2{#1\baselineskip}}%
+  \else
+    \addlines@error{column}%
+  \fi
+  \if@twoside
+    \checkoddpage
+    \ifoddpage
+      \addlines@error{page}%
+    \else
+      \afterpage{\afterpage{\enlargethispage#2{#1\baselineskip}}}%
+      \afterpage{\afterpage{\afterpage{\enlargethispage#2{#1\baselineskip}}}}%
+    \fi
+  \fi}
+
+\newcommand\addlines@error[1]{%
+  \if@addlines@checkpage@
+    \PackageError{addlines}
+      {\MessageBreak You're adding lines to the wrong #1}
+      {Extra lines need to be added to all columns and both sides of a doublepage spread.^^J
+       This error might clear up after a recompile, though.}%
+  \fi
+}
+
 \let\addline\addlines
 %    \end{macrocode}
 % \end{macro}
@@ -230,7 +291,8 @@
   {\endlist}
 
 \usepackage{xcolor}
-\usepackage{array,booktabs,calc,enumitem,fancyvrb,addlines,ifthen,refstyle,varioref,titlesec,url}
+\usepackage{array,booktabs,calc,enumitem,fancyvrb,ifthen,refstyle,varioref,titlesec,url}
+\usepackage{addlines}
 
 \usepackage[sc,osf]{mathpazo}
 

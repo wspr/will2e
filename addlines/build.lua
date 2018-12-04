@@ -1,7 +1,4 @@
 #!/usr/bin/env texlua
 
-module  = "addlines"
-
-
-
+module = "addlines"
 
