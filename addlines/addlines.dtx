@@ -45,17 +45,17 @@
 % \begin{tabular}{l>{\itshape\small}l}
 %  |\addlines| & adds one line to the current page height\\
 %  |\addlines[2]| & adds two lines to the current page\\
-%  |\addlines[-1]| & subtracts one line from the current page height
+%  |\addlines[-0.5]| & subtracts half a line from the current page height
 % \end{tabular}
 % \end{center}
-%
-% The command should be placed somewhere near the middle of the page
-% that it is intending to affect. Too near the top and it may not be
-% seen in time (\LaTeX's page breaking routine is asynchronous).
+% This command should be placed somewhere near the middle of the page
+% that it is intending to affect, and not be placed in the middle of
+% a paragraph or similar.
 %
 % \DescribeMacro{\addlines*}
 % A starred form of the command (\eg, \verb|\addlines*[2]|) performs
-% the same function as above without any checking and only on the current page
+% the same function as above without any checking and only on the current page.
+% In two-column mode this command adds lines only to the current \emph{column}.
 %
 % \DescribeMacro{\squeezepage}
 % When needing to break troublesome material on a page, it's sometimes necessary
@@ -109,60 +109,8 @@
 % \item[0.1] Initial version implementing the basic commands.
 % \item[0.2] Switched from \pkg{chngpage} to \pkg{changepage} and added package options |[draft]| and |[final]|.
 % \item[0.2a] Remove \verb|\usepackage{etex}| for better compatibility with \LaTeX\ 2015.
-% \item[0.3] Add \verb|\addlines*|.
-% \item[0.4] Add two-column support.
+% \item[0.3] Added \verb|\addlines*|, \verb|\squeezepage|, and two-column support.
 % \end{description}
-% 
-% \newpage
-% \subsection*{One-column example document}
-% 
-%    \begin{macrocode}
-%<*example>
-\documentclass[twoside]{article}
-\usepackage[a5paper,width=30em,lines=30]{geometry}
-\setlength\parskip{8pt plus 4pt minus 3pt}
-\usepackage{lipsum}
-\usepackage{addlines}
-\begin{document}
-\lipsum[1-5]
-
-\emph{Here is ADDLINES used correctly on an even page.}
-\addline
-
-\lipsum[3-6]
-
-\emph{Here is ADDLINES* used correctly on an even page.}
-\addline*
-
-\lipsum[6-15]
-
-\emph{Here is the command used erroneously on an odd page.}
-\addlines
-
-\lipsum[16-20]
-\end{document}
-%</example>
-%    \end{macrocode}
-%
-% \subsection*{Two-column example document}
-%
-%    \begin{macrocode}
-%<*example>
-\documentclass[twoside,twocolumn]{article}
-\usepackage[a5paper,width=30em,lines=30]{geometry}
-\setlength\parskip{8pt plus 4pt minus 3pt}
-\usepackage{lipsum}
-\usepackage{addlines}
-\begin{document}
-\lipsum[1-9]
-
-\emph{Here is ADDLINES used correctly on an even page.}
-\addline
-
-\lipsum[1-10]
-\end{document}
-%</example>
-%    \end{macrocode}
 % 
 %
 % \StopEventually{}
@@ -176,7 +124,7 @@
 %
 %    \begin{macrocode}
 \ProvidesPackage{addlines}
-  [2018/12/04 v0.4 Add/remove lines from a page]
+  [2018/12/04 v0.3 Add/remove lines from a page]
 %    \end{macrocode}
 %
 % Packages:
@@ -207,21 +155,22 @@
     \addlines@onecol{#1}%
   \fi
 }
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 \newcommand\addlines@onecol[1]{%
   \addlines@here{#1}%
   \if@twoside
     \checkoddpage
     \ifoddpage
-      \if@addlines@checkpage@
-        \PackageError{addlines}
-          {\MessageBreak You're adding lines to the wrong page}
-          {Extra lines need to be added to both sides of a doublepage spread.^^J
-           This error might clear up after a recompile, though.}%
-      \fi
+      \addlines@error{page}
     \else
       \afterpage{\addlines@here{#1}}%
     \fi
   \fi}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 \newcommand\addlines@twocol[1]{%
   \enlargethispage{#1\baselineskip}%
   \if@firstcolumn
@@ -238,7 +187,9 @@
       \afterpage{\afterpage{\afterpage{\addlines@here{#1}}}}%
     \fi
   \fi}
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 \newcommand\addlines@error[1]{%
   \if@addlines@checkpage@
     \PackageError{addlines}
@@ -247,7 +198,9 @@
        This error might clear up after a recompile, though.}%
   \fi
 }
-
+%    \end{macrocode}
+%
+%    \begin{macrocode}
 \let\addline\addlines
 %    \end{macrocode}
 % \end{macro}
@@ -263,10 +216,10 @@
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\squeezelines}
+% \begin{macro}{\squeezepage}
 % \oarg{Number of lines to add to the text height}
 %    \begin{macrocode}
-\newcommand\squeezelines[1][0]{\enlargethispage*{#1\baselineskip}}
+\newcommand\squeezepage[1][0]{\enlargethispage*{#1\baselineskip}}
 %    \end{macrocode}
 % \end{macro}
 %

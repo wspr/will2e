@@ -1,0 +1,24 @@
+
+\documentclass[twoside]{article}
+\usepackage[a5paper,width=30em,lines=30]{geometry}
+\setlength\parskip{8pt plus 4pt minus 3pt}
+\usepackage{lipsum}
+\usepackage{addlines}
+\begin{document}
+\lipsum[1-5]
+
+\emph{Here is ADDLINES used correctly on an even page.}
+\addline
+
+\lipsum[3-6]
+
+\emph{Here is ADDLINES* used correctly on an even page.}
+\addline*
+
+\lipsum[6-15]
+
+\emph{Here is the command used erroneously on an odd page.}
+\addlines
+
+\lipsum[16-20]
+\end{document}

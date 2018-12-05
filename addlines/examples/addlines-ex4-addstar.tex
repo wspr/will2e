@@ -1,0 +1,30 @@
+
+\documentclass[twoside,twocolumn]{article}
+\usepackage[a5paper,width=30em,lines=30]{geometry}
+\setlength\parskip{8pt plus 4pt minus 3pt}
+\usepackage{lipsum}
+\usepackage{addlines}
+\begin{document}
+\lipsum[1-9]
+
+\emph{Here is ADDLINES used correctly on an even page.}
+\addline
+
+\lipsum[1]
+\addline*
+
+\lipsum[2]
+
+\lipsum[1-9]
+
+\emph{Here is ADDLINES used correctly on an even page.}
+\addline
+
+\lipsum[1]
+\addline*[-3]
+
+\lipsum[2]
+
+\lipsum[1-9]
+
+\end{document}
