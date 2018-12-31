@@ -58,7 +58,3 @@ v0.5b:
   - Bug fix for `\LaTeX` when `[no-logos]` is used.
     Thanks to Enrico Gregorio for finding this.
 
-______________
-Will Robertson
-2006-2016
-Released under the LaTeX Project Public License
