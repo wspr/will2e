@@ -1,5 +1,5 @@
 
-THE XLTXTRA PACKAGE 2018/12/31 v0.7
+THE XLTXTRA PACKAGE 2000/01/01 v0.6
 ===================================
 
 This package was previously used to provide a number of small

@@ -28,7 +28,7 @@ typesetexe = "xelatex"
 checkengines = {"xetex"}
 recordstatus = true
 
-tagfiles = { "*.dtx" , "*.ins" }
+tagfiles = { "*.dtx" , "*.ins" , "README.md" }
 
 
 --[=================[--
@@ -95,24 +95,25 @@ function update_tag(file,content,tagname,tagdate)
 
   local content = content
 
+  -- copyright
   local newpattern  = "Copyright (C) 2006-"..theyear
   local findpattern = "Copyright%s%(C%)%s2006%-%d%d%d%d"
   local foundpattern = content:match(findpattern)
-  if not(newpattern==foundpattern) then
+  if foundpattern and not(newpattern==foundpattern) then
     print("File copyright: " .. foundpattern)
     print("New copyright:  " .. newpattern)
     content = content:gsub(findpattern,newpattern)
   end
 
-  if string.match(file, "%.dtx$") then
-    local newtag = pkgdate .. " v" .. version .. " "
-    local findpattern = "%d%d%d%d/%d%d/%d%d%sv%d.%d%s"
-    local foundtag = content:match(findpattern)
-    if not(newtag==foundtag) then
-      print("Old package date/version: " .. foundtag)
-      print("Replaced with:            " .. newtag)
-      content = content:gsub(findpattern,newtag)
-    end
+  -- versioning
+  local newtag = pkgdate .. " v" .. version
+  local findpattern = "%d%d%d%d/%d%d/%d%d%sv%d.%d"
+  local foundtag = content:match(findpattern)
+  if foundtag and not(newtag==foundtag) then
+    print("Old package date/version: " .. foundtag)
+    print("Replaced with:            " .. newtag)
+    content = content:gsub(findpattern,newtag)
   end
+
   return content
 end
