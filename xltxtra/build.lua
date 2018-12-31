@@ -5,7 +5,7 @@
 module = "xltxtra"
 version = "0.7"
 pkgdate = "2018/12/31"
-gittag  = module.."-v"..version
+copyrightyear = "2006"
 
 uploadconfig = {
   version     = version,
@@ -17,12 +17,8 @@ uploadconfig = {
   bugtracker  = "https://github.com/wspr/will2e/issues",
 }
 
-announce = {}
-announce["0.7"] = [[
-  Remove/change some deprecated internals. No user-level changes.
-]]
+require("announce.lua")
 uploadconfig.announcement = announce[version]
-
 
 typesetexe = "xelatex"
 checkengines = {"xetex"}

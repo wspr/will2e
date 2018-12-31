@@ -2,6 +2,8 @@
      L3BUILD CUSTOMISATION FOR WILL2e
 --]====================================]
 
+gittag  = module.."-v"..version
+
 today = os.date("%Y/%m/%d")
 theyear = os.date("%Y")
 
@@ -63,7 +65,7 @@ function update_tag(file,content,tagname,tagdate)
   local content = content
 
   -- copyright
-  local newpattern  = "(C) 2006-"..theyear
+  local newpattern  = "(C) "..copyrightyear.."-"..theyear
   local findpattern = "%(C%)%s2006%-%d%d%d%d"
   local foundpattern = content:match(findpattern)
   if foundpattern and not(newpattern==foundpattern) then
