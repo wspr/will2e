@@ -1,0 +1,159 @@
+
+%
+%\iffalse
+%<*package>
+%\fi
+%
+%    \begin{macrocode}
+\ProvidesPackage{subdepth}
+  [2007/09/02 v0.2 Unify subscript depths]
+%    \end{macrocode}
+%
+% \section{Loading and package options}
+%
+% Since this package is extracted from \textsf{dchem}, don't bother if that package is already loaded:
+%    \begin{macrocode}
+\@ifpackageloaded{dchem}{%
+  \PackageWarning{subdepth}
+    {subdepth is derived from dchem; aborting loading}%
+  \endinput}{}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\RequirePackage{xkeyval}
+%    \end{macrocode}
+%
+% Package option to lower the superscript height.
+%    \begin{macrocode}
+\newif\if@sd@sup@low@
+\DeclareOption{low-sup}{\@sd@sup@low@true}
+\DeclareOptionX{sym}{\def\sd@sym{#1}}
+\DeclareOptionX{sub}{\def\sd@sub{#1}}
+\DeclareOptionX{sup}{\def\sd@sup{#1}}
+%    \end{macrocode}
+% Default characters to use to size subscripts and superscripts:
+%    \begin{macrocode}
+\ExecuteOptionsX{sym=H,sub=2,sup=+}
+\ProcessOptionsX
+%    \end{macrocode}
+%
+% A command to execute the csname |#1| if it exists or do |#2| if not.
+%    \begin{macrocode}
+\def\sd@exe@else#1#2{%
+  \@ifundefined{#1}{#2}{\@nameuse{#1}}}
+%    \end{macrocode}
+%
+% \LaTeX3-like shorthands:
+%    \begin{macrocode}
+\providecommand\gdef@c[1]{\expandafter\xdef\csname#1\endcsname}
+%    \end{macrocode}
+%
+% \section{Don's code}
+%
+% \textit{The comments that follow are adapted from Donald's own.}
+%
+% Set the fontdimen parameters for subscript and superscript position
+% so that |C_2H_5^+| has both subscripts at the same vertical position.
+% Do this by actually comparing |H_2| with |H_2^+| and adjusting the font's
+% sub-lowering (16, 17) by half the difference and setting the super-raising
+% (13, 14, 15) to the matching position.  The settings (for
+% all three fonts t,s,ss) are determined once per text-font-size and
+% stored in the macro |\sd@sizet<size>| (e.g.\ |\csname sd@sizet12\endcsname|).
+% Since some specific fonts are used in different roles at different
+% text-font-sizes, the original (tfm) settings for each particular font
+% are saved in a macro |\sd@size<size>| (no `t') before they are changed
+% for the first time.  When that font appears in a different role for
+% another text-font size, those original settings are restored first
+% before making changes.
+%
+% \begin{macro}{\sd@scr@adjust}
+% This is the command called to adjust the fontdimens on the maths font.
+% If the csname |sd@sizet\f@size| exists, execute it.
+% Otherwise, define it in terms of the following macros.
+%    \begin{macrocode}
+\def\sd@scr@adjust{%
+  \sd@exe@else{sd@sizet\f@size}
+    {\expandafter\sd@set@script\csname sd@sizet\f@size\endcsname}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\sd@set@script}
+% \darg{single-token command name for executing settings}
+% textfont done last so it takes precedence in case it is the same as
+% another style (like at \cmd\tiny)
+%    \begin{macrocode}
+\def\sd@set@script#1{%
+  \begingroup % fontdimen settings are global anyway
+    \frozen@everymath{}% Prevent recursion!
+    \let#1\@empty
+    \let\sd@do@one\relax
+    \sd@set@one\scriptscriptstyle\scriptscriptfont#1\ssf@size
+    \sd@set@one\scriptstyle\scriptfont#1\sf@size
+    \sd@set@one\textstyle\textfont#1\f@size
+  \endgroup
+  #1}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\sd@set@one}
+% \darg{math style}
+% \darg{math style font}
+% \darg{csname of \texttt{sd@sizet\string\f@size}}
+% \darg{math style size}
+% This macro records the fontdimens for a single math style and passes off the adjustments to make to \cmd\sd@do@one.
+% ({\itshape Added conditional for the |[low-sup]| package option}):
+%    \begin{macrocode}
+\def\sd@set@one#1#2#3#4{%
+  \sd@exe@else{sd@size#4}
+   {\gdef@c{sd@size#4}{%
+      \if@sd@sup@low@\else
+        \fontdimen13\the#2\tw@=\the\fontdimen13#2\tw@
+        \fontdimen14\the#2\tw@=\the\fontdimen14#2\tw@
+        \fontdimen15\the#2\tw@=\the\fontdimen15#2\tw@
+      \fi
+      \fontdimen16\the#2\tw@=\the\fontdimen16#2\tw@
+      \fontdimen17\the#2\tw@=\the\fontdimen17#2\tw@}}%
+  \setbox\z@\hbox{$#1\sd@sym_\sd@sub$}%
+  \@tempdima\dp\z@
+  \setbox\z@\hbox{$#1\sd@sym_\sd@sub^{\sd@sup\vrule \@height 1em}$}%
+  \ifdim\@tempdima<\dp\z@
+    \@tempdima=\dimexpr (\@tempdima+\dp\z@)/2 \relax
+    \@tempdimb=\dimexpr (\dp\z@-\@tempdima+\ht\z@-1em) \relax
+    \xdef#3{#3\sd@do@one#2{\the\@tempdimb}{\the\@tempdima}}%
+  \fi
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\sd@do@one}
+% \darg{csname of \texttt{sd@sizet\string\f@size}}
+% \darg{dim}
+% \darg{dim}
+% ({\itshape Added conditional for the |[low-sup]| package option}):
+% TODO: different heights for fd 13--15
+%    \begin{macrocode}
+\def\sd@do@one#1#2#3{%
+  \if@sd@sup@low@\else
+    \fontdimen13#1\tw@=#2\relax
+    \fontdimen14#1\tw@=#2\relax
+    \fontdimen15#1\tw@=#2\relax
+  \fi
+  \fontdimen16#1\tw@=#3\relax
+  \fontdimen17#1\tw@=#3\relax}
+%    \end{macrocode}
+% \end{macro}
+%
+% Hook this all into \LaTeX's math font routine:
+%    \begin{macrocode}
+\addto@hook\every@math@size{\sd@scr@hook}
+\let\sd@scr@hook\sd@scr@adjust
+\ifx\glb@currsize\f@size
+  \sd@scr@adjust
+\fi
+%    \end{macrocode}
+%
+% \iffalse
+%</package>
+% \fi
+%
+\endinput
