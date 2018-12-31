@@ -98,7 +98,7 @@ function update_tag(file,content,tagname,tagdate)
   content:gsub(findpattern,newpattern)
 
   if string.match(file, "%.dtx$") then
-    local findpattern = "%d%d%d%d/%d%d/%d%d%sv%d.%d%S%s"
+    local findpattern = "%d%d%d%d/%d%d/%d%d%sv%d.%d%s"
     local foundtag = content:match(findpattern)
     print("Old package date/version: " .. foundtag)
     local newtag = pkgdate .. " v" .. version .. " "
