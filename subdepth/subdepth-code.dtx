@@ -20,21 +20,23 @@
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-\RequirePackage{xkeyval}
+\RequirePackage{keyval}
 %    \end{macrocode}
 %
 % Package option to lower the superscript height.
 %    \begin{macrocode}
 \newif\if@sd@sup@low@
 \DeclareOption{low-sup}{\@sd@sup@low@true}
-\DeclareOptionX{sym}{\def\sd@sym{#1}}
-\DeclareOptionX{sub}{\def\sd@sub{#1}}
-\DeclareOptionX{sup}{\def\sd@sup{#1}}
+\ProcessOptions
 %    \end{macrocode}
-% Default characters to use to size subscripts and superscripts:
+%
 %    \begin{macrocode}
-\ExecuteOptionsX{sym=H,sub=2,sup=+}
-\ProcessOptionsX
+\newcommand\subdepth{\setkeys{subdepth}}
+\@onlypreamble\subdepth
+\define@key{subdepth}{sym}{\def\sd@sym{#1}}
+\define@key{subdepth}{sub}{\def\sd@sub{#1}}
+\define@key{subdepth}{sup}{\def\sd@sup{#1}}
+\subdepth{sym=H,sub=2,sup=+}
 %    \end{macrocode}
 %
 % A command to execute the csname |#1| if it exists or do |#2| if not.
@@ -103,6 +105,8 @@
 % This macro records the fontdimens for a single math style and passes off the adjustments to make to \cmd\sd@do@one.
 % ({\itshape Added conditional for the |[low-sup]| package option}):
 %    \begin{macrocode}
+\newdimen\sd@gap
+\sd@gap=2ex\relax
 \def\sd@set@one#1#2#3#4{%
   \sd@exe@else{sd@size#4}
    {\gdef@c{sd@size#4}{%
@@ -113,12 +117,12 @@
       \fi
       \fontdimen16\the#2\tw@=\the\fontdimen16#2\tw@
       \fontdimen17\the#2\tw@=\the\fontdimen17#2\tw@}}%
-  \setbox\z@\hbox{$#1\sd@sym_\sd@sub$}%
+  \setbox\z@\hbox{$#1\sd@sym_{\sd@sub}$}%
   \@tempdima\dp\z@
-  \setbox\z@\hbox{$#1\sd@sym_\sd@sub^{\sd@sup\vrule \@height 1em}$}%
+  \setbox\z@\hbox{$#1\sd@sym_{\sd@sub}^{\sd@sup \vrule \@height \sd@gap}$}%
   \ifdim\@tempdima<\dp\z@
     \@tempdima=\dimexpr (\@tempdima+\dp\z@)/2 \relax
-    \@tempdimb=\dimexpr (\dp\z@-\@tempdima+\ht\z@-1em) \relax
+    \@tempdimb=\dimexpr (\dp\z@-\@tempdima+\ht\z@-\sd@gap) \relax
     \xdef#3{#3\sd@do@one#2{\the\@tempdimb}{\the\@tempdima}}%
   \fi
 }

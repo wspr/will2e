@@ -4,21 +4,20 @@
 \CodelineIndex
 \RecordChanges
 
+\usepackage{graphicx}
 
-\def\trialtext{\Huge
-$\smash{M_n}$
-$\smash{M_n'}$}
+\def\trialtext{\scalebox{2}{$M_n$ $M_n'$}}
 \newsavebox\default
 \savebox\default{\trialtext}
-
-
 
 \def\codeline{\par\noindent\hspace{2\parindent}}
 \setlength\parindent{2em}
 
 \usepackage[utf8]{inputenc}
 \usepackage[svgnames]{xcolor}
-\usepackage{booktabs,calc,enumitem,graphicx,ifthen,refstyle,subfig,varioref,subdepth,url}
+\usepackage{booktabs,calc,enumitem,ifthen,refstyle,subfig,varioref,subdepth,url}
+
+\subdepth{ sym={H}, sup={+}, sub={2} }
 
 \definecolor{niceblue}{rgb}{0.2,0.4,0.8}
 \def\theCodelineNo{\textcolor{niceblue}{\sffamily\tiny\arabic{CodelineNo}}}
@@ -72,7 +71,13 @@ Notice that to compensate for the higher subscript, the superscript position is 
 
 \section{Fine tuning}
 
-The original code was originally developed for typesetting symbols in chemistry such as $H_2$ and $H_2^+$, where you don't want the subscript to be moving around. Indeed, \pkg{subdepth} uses this example to measure the lengths it needs to do its adjustments nicely.
+The original code was originally developed for typesetting symbols in chemistry such as $H_2$ and $H_2^+$, where you don't want the subscript to be moving around. Indeed, \pkg{subdepth} uses this very example to measure the lengths it needs to do its adjustments nicely.
+For other fonts or other situations, it may be better to measure using a different expression.
+The setup command \cs{subdepth} allows the following keyval definitions to do this:
+\begin{verbatim}
+  \subdepth{ sym={H}, sup={+}, sub={2} }
+\end{verbatim}
+This command can only be run in the preamble of the document and should be done before any mathematical typesetting is performed.
 
 
 \section{Algorithm}
