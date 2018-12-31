@@ -7,7 +7,7 @@
 \keepsilent
 \preamble
   ____________________________
-  The XLTXTRA package         
+  The XLTXTRA package
   (C) 2006-2016 Will Robertson
   License information appended
 
@@ -20,7 +20,7 @@ Distributable under the LaTeX Project Public License,
 version 1.3c or higher (your choice). The latest version of
 this license is at: http://www.latex-project.org/lppl.txt
 
-This work is "maintained" (as per LPPL maintenance status) 
+This work is "maintained" (as per LPPL maintenance status)
 by Will Robertson.
 
 This work consists of the file  xltxtra.dtx
@@ -71,7 +71,7 @@ This work consists of the file  xltxtra.dtx
 %
 % \section{Introduction}
 %
-% This document describes the \pkg{xltxtra} package. 
+% This document describes the \pkg{xltxtra} package.
 % It implements some odds-and-ends features when using the \XeLaTeX\ format.
 %
 % \subsection{Usage}
@@ -97,7 +97,7 @@ This work consists of the file  xltxtra.dtx
 %	  |\textsuperscript     | \textsuperscript{abcdefghijklmnopqrstuvwxyz1234567890}\par
 %	  |\textsubscript       | \textsubscript{abcdefghijklmnopqrstuvwxyz1234567890}
 % \end{quotation}
-% But will fall back on `faked' ones if they don't exist: 
+% But will fall back on `faked' ones if they don't exist:
 % (this is {\fontspec{Didot} Didot})
 % \begin{quotation}\color{niceblue}
 %	\fontspec{Didot}
@@ -120,9 +120,9 @@ This work consists of the file  xltxtra.dtx
 % The \pkgopt{no-sscript} will swap the definitions of the starred and non-starred versions of the commands described above if the new definitions are undesirable.
 %
 % The macros
-% \cmd\realsubscript, 
-% \cmd\realsuperscript, 
-% \cmd\fakesubscript, and 
+% \cmd\realsubscript,
+% \cmd\realsuperscript,
+% \cmd\fakesubscript, and
 % \cmd\fakesuperscript\
 % may be used to access the `new' and `old' functionalities regardless of the \pkgopt{no-sscript}.
 %
@@ -163,7 +163,7 @@ This work consists of the file  xltxtra.dtx
 % These logos, ideally, should be hand-tuned for each font that they're used in. Please refer to the |metalogo| documentation for more information.
 %
 % The \pkgopt{no-logos} will not redefine \cmd\TeX\ or \cmd\LaTeX\ but will still define \cmd\XeTeX\ and \cmd\XeLaTeX.
-% 
+%
 %
 % \subsection{Vulgar fractions}
 % The \cmd\vfrac\ command for setting `vulgar' fractions based on AAT or OpenType font features. Not really recommended for many purposes, depending on your text, but it's a good example of how to program such things using \pkg{fontspec}.
@@ -186,7 +186,7 @@ This work consists of the file  xltxtra.dtx
 % \end{example}
 %
 % \subsection{The \cmd\showhyphens\ command}
-% The default definition doesn't work in \XeTeX. 
+% The default definition doesn't work in \XeTeX.
 % A new version, written by Enrico Gregorio, is included in this package that \emph{does} work; note that the syntax now matches plain \TeX's original rather than the comma-list approach taken by an earlier version of this package.
 % \showhyphens{discomedusoid discommodiousness}
 %
@@ -272,7 +272,7 @@ This work consists of the file  xltxtra.dtx
   \let\LaTeXe\original@LaTeXe
 \fi
 %    \end{macrocode}
-% 
+%
 % \begin{macro}{\TeX@logo@spacing}
 % This macro is now deprecated. It is recommended to use the commands
 % from |metalogo|.
@@ -288,7 +288,7 @@ This work consists of the file  xltxtra.dtx
   \setlogokern{Xe}{#2}%
   \setlogodrop{#3}%
   \setlogokern{La}{#4}%
-  \setlogokern{aT}{#5}%  
+  \setlogokern{aT}{#5}%
   \setlogokern{eL}{#6}}
 %    \end{macrocode}
 % \end{macro}
@@ -354,9 +354,9 @@ This work consists of the file  xltxtra.dtx
 %    \begin{macrocode}
 \newcommand\namedglyph[1]{%
   \@tempcnta=\XeTeXglyphindex "#1"\relax
-  \ifnum\@tempcnta>0 
-    \XeTeXglyph\@tempcnta 
-  \else 
+  \ifnum\@tempcnta>0
+    \XeTeXglyph\@tempcnta
+  \else
     \xxt@namedglyph@fallback{#1}%
   \fi}
 %    \end{macrocode}
@@ -400,14 +400,14 @@ This work consists of the file  xltxtra.dtx
    {% build a paragraph with the word with a very narrow line width
     \dim_set:Nn \hsize { 1sp }
     % disregard spurious messages
-    \hbadness = \c_ten_thousand
+    \hbadness = 10000\relax
     \dim_set:Nn \hfuzz { \c_max_dim }
     % clear possible values of \everypar and other parameters
     \everypar={}
     \skip_set:Nn \leftskip { 0pt }
     \skip_set_eq:NN \rightskip \leftskip
     % skip the first step
-    \pretolerance = \c_minus_one
+    \pretolerance = -1\relax
     % avoid the indentation and add a skip to allow hyphenation
     \noindent
     \skip_horizontal:n { 0pt }
@@ -469,8 +469,8 @@ This work consists of the file  xltxtra.dtx
 \renewenvironment{theglossary}
   {\small\list{}{}
      \item\relax
-     \glossary@prologue\GlossaryParms 
-     \let\item\@idxitem \ignorespaces 
+     \glossary@prologue\GlossaryParms
+     \let\item\@idxitem \ignorespaces
      \def\pfill{\hspace*{\fill}}}
   {\endlist}
 
