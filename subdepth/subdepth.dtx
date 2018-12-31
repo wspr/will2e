@@ -1,80 +1,42 @@
-% \iffalse 
-%<*internal>
-\iffalse
-%</internal>
-%<*readme>
-____________________
-The SUBDEPTH package
-v0.2
-
-This package uses some Donald Arseneau code to unify the heights
-of math subscripts regardless of the presence of a superscript above.
-Compare $M_n$ to $M_n'$ in regular LaTeX for why this can be desirable.
-
-v0.2 makes some changes deviating from Don's original algorith.
-
-__________________________
-Packaged by Will Robertson
-wspr 81 [at] gmail [dot] com
-
-Copyright 2007
-Distributed under the LaTeX Project Public License
-%</readme>
-%<*internal>
-\fi
-\begingroup
-%</internal>
-%<*batchfile>
-\input docstrip.tex
-\keepsilent
-\preamble
-
-  __________________________________
-  Copyright (C) 2007  Will Robertson
-
-  License information appended.
-
-
-\endpreamble
-\postamble
-
-Copyright (C) 2007 by Will Robertson <wspr81@gmail.com>
-
-Distributable under the LaTeX Project Public License,
-version 1.3c or higher (your choice). The latest version of
-this license is at: http://www.latex-project.org/lppl.txt
-
-This work is "maintained" (as per LPPL maintenance status) 
-by Will Robertson.
-
-This work consists of the file  subdepth.dtx
-          and the derived files subdepth.pdf,
-                                subdepth.sty, and
-                                subdepth.ins.
-
-\endpostamble
-\askforoverwritefalse
-\generate{\file{subdepth.sty}{\from{subdepth.dtx}{package}}}
-%</batchfile>
-%<batchfile>\endbatchfile
-%<*internal>
-\generate{\file{\jobname.ins}{\from{\jobname.dtx}{batchfile}}}
-\nopreamble\nopostamble
-\generate{\file{README.txt}{\from{\jobname.dtx}{readme}}}
-\generate{\file{prepare.sh}{\from{\jobname.dtx}{prepare}}}
-\generate{\file{dtx-style.sty}{\from{\jobname.dtx}{dtx-style}}}
-\endgroup
-\immediate\write18{makeindex -s gind.ist -o \jobname.ind  \jobname.idx}
-\immediate\write18{makeindex -s gglo.ist -o \jobname.gls  \jobname.glo}
-%</internal>
-%
+% \iffalse
 %<*driver>
 \documentclass{ltxdoc}
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
-%\OnlyDescription
-\usepackage{dtx-style}
+
+
+\def\trialtext{\Huge
+$\smash{M_n}$
+$\smash{M_n'}$}
+\newsavebox\default
+\savebox\default{\trialtext}
+
+
+
+\def\codeline{\par\noindent\hspace{2\parindent}}
+\setlength\parindent{2em}
+
+\usepackage[utf8]{inputenc}
+\usepackage[svgnames]{xcolor}
+\usepackage{booktabs,calc,enumitem,graphicx,ifthen,refstyle,subfig,varioref,subdepth,url}
+
+\definecolor{niceblue}{rgb}{0.2,0.4,0.8}
+\def\theCodelineNo{\textcolor{niceblue}{\sffamily\tiny\arabic{CodelineNo}}}
+
+\newcommand*\pkg[1]{\textsf{#1}}
+
+\newcounter{argument}
+\makeatletter
+\g@addto@macro\endmacro{\setcounter{argument}{0}}
+\makeatother
+\newcommand*\darg[1]{%
+  \stepcounter{argument}%
+  {\ttfamily\char`\#\theargument~:~}#1\par\noindent\ignorespaces}
+\newcommand*\doarg[1]{%
+  \stepcounter{argument}%
+  {\ttfamily\makebox[0pt][r]{[}\char`\#\theargument]:~}#1\par\noindent\ignorespaces}
+
 \begin{document}
   \DocInput{\jobname.dtx}
 \end{document}
@@ -105,7 +67,7 @@ This work consists of the file  subdepth.dtx
 %
 % In some circumstances, this isn't particularly desirable; this package adjusts \LaTeX's behaviour to unify the position of the subscript in both cases:
 % \begin{center}
-% \text
+% \trialtext
 % \end{center}
 %
 % Notice that to compensate for the higher subscript, the superscript position is slightly raised. The |[low-sup]| package option will suppress this change to the height of the superscripts.
@@ -387,65 +349,5 @@ This work consists of the file  subdepth.dtx
 %
 %\iffalse
 %</package>
-%<*dtx-style>
-%    \begin{macrocode}
-\ProvidesPackage{dtx-style}
-\errorcontextlines=999
-
-\def\text{\Huge 
-$\smash{M_n}$
-$\smash{M_n'}$}
-\newsavebox\default
-\savebox\default{\text}
-
-\usepackage[utf8]{inputenc}
-\usepackage[svgnames]{xcolor}
-\usepackage{booktabs,calc,enumitem,graphicx,ifthen,refstyle,subfig,varioref,subdepth,url}
-  
-\definecolor{niceblue}{rgb}{0.2,0.4,0.8}
-\def\theCodelineNo{\textcolor{niceblue}{\sffamily\tiny\arabic{CodelineNo}}}
-
-\newcommand*\name[1]{{#1}}
-\newcommand*\pkg[1]{\textsf{#1}}
-\newcommand*\feat[1]{\texttt{#1}}
-\newcommand*\opt[1]{\texttt{#1}}
-\newcommand*\note[1]{\unskip\footnote{#1}}
-\let\latin\textit
-\def\eg{\latin{e.g.}}
-\def\Eg{\latin{E.g.}}
-\def\ie{\latin{i.e.}}
-\def\etc{\@ifnextchar.{\latin{etc}}{\latin{etc.}\@}}
-\def\eTeX{$\varepsilon$-\TeX}
-
-\newcounter{argument}
-\g@addto@macro\endmacro{\setcounter{argument}{0}}
-\newcommand*\darg[1]{%
-  \stepcounter{argument}%
-  {\ttfamily\char`\#\theargument~:~}#1\par\noindent\ignorespaces}
-\newcommand*\doarg[1]{%
-  \stepcounter{argument}%
-  {\ttfamily\makebox[0pt][r]{[}\char`\#\theargument]:~}#1\par\noindent\ignorespaces}
-
-\def\codeline{\par\noindent\hspace{2\parindent}}
-\setlength\parindent{2em}
-\frenchspacing
-%    \end{macrocode}
-%</dtx-style>
-%<*prepare>
-rm subdepth.zip
-latex subdepth.dtx
-mv README.txt README
-zip subdepth.zip subdepth.dtx subdepth.ins subdepth.pdf README
-%</prepare>
-%\fi
-%
-% \typeout{*************************************************************}
-% \typeout{*}
-% \typeout{* To finish the installation you have to move the following}
-% \typeout{* file into a directory searched by XeTeX:}
-% \typeout{*}
-% \typeout{* \space\space\space subdepth.sty}
-% \typeout{*}
-% \typeout{*************************************************************}
 %
 \endinput
