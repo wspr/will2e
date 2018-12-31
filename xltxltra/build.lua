@@ -93,18 +93,26 @@ function update_tag(file,content,tagname,tagdate)
     return content
   end
 
-  local findpattern = "2006-%d%d%d%d"
-  local newpattern  = "2006-"..theyear
-  content:gsub(findpattern,newpattern)
+  local content = content
+
+  local newpattern  = "Copyright (C) 2006-"..theyear
+  local findpattern = "Copyright%s%(C%)%s2006%-%d%d%d%d"
+  local foundpattern = content:match(findpattern)
+  if not(newpattern==foundpattern) then
+    print("File copyright: " .. foundpattern)
+    print("New copyright:  " .. newpattern)
+    content = content:gsub(findpattern,newpattern)
+  end
 
   if string.match(file, "%.dtx$") then
+    local newtag = pkgdate .. " v" .. version .. " "
     local findpattern = "%d%d%d%d/%d%d/%d%d%sv%d.%d%s"
     local foundtag = content:match(findpattern)
-    print("Old package date/version: " .. foundtag)
-    local newtag = pkgdate .. " v" .. version .. " "
-    print("Replaced with:            " .. newtag)
-    local newcontent = content:gsub(findpattern,newtag)
-    return newcontent
+    if not(newtag==foundtag) then
+      print("Old package date/version: " .. foundtag)
+      print("Replaced with:            " .. newtag)
+      content = content:gsub(findpattern,newtag)
+    end
   end
   return content
 end
