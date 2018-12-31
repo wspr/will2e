@@ -63,8 +63,8 @@ function update_tag(file,content,tagname,tagdate)
   local content = content
 
   -- copyright
-  local newpattern  = "Copyright (C) 2006-"..theyear
-  local findpattern = "Copyright%s%(C%)%s2006%-%d%d%d%d"
+  local newpattern  = "(C) 2006-"..theyear
+  local findpattern = "%(C%)%s2006%-%d%d%d%d"
   local foundpattern = content:match(findpattern)
   if foundpattern and not(newpattern==foundpattern) then
     print("File copyright: " .. foundpattern)
