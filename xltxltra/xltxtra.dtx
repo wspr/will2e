@@ -273,25 +273,6 @@ This work consists of the file  xltxtra.dtx
 \fi
 %    \end{macrocode}
 %
-% \begin{macro}{\TeX@logo@spacing}
-% This macro is now deprecated. It is recommended to use the commands
-% from |metalogo|.
-%
-%    \begin{macrocode}
-\newcommand*\TeX@logo@spacing[6]{%
-  \PackageWarning{xltxtra}{%
-    Use of \protect\TeX@logo@spacing\space is deprecated,\MessageBreak
-    recommend to use commands from package `metalogo' instead}
-  \setlogokern{Te}{#1}%
-  \setlogokern{eT}{#1}%
-  \setlogokern{eX}{#2}%
-  \setlogokern{Xe}{#2}%
-  \setlogodrop{#3}%
-  \setlogokern{La}{#4}%
-  \setlogokern{aT}{#5}%
-  \setlogokern{eL}{#6}}
-%    \end{macrocode}
-% \end{macro}
 %
 %
 % \section{Subscript and superscript}
