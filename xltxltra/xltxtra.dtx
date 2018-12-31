@@ -1,59 +1,162 @@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% THE XLTXTRA PACKAGE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% Copyright (C) 2006-2018 by Will Robertson <wspr81@gmail.com>
+%%
+%% Distributable under the LaTeX Project Public License,
+%% version 1.3c or higher (your choice). The latest version of
+%% this license is at: http://www.latex-project.org/lppl.txt
+%%
+%% This work is "maintained" (as per LPPL maintenance status)
+%% by Will Robertson.
+%%
+%% This work consists of the files xltxtra.dtx and xltxtra.ins,
+%%           and the derived files xltxtra.sty and xltxtra.pdf.
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % \iffalse
-%<*internal>
-\begingroup
-%</internal>
-%<*batchfile>
-\input docstrip.tex
-\keepsilent
-\preamble
-  ____________________________
-  The XLTXTRA package
-  (C) 2006-2018 Will Robertson
-  License information appended
-
-\endpreamble
-\postamble
-
-Copyright (C) 2006-2018 by Will Robertson <wspr81@gmail.com>
-
-Distributable under the LaTeX Project Public License,
-version 1.3c or higher (your choice). The latest version of
-this license is at: http://www.latex-project.org/lppl.txt
-
-This work is "maintained" (as per LPPL maintenance status)
-by Will Robertson.
-
-This work consists of the file  xltxtra.dtx
-          and the derived files xltxtra.sty,
-                                xltxtra.ins, and
-                                xltxtra.pdf.
-
-\endpostamble
-\askforoverwritefalse
-\generate{\file{xltxtra.sty}{\from{xltxtra.dtx}{package}}}
-%</batchfile>
-%<batchfile>\endbatchfile
-%<*internal>
-\generate{\file{xltxtra.ins}{\from{xltxtra.dtx}{batchfile}}}
-\nopreamble\nopostamble
-\generate{\file{dtx-style.sty}{\from{xltxtra.dtx}{dtx-style}}}
-\def\tmpa{plain}
-\ifx\tmpa\fmtname\endgroup\expandafter\bye\fi
-\endgroup
-%</internal>
-%
 %<*driver>
 \documentclass{ltxdoc}
+
+\makeatletter
+
+\def\@dotsep{1000}
+\setcounter{tocdepth}{2}
+
+\setcounter{IndexColumns}{2}
+\renewenvironment{theglossary}
+  {\small\list{}{}
+     \item\relax
+     \glossary@prologue\GlossaryParms
+     \let\item\@idxitem \ignorespaces
+     \def\pfill{\hspace*{\fill}}}
+  {\endlist}
+
+\usepackage{array,booktabs,calc,color,enumitem,fancyvrb,graphicx,ifthen,longtable,refstyle,varioref,xltxtra}
+\usepackage[rm]{titlesec}
+\setmainfont{texgyrepagella}[
+  Extension = .otf ,
+  UprightFont = *-regular ,
+  ItalicFont = *-italic ,
+  BoldFont = *-bold ,
+  BoldItalicFont = *-bolditalic ,
+]
+\setsansfont{texgyreheros}[
+  Scale=MatchLowercase ,
+  Extension = .otf ,
+  UprightFont = *-regular ,
+  ItalicFont = *-italic ,
+  BoldFont = *-bold ,
+  BoldItalicFont = *-bolditalic ,
+]
+\setmonofont{lmmono10}[
+  Extension = .otf ,
+  UprightFont = *-regular ,
+  ItalicFont = *-italic ,
+]
+
+\linespread{1.05}      % A bit more space between lines
+\frenchspacing         % Remove space after punctuation
+
+\setlogokern{Xe}{-0.061em}
+\setlogokern{eL}{-0.057em}
+\setlogokern{La}{-0.28em}
+\setlogokern{aT}{-0.10em}
+\setlogokern{Te}{-0.0575em}
+\setlogokern{eX}{-0.072em}
+\setlogokern{eT}{-0.056em}
+\setlogokern{X2}{0.1667em}
+\setlogodrop{0.153em}
+\setLaTeXa{\scshape a}
+\setLaTeXee{\mbox{\fontspec{Times}\itshape ε}}
+\def\eTeX{{\fontspec{Times}\textit{ε}{}}-\TeX} % The eTeX logo is not (yet) covered by metalogo
+
+\definecolor{niceblue}{rgb}{0.2,0.4,0.6}
+\def\theCodelineNo{\textcolor{niceblue}{\sffamily\tiny\arabic{CodelineNo}}}
+
+\newenvironment{example}
+  {\VerbatimEnvironment
+   \begin{trivlist}\item[]
+   \begin{minipage}{\linewidth}
+   \par\noindent\hrulefill\par
+   \begin{VerbatimOut}[gobble=4]{\examplefilename}}
+  {\end{VerbatimOut}\relax
+   \begingroup
+     \color{niceblue}
+     \typesetexample
+   \endgroup\par\noindent\hrulefill\par
+   \end{minipage}\end{trivlist}}
+
+\let\examplesize\normalsize
+\let\auxwidth\relax
+
+\newlength\examplewidth\newlength\verbatimwidth
+\newlength\exoutdent   \newlength\exverbgap
+\setlength\exverbgap{0em}
+\setlength\exoutdent{-0\textwidth}
+\newsavebox\verbatimbox
+\edef\examplefilename{xltxtra.example}
+
+\newcommand\typesetexample{\relax
+   \begin{lrbox}{\verbatimbox}\relax
+     \BVerbatimInput[fontsize=\small]{\examplefilename}\relax
+   \end{lrbox}
+   \begin{list}{}{\setlength\itemindent{0pt}
+                  \setlength\leftmargin\exoutdent
+                  \setlength\rightmargin{0pt}}\item
+   \ifx\auxwidth\relax
+     \setlength\verbatimwidth{\wd\verbatimbox}\relax
+   \else
+     \setlength\verbatimwidth{\auxwidth}\relax
+   \fi
+   \begin{minipage}[c]{\textwidth-\exoutdent-\verbatimwidth-\exverbgap}
+     \catcode`\%=14\centering\examplesize\input\examplefilename\relax
+   \end{minipage}\hfill
+   \begin{minipage}[c]{\verbatimwidth}
+     \usebox\verbatimbox
+   \end{minipage}
+   \end{list}
+   \global\let\examplesize\normalsize}
+
+\newcommand*\setexsize[1]{\let\examplesize#1}
+\newcommand*\setverbwidth[1]{\def\auxwidth{#1}}
+
+\newcommand*\name[1]{{#1}}
+\newcommand*\pkg[1]{\texttt{#1}}
+\newcommand*\pkgopt[1]{\texttt{[#1]} package option}
+
+\newcommand*\acro[1]{\textsc{\MakeLowercase{#1}}}
+
+\newcommand*\note[1]{\unskip\footnote{#1}}
+
+\let\latin\textit
+\def\eg{\latin{e.g.}}
+\def\Eg{\latin{E.g.}}
+\def\ie{\latin{i.e.}}
+\def\etc{\@ifnextchar.{\latin{etc}}{\latin{etc.}\@}}
+
+\newcounter{argument}
+\g@addto@macro\endmacro{\setcounter{argument}{0}}
+\newcommand*\darg[1]{%
+  \stepcounter{argument}%
+  \noindent{\ttfamily\#\theargument}:~#1\par\nobreak}
+\newcommand*\doarg[1]{%
+  \stepcounter{argument}%
+  \noindent{\ttfamily\makebox[0pt][r]{[}\#\theargument]}:~#1\par\nobreak}
+
+\newcommand\unichar[2]{\textsc{\MakeLowercase{u+#1: #2}}}
+
+\makeatother
+
 \EnableCrossrefs
 \CodelineIndex
-\RecordChanges
-%\OnlyDescription
-\usepackage{dtx-style}
 \begin{document}
   \DocInput{xltxtra.dtx}
 \end{document}
 %</driver>
-%
 % \fi
 %
 % \errorcontextlines=999
@@ -110,12 +213,6 @@ This work consists of the file  xltxtra.dtx
 %	  |\textsuperscript*    | \textsuperscript*{abcdefghijklmnopqrstuvwxyz1234567890}\par
 %	  |\textsubscript*      | \textsubscript*{abcdefghijklmnopqrstuvwxyz1234567890}
 % \end{quotation}
-% But beware fonts lacking the full repertoire: (this is Adobe Jenson Pro)
-% \begin{quotation}\color{niceblue}
-%	\fontspec{Adobe Jenson Pro}
-%	  |\textsuperscript     | \makebox[0pt][l]{\textsuperscript{abcdefghijklmnopqrstuvwxyz1234567890}}\par
-%	  |\textsubscript       | \makebox[0pt][l]{\textsubscript{abcdefghijklmnopqrstuvwxyz1234567890}}
-% \end{quotation}
 %
 % The \pkgopt{no-sscript} will swap the definitions of the starred and non-starred versions of the commands described above if the new definitions are undesirable.
 %
@@ -168,10 +265,8 @@ This work consists of the file  xltxtra.dtx
 % \subsection{Vulgar fractions}
 % The \cmd\vfrac\ command for setting `vulgar' fractions based on AAT or OpenType font features. Not really recommended for many purposes, depending on your text, but it's a good example of how to program such things using \pkg{fontspec}.
 % \begin{example}
-%   \fontspec{Skia}
-%   AAT: \vfrac{123}{456}\\
-%   \fontspec{Warnock Pro}
-%   ICU: \vfrac{123}{456}
+%   \fontspec{LibreCaslonText-Regular.otf}
+%   \vfrac{123}{456}
 % \end{example}
 % \noindent (This can also be achieved in regular \LaTeX\ with either the \pkg{nicefrac} or \pkg{xfrac} package.)
 %
@@ -180,7 +275,7 @@ This work consists of the file  xltxtra.dtx
 % \subsection{Named glyphs}
 % Along the way somewhere, \XeTeX\ added support for selecting glyphs from a TrueType-based OpenType font based on their internal glyph name. Jonathan Kew posted the following definition as a nice interface to it.
 % \begin{example}
-%   \fontspec{Charis SIL}
+%   \fontspec{charis}
 %   \namedglyph{yen}
 %   \namedglyph{smile}
 % \end{example}
@@ -431,139 +526,11 @@ This work consists of the file  xltxtra.dtx
 %    \end{macrocode}
 % \end{macro}
 %
-%
 %\iffalse
 %</package>
 %\fi
 %
 % \Finale
-%
-%\iffalse
-%<*dtx-style>
-%    \begin{macrocode}
-\ProvidesPackage{dtx-style}
-
-\def\@dotsep{1000}
-\setcounter{tocdepth}{2}
-
-\setcounter{IndexColumns}{2}
-\renewenvironment{theglossary}
-  {\small\list{}{}
-     \item\relax
-     \glossary@prologue\GlossaryParms
-     \let\item\@idxitem \ignorespaces
-     \def\pfill{\hspace*{\fill}}}
-  {\endlist}
-
-\usepackage{array,booktabs,calc,color,enumitem,fancyvrb,graphicx,ifthen,longtable,refstyle,varioref,xltxtra}
-\usepackage[rm]{titlesec}
-\setmainfont[Mapping=tex-text]{TeX Gyre Pagella}
-\setsansfont[Scale=MatchLowercase,Mapping=tex-text]{Verdana}
-\setmonofont[Scale=MatchLowercase]{Consolas}
-
-\linespread{1.05}      % A bit more space between lines
-\frenchspacing         % Remove ugly extra space after punctuation
-
-\setlogokern{Xe}{-0.061em}
-\setlogokern{eL}{-0.057em}
-\setlogokern{La}{-0.28em}
-\setlogokern{aT}{-0.10em}
-\setlogokern{Te}{-0.0575em}
-\setlogokern{eX}{-0.072em}
-\setlogokern{eT}{-0.056em}
-\setlogokern{X2}{0.1667em}
-\setlogodrop{0.153em}
-\setLaTeXa{\scshape a}
-\setLaTeXee{\mbox{\fontspec{Times}\itshape ε}}
-\def\eTeX{{\fontspec{Times}\textit{ε}{}}-\TeX} % The eTeX logo is not (yet) covered by metalogo
-
-\definecolor{niceblue}{rgb}{0.2,0.4,0.6}
-\def\theCodelineNo{\textcolor{niceblue}{\sffamily\tiny\arabic{CodelineNo}}}
-
-\newenvironment{example}
-  {\VerbatimEnvironment
-   \begin{trivlist}\item[]
-   \begin{minipage}{\linewidth}
-   \par\noindent\hrulefill\par
-   \begin{VerbatimOut}[gobble=4]{\examplefilename}}
-  {\end{VerbatimOut}\relax
-   \begingroup
-     \color{niceblue}
-     \typesetexample
-   \endgroup\par\noindent\hrulefill\par
-   \end{minipage}\end{trivlist}}
-
-\let\examplesize\normalsize
-\let\auxwidth\relax
-
-\newlength\examplewidth\newlength\verbatimwidth
-\newlength\exoutdent   \newlength\exverbgap
-\setlength\exverbgap{0em}
-\setlength\exoutdent{-0\textwidth}
-\newsavebox\verbatimbox
-\edef\examplefilename{xltxtra.example}
-
-\newcommand\typesetexample{\relax
-   \begin{lrbox}{\verbatimbox}\relax
-     \BVerbatimInput[fontsize=\small]{\examplefilename}\relax
-   \end{lrbox}
-   \begin{list}{}{\setlength\itemindent{0pt}
-                  \setlength\leftmargin\exoutdent
-                  \setlength\rightmargin{0pt}}\item
-   \ifx\auxwidth\relax
-     \setlength\verbatimwidth{\wd\verbatimbox}\relax
-   \else
-     \setlength\verbatimwidth{\auxwidth}\relax
-   \fi
-   \begin{minipage}[c]{\textwidth-\exoutdent-\verbatimwidth-\exverbgap}
-     \catcode`\%=14\centering\examplesize\input\examplefilename\relax
-   \end{minipage}\hfill
-   \begin{minipage}[c]{\verbatimwidth}
-     \usebox\verbatimbox
-   \end{minipage}
-   \end{list}
-   \global\let\examplesize\normalsize}
-
-\newcommand*\setexsize[1]{\let\examplesize#1}
-\newcommand*\setverbwidth[1]{\def\auxwidth{#1}}
-
-\newcommand*\name[1]{{#1}}
-\newcommand*\pkg[1]{\texttt{#1}}
-\newcommand*\pkgopt[1]{\texttt{[#1]} package option}
-
-\newcommand*\acro[1]{\textsc{\MakeLowercase{#1}}}
-
-\newcommand*\note[1]{\unskip\footnote{#1}}
-
-\let\latin\textit
-\def\eg{\latin{e.g.}}
-\def\Eg{\latin{E.g.}}
-\def\ie{\latin{i.e.}}
-\def\etc{\@ifnextchar.{\latin{etc}}{\latin{etc.}\@}}
-
-\newcounter{argument}
-\g@addto@macro\endmacro{\setcounter{argument}{0}}
-\newcommand*\darg[1]{%
-  \stepcounter{argument}%
-  \noindent{\ttfamily\#\theargument}:~#1\par\nobreak}
-\newcommand*\doarg[1]{%
-  \stepcounter{argument}%
-  \noindent{\ttfamily\makebox[0pt][r]{[}\#\theargument]}:~#1\par\nobreak}
-
-\newcommand\unichar[2]{\textsc{\MakeLowercase{u+#1: #2}}}
-
-%    \end{macrocode}
-%</dtx-style>
-%\fi
-%
-% \typeout{*************************************************************}
-% \typeout{*}
-% \typeout{* To finish the installation you have to move the following}
-% \typeout{* file into a directory searched by XeTeX:}
-% \typeout{*}
-% \typeout{* \space\space\space xltxtra.sty}
-% \typeout{*}
-% \typeout{*************************************************************}
 %
 \endinput
 

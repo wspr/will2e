@@ -24,12 +24,11 @@ announce["0.7"] = [[
 uploadconfig.announcement = announce[version]
 
 
+typesetexe = "xelatex"
 checkengines = {"xetex"}
 recordstatus = true
 
-sourcefiles  = {"*.dtx"}
-unpackfiles  = {"*.dtx"}
-tagfiles = { module..".dtx" }
+tagfiles = { "*.dtx" , "*.ins" }
 
 
 --[=================[--
@@ -37,6 +36,8 @@ tagfiles = { module..".dtx" }
 --]=================]--
 
 today = os.date("%Y/%m/%d")
+theyear = os.date("%Y")
+
 if pkgdate ~= today then
   print("Package date is not today:"..
         "\nPkg date: "..pkgdate..
@@ -91,6 +92,10 @@ function update_tag(file,content,tagname,tagdate)
   if not(check_status()) then
     return content
   end
+
+  local findpattern = "2006-%d%d%d%d"
+  local newpattern  = "2006-"..theyear
+  content:gsub(findpattern,newpattern)
 
   if string.match(file, "%.dtx$") then
     local findpattern = "%d%d%d%d/%d%d/%d%d%sv%d.%d%S%s"
