@@ -1,0 +1,16 @@
+\input regression-test.tex\relax
+
+\documentclass{article}
+\PassOptionsToPackage{enable-debug}{expl3}
+\usepackage{xltxtra}
+\ExplSyntaxOn
+\debug_on:n {all}
+\ExplSyntaxOff
+\begin{document}
+
+\START
+\TIMO
+\typeout{This is just a package loading test. No further output expected.}
+\OMIT
+
+\end{document}
