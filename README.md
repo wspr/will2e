@@ -10,4 +10,4 @@ One or two probably see continued use here and there.
 
 While I'm happy to continue to maintain these packages to some degree they shouldn't be considered ‘under development’ in any real sense.
 
-(C) 2017 Will Robertson
+(C) 2017-2018 Will Robertson
