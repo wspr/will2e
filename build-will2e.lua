@@ -14,8 +14,12 @@ if pkgdate ~= today then
         "\nToday:    "..today)
 end
 
+local f=io.open("l3build-wspr.lua","r")
+if f ~= nil then
+  io.close(f)
+  require("l3build-wspr.lua")
+end
 
-require("l3build-wspr.lua")
 
 --[===========[--
      TAGGING

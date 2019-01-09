@@ -31,7 +31,9 @@ tlmgr install cm etex knuth-lib latex-bin tex tex-ini-files unicode-data xetex
 tlmgr install   \
   fontspec      \
   unicode-math  \
+  ifluatex ifxetex \
   xltxtra       \
+  realscripts   \
   subdepth
 
 # Keep no backups (not required, simply makes cache bigger)
