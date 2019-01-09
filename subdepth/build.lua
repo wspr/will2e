@@ -4,7 +4,6 @@
 
 module = "subdepth"
 version = "0.2"
-pkgdate = "2018/12/31"
 copyrightyear = "2007"
 
 uploadconfig = {

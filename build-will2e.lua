@@ -6,12 +6,14 @@ gittag  = module.."-v"..version
 
 today = os.date("%Y/%m/%d")
 theyear = os.date("%Y")
+pkgdate = pkgdate or today
 
 if pkgdate ~= today then
   print("Package date is not today:"..
         "\nPkg date: "..pkgdate..
         "\nToday:    "..today)
 end
+
 
 require("l3build-wspr.lua")
 
@@ -66,7 +68,7 @@ function update_tag(file,content,tagname,tagdate)
 
   -- copyright
   local newpattern  = "(C) "..copyrightyear.."-"..theyear
-  local findpattern = "%(C%)%s2006%-%d%d%d%d"
+  local findpattern = "%(C%)%s"..copyrightyear.."%-%d%d%d%d"
   local foundpattern = content:match(findpattern)
   if foundpattern and not(newpattern==foundpattern) then
     print("File copyright: " .. foundpattern)
@@ -76,7 +78,7 @@ function update_tag(file,content,tagname,tagdate)
 
   -- versioning
   local newtag = pkgdate .. " v" .. version
-  local findpattern = "%d%d%d%d/%d%d/%d%d%sv%d.%d"
+  local findpattern = "%d%d%d%d/%d%d/%d%d%sv%d%.%d%a*"
   local foundtag = content:match(findpattern)
   if foundtag and not(newtag==foundtag) then
     print("Old package date/version: " .. foundtag)
