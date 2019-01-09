@@ -1,22 +1,46 @@
-\documentclass[12pt]{article}
 
-\def\text{\parbox{2cm}{\Huge 
-$\smash{M_n}$\\[1ex]
-$\smash{M_h}$\\[1ex]
-$\smash{M_h^g}$\\[1ex]
-$\smash{M_0^0}$\\[1ex]
-$\smash{M_n'}$}}
+%%%%%%%%%%%%%%%%%%%%%%
+% SUBDEPTH test file %
+%%%%%%%%%%%%%%%%%%%%%%
 
-\newsavebox\default
-\savebox\default{\text}
+% Set the following to 0, 1, 2, or 3 to
+% examine the different behaviours of the package options
+\def\CASE{1}
 
-\usepackage{subdepth}
-%\usepackage[low-sup]{subdepth}
+% Comment out if you do not need to regenerate a new version
+% of the sty file -- this is useful for testing code changes
+\RequirePackage{shellesc}
+\ShellEscape{tex subdepth.ins}
+
+% The document
+\documentclass{article}
+\usepackage[active,tightpage]{preview}
+\ifcase\CASE
+  \or\usepackage[]{subdepth}
+  \or\usepackage[low-sup]{subdepth}
+  \or\usepackage[high-sup]{subdepth}
+\fi
 \begin{document}
-
-\makeatletter
-\let\glb@currsize\relax
-\makeatother
-\usebox\default\text
-
+\begin{preview}
+\vbox{\hbox{\fbox{%
+\parbox[s][1.2cm]{3.1cm}{\noindent
+\vspace*{0.1cm}\par
+\tiny
+\smash{\ifcase\CASE
+    \texttt{\%\char`\\usepackage\char`\{subdepth\char`\}}%
+\or \texttt{~\char`\\usepackage\char`\{subdepth\char`\}}%
+\or \texttt{~\char`\\usepackage[low-sup]\char`\{subdepth\char`\}}%
+\or \texttt{~\char`\\usepackage[high-sup]\char`\{subdepth\char`\}}%
+\fi}\par
+\normalsize
+\vspace*{0.2cm}
+\hfil\smash{$
+  A^1
+  A_2
+  A^1_2
+  A^g_2
+  A^g
+$\quad}\hfil
+}}}}
+\end{preview}
 \end{document}
