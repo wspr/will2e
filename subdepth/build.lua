@@ -24,7 +24,7 @@ uploadconfig.announcement = announce[version]
 
 
 typesetexe = "xelatex"
-checkengines = {"xetex"}
+checkengines = {"pdftex"}
 recordstatus = true
 
 typesetfiles = {"subdepth.dtx"}

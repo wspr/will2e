@@ -4,5 +4,5 @@
 
 bundle = "will2e"
 
-modules = {"xltxtra"}
+modules = {"subdepth","xltxtra"}
 

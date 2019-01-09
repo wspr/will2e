@@ -1,0 +1,32 @@
+
+\input{regression-test.tex}
+
+\def\YPOS{%
+  \pdfsavepos\write-1{\the\pdflastypos}%
+}
+
+\documentclass{article}
+\usepackage[high-sup]{subdepth}
+\begin{document}
+$x$
+\START
+\SEPARATOR
+\typeout{Subscript height (expect all three same)}
+\SEPARATOR
+$
+  A_{2\YPOS}
+  A^1_{2\YPOS}
+  A^g_{2\YPOS}
+$
+\clearpage
+\SEPARATOR
+\typeout{Superscript height (expect all three same)}
+\SEPARATOR
+$
+  A^{1\YPOS}
+  A^{1\YPOS}_{2}
+  A^{g\YPOS}_{2}
+$
+\clearpage
+\OMIT
+\end{document}

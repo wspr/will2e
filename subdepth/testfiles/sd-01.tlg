@@ -1,0 +1,20 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+============================================================
+Subscript height (expect all three same)
+============================================================
+[1
+46341178
+46341178
+46341178
+]
+============================================================
+Superscript height (expect first two same)
+============================================================
+[2
+46753761
+46753761
+46830871
+]
+***************
+Compilation 1 of test file completed with exit status 0
