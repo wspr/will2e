@@ -28,7 +28,7 @@ tlmgr install l3build luatex
 tlmgr install cm etex knuth-lib latex-bin tex tex-ini-files unicode-data xetex
 
 # Dependencies
-tlmgr install   \
+tlmgr install tools graphics \
   fontspec      \
   unicode-math  \
   ifluatex ifxetex \
