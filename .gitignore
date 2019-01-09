@@ -21,7 +21,6 @@ build/
 *.gls
 *.ilg
 *.ind
-*.ins
 
 *.pdf
 *.dvi
