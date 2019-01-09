@@ -29,9 +29,11 @@ tlmgr install cm etex knuth-lib latex-bin tex tex-ini-files unicode-data xetex
 
 # Dependencies
 tlmgr install tools graphics \
+  l3kernel l3packages \
   fontspec      \
   unicode-math  \
   ifluatex ifxetex \
+  metalogo \
   realscripts
 
 # Keep no backups (not required, simply makes cache bigger)
