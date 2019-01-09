@@ -85,7 +85,29 @@ This package adjusts \LaTeX's behaviour to unify the position of the subscript i
 \begin{center}
 \trialtext
 \end{center}
-Notice that to compensate for the higher subscript, the superscript position is slightly raised. The |[low-sup]| package option will suppress this change to the height of the superscripts.
+Notice that to compensate for the higher subscript, the superscript position is slightly raised.
+
+If this change in the superscript height is not desired, the |[low-sup]| package option can be activated instead, which moves the subscript to the lowest position and keeps the superscript in its original location.
+
+Even in the case with |[low-sup]|, a symbol such as $g$ may cause additional movement between the subscript and superscript --- to avoid inconsistencies of placement even in this case, load the package with the |[high-sup]| package option instead.
+This setup could be considered the most crude from a typographical perspective but may appeal in certain types of document with large numbers of mixed subscripts and superscripts.
+
+\section{Demo}
+
+A side-by-side comparison is shown in Figure~\ref{fig:demo}  between the default \LaTeX\ spacing and the three possibilities of package options with \pkg{subdepth}.
+The differences are rather subtle to detect in this form; you may wish to run the \texttt{subdepth-demo} file interactively to compare more closely.
+
+\begin{figure}[h]
+\centering
+\IfFileExists{subdepth-demo-0.pdf}{%
+  \includegraphics[scale=1.5]{subdepth-demo-0.pdf}\qquad
+  \includegraphics[scale=1.5]{subdepth-demo-1.pdf}\par\medskip
+  \includegraphics[scale=1.5]{subdepth-demo-2.pdf}\qquad
+  \includegraphics[scale=1.5]{subdepth-demo-3.pdf}\par\medskip
+}{\fbox{Demo files not yet generated. Run \texttt{./demo\_generate.sh}.}}
+\caption{Demo of the package options.}
+\label{fig:demo}
+\end{figure}
 
 \section{Fine tuning}
 
@@ -93,15 +115,23 @@ The original code was originally developed for typesetting symbols in chemistry 
 For other fonts or other situations, it may be better to measure using a different expression.
 The setup command \cs{subdepth} allows the following keyval definitions to do this:
 \begin{verbatim}
-  \subdepth{ sym={H}, sup={+}, sub={2} }
+  \subdepth{ base-sym={H}, base-sup={+}, base-sub={2} }
 \end{verbatim}
-This command can only be run in the preamble of the document and should be done before any mathematical typesetting is performed.
+The \cs{subdepth} can only be run in the preamble of the document and should be done before any mathematical typesetting is performed.
 
-\input{subdepth-algorithm.tex}
+More usefully (probably), the final positions of the subscript and superscript can be adjusted using (e.g.)
+\begin{verbatim}
+  \subdepth{ sub-adj={+2pt}, sup-adj={+2pt} }
+\end{verbatim}
+Here, positive values mean \emph{away} from the baseline; e.g., for positive values as above the subscript moves further down and the superscript moves further up.
+
 
 \part{\textsf{\jobname} implementation}
 
 \DocInput{subdepth-code.dtx}
 
+\clearpage
+
+\input{subdepth-algorithm.tex}
+
 \end{document}
- 
