@@ -6,7 +6,7 @@
 %
 %    \begin{macrocode}
 \ProvidesPackage{subdepth}
-  [2018/12/31 v0.2 Unify subscript depths]
+  [2018/12/31 v0.2 Unify and control subscript depths]
 %    \end{macrocode}
 %
 % \section{Loading and package options}
@@ -19,35 +19,49 @@
   \endinput}{}
 %    \end{macrocode}
 %
+% Packages.
 %    \begin{macrocode}
 \RequirePackage{keyval}
 %    \end{macrocode}
 %
-% Package option to lower the superscript height.
+% Variables.
 %    \begin{macrocode}
 \newif\if@sd@sup@low@
 \newif\if@sd@sup@high@
+\newdimen\sd@supheight
+\newdimen\sd@newsubdim
+\newdimen\sd@newsupdim
+%    \end{macrocode}
+%
+% Package option to lower the superscript height.
+%    \begin{macrocode}
 \DeclareOption{low-sup}{\@sd@sup@low@true}
 \DeclareOption{high-sup}{\@sd@sup@high@true}
 \ProcessOptions
 %    \end{macrocode}
 %
-% This interface is not documented publicly and may change.
+% Setup commands.
 %    \begin{macrocode}
 \newcommand\subdepth{\setkeys{subdepth}}
 \@onlypreamble\subheight
-\newdimen\sd@supheight
-\newdimen\sd@newsublower
-\newdimen\sd@newsupraise
-\define@key{subdepth}{sym}{\def\sd@sym{#1}}
-\define@key{subdepth}{sub}{\def\sd@sub{#1}}
-\define@key{subdepth}{sup}{\def\sd@sup{#1}}
-\define@key{subdepth}{supheight}{\sd@supheight=\dimexpr(#1)\relax}
-\subdepth{sym=H,sub=2,supheight=4ex}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\define@key{subdepth}{base-sym}{\def\sd@sym{#1}}
+\define@key{subdepth}{sub-sym}{\def\sd@sub{#1}}
+\define@key{subdepth}{sup-sym}{\def\sd@sup{#1}}
+\define@key{subdepth}{sub-adj}{\def\sd@subadj{#1}}
+\define@key{subdepth}{sup-adj}{\def\sd@supadj{#1}}
+\define@key{subdepth}{sup-height}{\sd@supheight=\dimexpr(#1)\relax}
+%    \end{macrocode}
+%
+% Defaults.
+%    \begin{macrocode}
+\subdepth{base-sym=H,sub-sym=2,sup-height=4ex,sub-adj=0pt,sup-adj=0pt}
 \if@sd@sup@high@
-  \subdepth{sup=1g}
+  \subdepth{sup-sym={1g}}
 \else
-  \subdepth{sup=+}
+  \subdepth{sup-sym=+}
 \fi
 %    \end{macrocode}
 %
@@ -64,7 +78,7 @@
 %
 % \section{Don's code}
 %
-% \textit{The comments that follow are adapted from Donald's own.}
+% \textit{Most of the comments that follow are adapted from Donald's own.}
 %
 % Set the fontdimen parameters for subscript and superscript position
 % so that |C_2H_5^+| has both subscripts at the same vertical position.
@@ -117,9 +131,9 @@
 % This macro records the fontdimens for a single math style and passes off the adjustments to make to \cmd\sd@do@one.
 %    \begin{macrocode}
 \def\sd@set@one#1#2#3#4{%
-  \sd@exe@else{sd@size#4}
+  \sd@exe@else{sd@size#4}%
     {%
-      \gdef@c{sd@size#4}
+      \gdef@c{sd@size#4}%
         {%
           \fontdimen13\the#2\tw@=\the\fontdimen13#2\tw@
           \fontdimen14\the#2\tw@=\the\fontdimen14#2\tw@
@@ -133,16 +147,16 @@
   \setbox\z@\hbox{$#1\sd@sym_{\sd@sub}^{\sd@sup \vrule \@height \sd@supheight}$}%
   \ifdim\@tempdima<\dp\z@
     \if@sd@sup@low@
-      \sd@newsublower=\dimexpr (\dp\z@) \relax
-      \xdef#3{#3\sd@do@one#2{\the\sd@newsublower}}%
+      \sd@newsubdim=\dimexpr (\dp\z@) + \sd@subadj \relax
+      \xdef#3{#3\sd@do@one#2{\the\sd@newsubdim}}%
     \else
       \if@sd@sup@high@
-        \sd@newsublower=\dimexpr \dp\z@ \relax
+        \sd@newsubdim=\dimexpr \dp\z@ + \sd@subadj \relax
       \else
-        \sd@newsublower=\dimexpr \@tempdima + (\dp\z@-\@tempdima)/2 \relax
+        \sd@newsubdim=\dimexpr \@tempdima + (\dp\z@-\@tempdima)/2 + \sd@subadj \relax
       \fi
-      \sd@newsupraise=\dimexpr (\ht\z@-\sd@supheight) \relax
-      \xdef#3{#3\sd@do@two#2{\the\sd@newsupraise}{\the\sd@newsublower}}%
+      \sd@newsupdim=\dimexpr (\ht\z@-\sd@supheight) + \sd@supadj \relax
+      \xdef#3{#3\sd@do@two#2{\the\sd@newsupdim}{\the\sd@newsubdim}}%
     \fi
   \fi
 }

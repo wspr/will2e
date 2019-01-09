@@ -17,6 +17,9 @@
 %%
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\ProvidesFile{subdepth.dtx}
+  [2018/12/31 v0.2 Unify and control subscript depths]
+
 \documentclass{ltxdoc}
 \EnableCrossrefs
 \CodelineIndex
@@ -33,9 +36,9 @@
 
 \usepackage[utf8]{inputenc}
 \usepackage[svgnames]{xcolor}
-\usepackage{booktabs,calc,docmute,enumitem,ifthen,refstyle,subfig,varioref,subdepth,url}
+\usepackage{booktabs,calc,docmute,enumitem,ifthen,refstyle,subfig,subdepth,varioref,url}
 
-\subdepth{ sym={H}, sup={+}, sub={2} }
+\errorcontextlines=999
 
 \definecolor{niceblue}{rgb}{0.2,0.4,0.8}
 \def\theCodelineNo{\textcolor{niceblue}{\sffamily\tiny\arabic{CodelineNo}}}
@@ -56,7 +59,8 @@
 
 \begin{document}
 
-\GetFileInfo{subdepth.sty}
+\GetFileInfo{subdepth.dtx}
+
 \CheckSum{0}
 \makeatletter
 
