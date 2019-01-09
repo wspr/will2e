@@ -32,9 +32,7 @@ tlmgr install   \
   fontspec      \
   unicode-math  \
   ifluatex ifxetex \
-  xltxtra       \
-  realscripts   \
-  subdepth
+  realscripts
 
 # Keep no backups (not required, simply makes cache bigger)
 tlmgr option -- autobackup 0
