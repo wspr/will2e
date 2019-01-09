@@ -1,0 +1,141 @@
+\documentclass{article}
+\usepackage{calc,color,graphicx,url}
+\def\cs#1{\texttt{\char`\\#1}}
+\begin{document}
+
+\section{Algorithm}
+
+\makeatletter
+
+First, some typical examples for context:
+\def\YPOS{%
+  \pdfsavepos\write-1{\the\pdflastypos}%
+}
+\begin{center}
+    $A^{A}_{B}$\quad
+    $A^{x}_{y}$\quad
+    $A^{\frac{x}{y}}_{2}$\quad
+    $A_2$\quad
+    $C_2H_5^+$\quad
+    $A_{2\YPOS}A^1_{2\YPOS}A^g_{2\YPOS}A^g$
+\end{center}
+
+
+\newcommand\HDrule[2]{%
+  \hbox{%
+    {\color{red}\vrule height \dimexpr(#1) depth 0pt width 1ex\relax}%
+    \kern-1ex\relax
+    {\color{black}\vrule height 0pt depth \dimexpr(#2) width 1ex\relax}%
+  }%
+}
+
+\def\supsym#1{%
+  \smash{\color{red}%
+    \makebox[0pt][l]{\rule[-0.4pt]{0.7cm}{0.4pt}}
+    \rule
+      [-\the\fontdimen#1\textfont2]
+      {0.4pt}{\the\fontdimen#1\textfont2}}
+   i}
+\def\subsym#1{%
+  \smash{\color{red}%
+    \makebox[0pt][l]{\rule[-0.4pt]{0.7cm}{0.4pt}}
+    \rule{0.4pt}{\the\fontdimen#1\textfont2}}
+   i}
+
+\savebox\@tempboxa{$~$}%
+\edef\reset{%
+   \fontdimen13\noexpand\textfont2=\the\fontdimen13\textfont2
+   \fontdimen14\noexpand\textfont2=\the\fontdimen14\textfont2
+   \fontdimen15\noexpand\textfont2=\the\fontdimen15\textfont2
+   \fontdimen16\noexpand\textfont2=\the\fontdimen16\textfont2
+   \fontdimen17\noexpand\textfont2=\the\fontdimen17\textfont2
+ }
+
+\def\a#1{\noindent
+{\footnotesize\ttfamily1.5\cs{fontdimen#1}:}
+\hfill
+\reset$\displaystyle\sum A^{\supsym{13}}$\quad
+\fontdimen#1\textfont2=1.5\fontdimen#1\textfont2
+$\displaystyle A^{\supsym{13}}$\hfill
+\reset$\sum A^{\supsym{14}}$\quad
+\fontdimen#1\textfont2=1.5\fontdimen#1\textfont2
+$A^{\supsym{14}}$\hfill
+\reset$\sqrt{A^{\supsym{15}}}$\quad
+\fontdimen#1\textfont2=1.5\fontdimen#1\textfont2
+$\sqrt{A^{\supsym{15}}}$\hfill
+\reset\null\par\bigskip}
+
+\def\b#1{\noindent
+{\footnotesize\ttfamily2\cs{fontdimen#1}:}\hfill
+\reset$A_{\subsym{16}}$\quad
+\fontdimen#1\textfont2=2\fontdimen#1\textfont2
+$A_{\subsym{16}}$\hfill
+\reset$A^B_{\subsym{17}}$\quad
+\fontdimen#1\textfont2=2\fontdimen#1\textfont2
+$A^B_{\subsym{17}}$\hfill
+\reset\null\par\bigskip}
+
+In the examples to follow the height and depth of the boxes is important and indicated with a stacked box as so: `\HDrule{2ex}{1ex}'. (That example shows a height of 2ex and a depth of 1ex.)
+
+The intricacies of \TeX's behaviour for maths typesetting are well described by Bogusław `Jacko' Jackowski in his TUGboat paper `Appendix G illuminated':
+\url{https://www.tug.org/TUGboat/tb27-1/tb86jackowski.pdf}
+
+Superscript symbols are placed vertically according to fontdimens 13 (display), 14 (text), and~15 (cramped).
+
+\bigskip
+\a{13}
+\a{14}
+\a{15}
+
+For subscripts, fontdimens 16 and 17 are used when and when not a superscript is also present, respectively.
+
+\bigskip
+\b{16}
+\b{17}
+
+Fontdimens 18 and 19 are used to place the subscript and superscript, respectively, when they are attached to a boxed formula. But we don't care for that special case, because it already looks fine.
+
+Furthermore, if subscripts and superscripts clash then their spacing will be adjusted to compensate.
+
+First of all, the superscript must not extend too low, or it is raised to not exceed this minimum:
+\begin{center}
+\@for\ii:={0pt,1pt,2pt,3pt,4pt,5pt}\do{%
+  \scalebox{2}{$A^{\HDrule{1ex+\ii}{0.5ex+\ii}}$\quad}}
+\end{center}
+Similarly, the subscript cannot extend too high:
+\begin{center}
+\@for\ii:={0pt,1pt,2pt,3pt,4pt,5pt}\do{%
+  \scalebox{2}{$A_{\HDrule{1ex+\ii}{0.5ex+\ii}}$\quad}}
+\end{center}
+Note that the `too low' position for the superscript and the `too high' for the subscript overlap. There are further restrictions when they clash. When the superscript clashes with the subscript:
+\begin{center}
+\@for\ii:={0pt,1pt,2pt,3pt,4pt,5pt}\do{%
+  \scalebox{2}{$A_{\HDrule{1ex}{0.5ex}}^{\HDrule{1ex+\ii}{0.5ex+\ii}}$\quad}}
+\end{center}
+And when the subscript clashes with the superscript:
+\begin{center}
+\@for\ii:={0pt,1pt,2pt,3pt,4pt,5pt}\do{%
+  \scalebox{2}{$A_{\HDrule{1ex+\ii}{0.5ex+\ii}}^{\HDrule{1ex}{0.5ex}}$\quad}}
+\end{center}
+And when they both grow:
+\begin{center}
+\@for\ii:={0pt,1pt,2pt,3pt,4pt,5pt}\do{%
+  \scalebox{2}{$A_{\HDrule{1ex+\ii}{0.5ex+\ii}}^{\HDrule{1ex+\ii}{0.5ex+\ii}}$\quad}}
+\end{center}
+
+The parameter that mainly controls the details of all these adjustments is the x-height of the font, fontdimen 5.
+
+What this package attempts to do is unify the subscript placement with and without a superscript. By default the spacing is as so:
+
+\begin{center}
+  \scalebox{2}{%
+    $A_{\HDrule{1ex}{0.25ex}}$\quad
+    $A^{\HDrule{1ex}{0.25ex}}_{\HDrule{1ex}{0.25ex}}$\quad
+  }
+\end{center}
+
+
+
+\makeatother
+
+\end{document}
