@@ -28,6 +28,7 @@ checkengines = {"xetex"}
 recordstatus = true
 
 typesetfiles = {"subdepth.dtx"}
+typesetsuppfiles = {"*.pdf"}
 tagfiles = { "*.dtx" , "*.ins" , "README.md" }
 
 require("../build-will2e.lua")
