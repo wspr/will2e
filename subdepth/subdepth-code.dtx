@@ -26,17 +26,29 @@
 % Package option to lower the superscript height.
 %    \begin{macrocode}
 \newif\if@sd@sup@low@
+\newif\if@sd@sup@high@
 \DeclareOption{low-sup}{\@sd@sup@low@true}
+\DeclareOption{high-sup}{\@sd@sup@high@true}
 \ProcessOptions
 %    \end{macrocode}
 %
+% This interface is not documented publicly and may change.
 %    \begin{macrocode}
 \newcommand\subdepth{\setkeys{subdepth}}
-\@onlypreamble\subdepth
+\@onlypreamble\subheight
+\newdimen\sd@supheight
+\newdimen\sd@newsublower
+\newdimen\sd@newsupraise
 \define@key{subdepth}{sym}{\def\sd@sym{#1}}
 \define@key{subdepth}{sub}{\def\sd@sub{#1}}
 \define@key{subdepth}{sup}{\def\sd@sup{#1}}
-\subdepth{sym=H,sub=2,sup=+}
+\define@key{subdepth}{supheight}{\sd@supheight=\dimexpr(#1)\relax}
+\subdepth{sym=H,sub=2,supheight=4ex}
+\if@sd@sup@high@
+  \subdepth{sup=1g}
+\else
+  \subdepth{sup=+}
+\fi
 %    \end{macrocode}
 %
 % A command to execute the csname |#1| if it exists or do |#2| if not.
@@ -103,47 +115,56 @@
 % \darg{csname of \texttt{sd@sizet\string\f@size}}
 % \darg{math style size}
 % This macro records the fontdimens for a single math style and passes off the adjustments to make to \cmd\sd@do@one.
-% ({\itshape Added conditional for the |[low-sup]| package option}):
 %    \begin{macrocode}
-\newdimen\sd@gap
-\sd@gap=2ex\relax
 \def\sd@set@one#1#2#3#4{%
   \sd@exe@else{sd@size#4}
-   {\gdef@c{sd@size#4}{%
-      \if@sd@sup@low@\else
-        \fontdimen13\the#2\tw@=\the\fontdimen13#2\tw@
-        \fontdimen14\the#2\tw@=\the\fontdimen14#2\tw@
-        \fontdimen15\the#2\tw@=\the\fontdimen15#2\tw@
-      \fi
-      \fontdimen16\the#2\tw@=\the\fontdimen16#2\tw@
-      \fontdimen17\the#2\tw@=\the\fontdimen17#2\tw@}}%
+    {%
+      \gdef@c{sd@size#4}
+        {%
+          \fontdimen13\the#2\tw@=\the\fontdimen13#2\tw@
+          \fontdimen14\the#2\tw@=\the\fontdimen14#2\tw@
+          \fontdimen15\the#2\tw@=\the\fontdimen15#2\tw@
+          \fontdimen16\the#2\tw@=\the\fontdimen16#2\tw@
+          \fontdimen17\the#2\tw@=\the\fontdimen17#2\tw@
+        }%
+    }%
   \setbox\z@\hbox{$#1\sd@sym_{\sd@sub}$}%
-  \@tempdima\dp\z@
-  \setbox\z@\hbox{$#1\sd@sym_{\sd@sub}^{\sd@sup \vrule \@height \sd@gap}$}%
+  \@tempdima=\dp\z@
+  \setbox\z@\hbox{$#1\sd@sym_{\sd@sub}^{\sd@sup \vrule \@height \sd@supheight}$}%
   \ifdim\@tempdima<\dp\z@
-    \@tempdima=\dimexpr (\@tempdima+\dp\z@)/2 \relax
-    \@tempdimb=\dimexpr (\dp\z@-\@tempdima+\ht\z@-\sd@gap) \relax
-    \xdef#3{#3\sd@do@one#2{\the\@tempdimb}{\the\@tempdima}}%
+    \if@sd@sup@low@
+      \sd@newsublower=\dimexpr (\dp\z@) \relax
+      \xdef#3{#3\sd@do@one#2{\the\sd@newsublower}}%
+    \else
+      \if@sd@sup@high@
+        \sd@newsublower=\dimexpr \dp\z@ \relax
+      \else
+        \sd@newsublower=\dimexpr \@tempdima + (\dp\z@-\@tempdima)/2 \relax
+      \fi
+      \sd@newsupraise=\dimexpr (\ht\z@-\sd@supheight) \relax
+      \xdef#3{#3\sd@do@two#2{\the\sd@newsupraise}{\the\sd@newsublower}}%
+    \fi
   \fi
 }
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\sd@do@one}
+% \begin{macro}{\sd@do@two}
 % \darg{csname of \texttt{sd@sizet\string\f@size}}
 % \darg{dim}
 % \darg{dim}
-% ({\itshape Added conditional for the |[low-sup]| package option}):
-% TODO: different heights for fd 13--15
 %    \begin{macrocode}
-\def\sd@do@one#1#2#3{%
-  \if@sd@sup@low@\else
-    \fontdimen13#1\tw@=#2\relax
-    \fontdimen14#1\tw@=#2\relax
-    \fontdimen15#1\tw@=#2\relax
-  \fi
+\def\sd@do@two#1#2#3{%
+  \fontdimen13#1\tw@=#2\relax
+  \fontdimen14#1\tw@=#2\relax
+  \fontdimen15#1\tw@=#2\relax
   \fontdimen16#1\tw@=#3\relax
-  \fontdimen17#1\tw@=#3\relax}
+  \fontdimen17#1\tw@=#3\relax
+}
+\def\sd@do@one#1#2{%
+  \fontdimen16#1\tw@=#2\relax
+  \fontdimen17#1\tw@=#2\relax
+}
 %    \end{macrocode}
 % \end{macro}
 %
