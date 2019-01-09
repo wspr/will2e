@@ -28,12 +28,19 @@ tlmgr install l3build luatex
 tlmgr install cm etex knuth-lib latex-bin tex tex-ini-files unicode-data xetex
 
 # Dependencies
-tlmgr install tools graphics \
-  l3kernel l3packages \
+tlmgr install
+  tools         \
+  graphics      \
+  graphics-def  \
+  l3kernel      \
+  l3packages    \
+  ifluatex      \
+  ifxetex       \
   fontspec      \
   unicode-math  \
-  ifluatex ifxetex \
-  metalogo \
+  luaotfload    \
+  oberdiek      \
+  metalogo      \
   realscripts
 
 # Keep no backups (not required, simply makes cache bigger)
