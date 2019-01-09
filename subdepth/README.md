@@ -25,7 +25,7 @@ Further details can be found in the PDF documentation.
 
 ## License and copyright
 
-Copyright (C) 2007-2018 by Will Robertson
+Copyright (C) 2007-2019 by Will Robertson
 
 Distributed under the LaTeX Project Public License,
 version 1.3c or higher (your choice). The latest version of
