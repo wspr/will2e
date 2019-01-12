@@ -1,5 +1,4 @@
 \input regression-test.tex\relax
-\START
 
 \documentclass{article}
 \PassOptionsToPackage{enable-debug}{expl3}
