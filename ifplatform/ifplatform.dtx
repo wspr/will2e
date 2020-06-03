@@ -210,7 +210,7 @@ This work consists of the file  ifplatform.dtx
 %    \end{macrocode}
 % Packages required: (thanks Heiko)
 %    \begin{macrocode}
-\RequirePackage{shellesc,pdftexcmds,catchfile,ifluatex}
+\RequirePackage{shellesc,pdftexcmds,catchfile,ifluatex,xstring}
 %    \end{macrocode}
 % Conditionals we provide:
 %    \begin{macrocode}
@@ -244,6 +244,7 @@ This work consists of the file  ifplatform.dtx
 % For internal stuff later:
 %    \begin{macrocode}
 \edef\ip@file{\jobname.w18}
+\StrSubstitute{\ip@file}{"}{}[\ip@file]
 \newif\if@ip@nix@
 %    \end{macrocode}
 % \begin{macro}{\ifshellescape}
