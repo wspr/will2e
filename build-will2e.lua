@@ -14,11 +14,13 @@ if pkgdate ~= today then
         "\nToday:    "..today)
 end
 
-local f=io.open("l3build-wspr.lua","r")
-if f ~= nil then
-  io.close(f)
-  require("l3build-wspr.lua")
+local function prequire(m) -- from: https://stackoverflow.com/a/17878208
+  local ok, err = pcall(require, m)
+  if not ok then return nil, err end
+  return err
 end
+
+prequire("l3build-wspr.lua")
 
 
 --[===========[--
