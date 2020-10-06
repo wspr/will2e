@@ -1,66 +1,11 @@
-% \iffalse 
+% \iffalse
 %<*internal>
-\iffalse
-%</internal>
-%<*readme>
-________________________
-The auto-pst-pdf package
-v0.6          2009/04/26
-
-The package uses -shell-escape to execute pst-pdf. 
-This makes it especially easy to integrate into the 
-workflow of an editor with just "LaTeX" and "pdfLaTeX" 
-buttons.
-
-Wrappers are provided for various psfrag-related 
-features so that Matlab figures via laprint, Mathematica 
-figures via MathPSfrag, and regular psfrag figures can 
-all be input consistently and easily.
-
-Will Robertson  -  wspr 81 at gmail dot com
-Johannes Große
-
-Copyright 2007
-Distributed under the LaTeX Project Public License
-%</readme>
-%<*internal>
-\fi
 \begingroup
-%</internal>
-%<*batchfile>
 \input docstrip.tex
-\keepsilent
-\preamble
-  __________________________________
-  Copyright (C) 2007  Will Robertson
-  License information appended.
-\endpreamble
-\postamble
-Copyright (C) 2007 by Will Robertson & Johannes Große
-
-Distributable under the LaTeX Project Public License,
-version 1.3c or higher (your choice). The latest version of
-this license is at: http://www.latex-project.org/lppl.txt
-
-This work is "maintained" (as per LPPL maintenance status) 
-by Will Robertson.
-
-This work consists of the file  auto-pst-pdf.dtx
-          and the derived files auto-pst-pdf.pdf,
-                                auto-pst-pdf.sty, and 
-                                auto-pst-pdf.ins.
-\endpostamble
-\askforoverwritefalse
-\generate{\file{\jobname.sty}{\from{\jobname.dtx}{package}}}
-%</batchfile>
-%<batchfile>\endbatchfile
-%<*internal>
-\generate{\file{\jobname.ins}{\from{\jobname.dtx}{batchfile}}}
+\keepsilent\askforoverwritefalse
 \nopreamble\nopostamble
-\generate{\file{README.txt}{\from{\jobname.dtx}{readme}}}
 \generate{\file{dtx-style.sty}{\from{\jobname.dtx}{dtx-style}}}
 \endgroup
-\immediate\write18{mv README.txt README}
 \immediate\write18{makeindex -s gind.ist -o \jobname.ind  \jobname.idx}
 \immediate\write18{makeindex -s gglo.ist -o \jobname.gls  \jobname.glo}
 %</internal>
@@ -92,7 +37,7 @@ This work consists of the file  auto-pst-pdf.dtx
 % \maketitle
 %
 % \section{Future plans}
-% This package is no longer being actively developed 
+% This package is no longer being actively developed
 % (although I'm happy to add small features and fix bugs). I (Will Robertson) first
 % wrote \pkg{auto-pst-pdf} to aid the use of \pkg{psfrag} in pdf\LaTeX\ documents. The newer
 % \pkg{pstool} package does this in a more efficient and convenient manner,
@@ -104,7 +49,7 @@ This work consists of the file  auto-pst-pdf.dtx
 % This package provides a wrapper around \pkg{pst-pdf} to automatically
 % accomodate for typesetting either with \DVI\ or \PDF\ output. With
 % default package option |[on]|, typesetting under pdf\/\LaTeX\ will
-% automatically initiate an auxiliary compilation of \LaTeX $\to$ |dvips| 
+% automatically initiate an auxiliary compilation of \LaTeX $\to$ |dvips|
 % $\to$ |ps2pdf| $\to$ |pdfcrop| to generate the required \PDF\ figures for the document.
 %
 % After this has been done and the figures no longer need to be
@@ -121,43 +66,43 @@ This work consists of the file  auto-pst-pdf.dtx
 % Requires the following packages: \pkg{ifplatform}, \pkg{pst-pdf}, \pkg{xkeyval}.
 %
 % Heiko Oberdiek's |pdfcrop| Perl script
-%  \note{\url{http://www.ctan.org/tex-archive/support/pdfcrop/}} 
+%  \note{\url{http://www.ctan.org/tex-archive/support/pdfcrop/}}
 % must be installed for the default {\color{niceblue}|crop=on|} option (see section~\ref{sec:opt}).
-% Under Windows, a Perl installation 
-%   \note{Freely available: \url{http://www.activestate.com/Products/activeperl/index.plex}} 
+% Under Windows, a Perl installation
+%   \note{Freely available: \url{http://www.activestate.com/Products/activeperl/index.plex}}
 % will also need to be installed even though |pdfcrop| itself is part of MiK\TeX.
 %
 % \section{Provided macros for including graphics}
 % Macros are provided to easily facilitate figures created by the
 % \textsc{Matlab} package \pkg{laprint}
-%  \note{\url{http://www.uni-kassel.de/fb16/rat/matlab/laprint/}} 
+%  \note{\url{http://www.uni-kassel.de/fb16/rat/matlab/laprint/}}
 % and the Mathematica package \pkg{MathPSfrag}
 %  \note{\url{http://wwwth.mppmu.mpg.de/members/jgrosse/mathpsfrag/}}. Also,
 % a generic \pkg{psfrag}
-%  \note{\url{http://www.ctan.org/tex-archive/help/Catalogue/entries/psfrag.html}} 
+%  \note{\url{http://www.ctan.org/tex-archive/help/Catalogue/entries/psfrag.html}}
 % wrapper is provided.
 %
 % \begin{trivlist}\item[]
 % \begin{tabular}{@{\hskip 2em}lp{7cm}}
-%  \cmd\mathfig\marg{filename}   & \raggedright 
+%  \cmd\mathfig\marg{filename}   & \raggedright
 %    insert a Mathematica graphic from \pkg{MathPSfrag}
 %    (without |-psfrag| suffix)\arraybackslash \\
-%  \cmd\matlabfig\marg{filename} & 
+%  \cmd\matlabfig\marg{filename} &
 %    insert a \textsc{Matlab} graphic from \pkg{laprint} \\
-%  \cmd\psfragfig\marg{filename} & 
+%  \cmd\psfragfig\marg{filename} &
 %    insert an \EPS\ with \pkg{psfrag}
 % \end{tabular}
 % \end{trivlist}
 %
-% \noindent The above commands all accept an optional argument 
+% \noindent The above commands all accept an optional argument
 % which is passed to the underlying \cmd\includegraphics\ macro.
 %
 % The \cmd\matlabfig\ command meddles slightly with the output of
-% \pkg{laprint}; the font sizes in the figure will always be as 
+% \pkg{laprint}; the font sizes in the figure will always be as
 % originally defined. (This is unavoidable I'm afraid.)
 %
-% For the \cmd\psfragfig\ command, \pkg{psfrag} statements are input 
-% from either or both of the files \meta{document}|-psfrag.tex| and 
+% For the \cmd\psfragfig\ command, \pkg{psfrag} statements are input
+% from either or both of the files \meta{document}|-psfrag.tex| and
 % \meta{filename}|-psfrag.tex| if they exist. Furthermore, supplementary
 % \cmd\psfrag\ statements can be added in a trailing optional argument:
 %
@@ -195,11 +140,11 @@ This work consists of the file  auto-pst-pdf.dtx
 % {\color{gray}|\usepackage[|\color{niceblue}|latex={-interaction=nonstopmode}|\color{gray}|]{auto-pst-pdf}|}
 %
 % \bigskip\noindent
-% Any package options that are not recognised are passed on to \pkg{pst-pdf}. As an example, 
+% Any package options that are not recognised are passed on to \pkg{pst-pdf}. As an example,
 %
 % {\color{gray}|\usepackage[|\color{niceblue}|final|\color{gray}|]{auto-pst-pdf}|}
 %
-% \noindent will load \pkg{pst-pdf} with the \texttt{final} package option, possibly overriding 
+% \noindent will load \pkg{pst-pdf} with the \texttt{final} package option, possibly overriding
 % a global \texttt{draft} option from the class loading.
 %
 % \section{Acknowledgements}
@@ -220,10 +165,11 @@ This work consists of the file  auto-pst-pdf.dtx
 % This is the package.
 %
 %    \begin{macrocode}
-\ProvidesPackage{auto-pst-pdf}[2009/04/26 v0.6 Wrapper for pst-pdf]
+\ProvidesPackage{auto-pst-pdf}[2020/10/07 v0.7 Wrapper for pst-pdf]
 %    \end{macrocode}
 %
 % \PrintChanges
+% \changes{v0.7}{2020/10/07}{Security fix for Windows.}
 % \changes{v0.6}{2009/04/26}{Pass unknown options to \pkg{pst-pdf}.}
 % \changes{v0.6}{2009/04/26}{\texttt{runs} option added (thanks Joseph!!)}
 % \changes{v0.5}{2007/11/22}{\texttt{delay} option removed. Keep it simple, stupid!!}
@@ -251,19 +197,19 @@ This work consists of the file  auto-pst-pdf.dtx
 %    \begin{macrocode}
 \DeclareOptionX{off}[]{\@app@off@true}
 \define@choicekey{auto-pst-pdf.sty}{crop}[\@tempa\@tempb]{on,off}{%
-  \ifcase\@tempb\relax 
+  \ifcase\@tempb\relax
     \@app@crop@true
-  \or 
-    \@app@crop@false 
+  \or
+    \@app@crop@false
   \fi}
 \DeclareOptionX{on}[]{\@app@off@false}
 \DeclareOptionX{ext}{\def\app@ext{#1}}
 \DeclareOptionX{latex}{%
   \def\app@latex@opts{%
     \ifwindows
-      -disable-write18 
+      -disable-write18
     \else
-      -no-shell-escape 
+      -no-shell-escape
     \fi
     -jobname="\app@jobname"
     -interaction=batchmode
@@ -279,7 +225,7 @@ This work consists of the file  auto-pst-pdf.dtx
 
 \DeclareOptionX{runs}{%
   \setcounter{app@runs}{#1}% support calc
-  \ifnum\c@app@runs > \z@ 
+  \ifnum\c@app@runs > \z@
   \else
     \app@PackageWarning{The number of runs must be at least one.}%
     \c@app@runs\@ne
@@ -347,7 +293,7 @@ This work consists of the file  auto-pst-pdf.dtx
   \repeat
   \app@convert{latex}{\jobname.\app@ext}{\app@jobname.dvi}%
   \app@convert{dvips}{\app@jobname.dvi}{\app@jobname.ps}%
-  \if@app@crop@  
+  \if@app@crop@
     \app@convert{pstopdf}{\app@jobname.ps}{\app@jobname.pdf}%
     \app@convert{pdfcrop}{\app@jobname.pdf}{\app@pics}%
   \else
@@ -355,12 +301,12 @@ This work consists of the file  auto-pst-pdf.dtx
   \fi
   \IfFileExists{\app@pics}
     {\app@cleanup}
-    {\app@PackageWarning{Could not create \app@pics. 
+    {\app@PackageWarning{Could not create \app@pics.
       Auxiliary files not deleted.}}}
 %    \end{macrocode}
 % \end{macro}
-% 
-% Command-line program to delete files: 
+%
+% Command-line program to delete files:
 %    \begin{macrocode}
 \edef\app@rm{\ifwindows del \else rm -- \fi}
 %    \end{macrocode}
@@ -370,7 +316,11 @@ This work consists of the file  auto-pst-pdf.dtx
 %    \begin{macrocode}
 \newcommand\app@try@rm[1]{%
   \@for\@tempa:=#1\do{%
-    \OnlyIfFileExists{\@tempa}{\app@exe{\app@rm "\@tempa"}}}}
+    \edef\@tempa{\@tempa}%
+    \ifx\@tempa\@empty\else
+      \OnlyIfFileExists{\@tempa}{\app@exe{\app@rm "\@tempa"}}%
+    \fi
+  }}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -425,10 +375,10 @@ This work consists of the file  auto-pst-pdf.dtx
       \app@exe{echo "-------------------------------------------------"}
     \else
       \app@PackageError{%
-        "shell escape" (or "write18") is not enabled:\app@nl 
+        "shell escape" (or "write18") is not enabled:\app@nl
         auto-pst-pdf will not work!}
-       {You need to run LaTeX with the equivalent of 
-        "pdflatex -shell-escape"\app@nl 
+       {You need to run LaTeX with the equivalent of
+        "pdflatex -shell-escape"\app@nl
         Or turn off auto-pst-pdf.}%
     \fi
   \fi
@@ -446,7 +396,7 @@ This work consists of the file  auto-pst-pdf.dtx
 % \LaTeX\ compilation from scratch (as in `|latex| \meta{document}|.tex|`) --- here the |postscript| environment does nothing and document is processed `normally':
 % \changes{v0.5}{2007/11/22}{Removed \cs{ifdefined} to avoid e-\TeX.}
 %    \begin{macrocode}
-  \ifx\APPmakepictures\@undefined    
+  \ifx\APPmakepictures\@undefined
     \PassOptionsToPackage{inactive}{pst-pdf}
 %    \end{macrocode}
 % \LaTeX\ compilation induced by this package:
@@ -475,7 +425,7 @@ This work consists of the file  auto-pst-pdf.dtx
 %
 % Please suggest wrappers for other packages that output psfrag figures
 % (for example: SciLab, R, Maple, LabView, Sage, ... ?)
-% 
+%
 % \begin{macro}{\matlabfig}
 % We need to disable the scaling that laprint applies
 % to \cmd\includegraphics\ in here, because otherwise labels that extend
@@ -542,8 +492,8 @@ This work consists of the file  auto-pst-pdf.dtx
 \renewenvironment{theglossary}
   {\small\list{}{}
      \item\relax
-     \glossary@prologue\GlossaryParms 
-     \let\item\@idxitem \ignorespaces 
+     \glossary@prologue\GlossaryParms
+     \let\item\@idxitem \ignorespaces
      \def\pfill{\hspace*{\fill}}}
   {\endlist}
 
@@ -556,7 +506,7 @@ This work consists of the file  auto-pst-pdf.dtx
 
 \linespread{1.1}      % A bit more space between lines
 \frenchspacing         % Remove ugly extra space after punctuation
-  
+
 \definecolor{niceblue}{rgb}{0.2,0.4,0.8}
 \def\theCodelineNo{\textcolor{niceblue}{\sffamily\tiny\arabic{CodelineNo}}}
 
