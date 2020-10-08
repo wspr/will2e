@@ -1,7 +1,7 @@
 ========================
 The auto-pst-pdf package
 
-2009/04/26 v0.6
+2020/10/08 v0.7
 
 The package uses `-shell-escape` to execute `pst-pdf`.
 This makes it especially easy to integrate into the
