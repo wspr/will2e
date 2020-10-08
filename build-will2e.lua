@@ -54,7 +54,7 @@ function tag_hook(tagname)
     print("Update git with commit & tag? [y/n]")
     tag_check = io.read()
     if tag_check == "y" then
-      os.execute('git commit -a -m "Step release tag"')
+      os.execute('git commit -a -m "Step release tag ('..gittag..')"')
       os.execute('git tag -a -m "" ' .. gittag)
     end
   end
